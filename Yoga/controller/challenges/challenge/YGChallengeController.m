@@ -24,8 +24,7 @@
 #import "YGUnlockChallengeFooter.h"
 #import "YGChosenChallengeFooter.h"
 #import "YGChangeChallengeAlert.h"
-#import "YGChallengeUnCompletedAlert.h"
-#define margin 16*SCALE
+#import "YGPlayController.h"
 static NSString *CHALLENGE_BANNER_CELLID     = @"challengesCellID";
 
 static NSString *CHALLENGE_SESSION_CELLID    = @"currentChallengeCellID";
@@ -34,7 +33,6 @@ static NSString *CHALLENGE_SESSION_HEADERID  = @"challengesHeaderID";
 
 static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
-static NSString *CHALLENGE_UNLOCKED_FOOTERID = @"challengeUnlockedFooterID";
 
 static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 
@@ -45,15 +43,15 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 
 @implementation YGChallengeController{
     __block YGChangeChallengeAlert *changeChallengeAlert;
-    YGChallengeUnCompletedAlert *challengeUnCompletedAlert;
     
 }
 #pragma mark Life-Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Challenge";
+    self.navigationItem.title = @"CHALLENGE";
     [self setCollectionView];
     [self setLeftNavigationItem];
+    [self setRightShareNavigationItem];
     [YGHUD loading:self.view];
 }
 
@@ -110,9 +108,7 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     [self.collectionView registerClass:[YGWorkoutCell class] forCellWithReuseIdentifier:CHALLENGE_SESSION_CELLID];
     self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchChallengeInfo) view:self.collectionView];
     [self.collectionView registerClass:[YGTextHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CHALLENGE_SESSION_HEADERID];
-    
     [self.collectionView registerClass:[YGChosenChallengeFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:CHALLENGE_CHOOSEN_FOOTERID];
-    [self.collectionView registerClass:[YGUnlockChallengeFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:CHALLENGE_UNLOCKED_FOOTERID];
     [self.collectionView registerClass:[YGStartWorkoutFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:START_WORKOUT_FOOTERID];
     [self.view addSubview:self.collectionView];
 }
@@ -131,11 +127,9 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     if (indexPath.section==0) {
         YGChallengeBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CHALLENGE_BANNER_CELLID forIndexPath:indexPath];
         cell.challenge = self.challenge;
-        cell.shouldLight = (self.shouldLigth||self.isMineChallenge);
         return cell;
     }
     YGWorkoutCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CHALLENGE_SESSION_CELLID forIndexPath:indexPath];
@@ -163,7 +157,6 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
         header.text = self.challenge.attributedDescription;
         return header;
     }else{
-        /*user current challenge footer*/
         if (self.isMineChallenge==YES) {
             YGStartWorkoutFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:START_WORKOUT_FOOTERID forIndexPath:indexPath];
             if ([footer.startWorkoutBtn respondsToSelector:@selector(startWorkout)]==NO) {
@@ -171,20 +164,10 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
             }
             return footer;
         }
-        /*unlocked*/
-        if (self.shouldLigth==YES) {
-            YGChosenChallengeFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:CHALLENGE_CHOOSEN_FOOTERID forIndexPath:indexPath];
-            SEL action = @selector(chooseThisChallenge);
-            if ([footer.choosenChallengeBtn respondsToSelector:action]==NO) {
-                [footer.choosenChallengeBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
-            }
-            return footer;
-        }
-        /*locked*/
-        YGUnlockChallengeFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:CHALLENGE_UNLOCKED_FOOTERID forIndexPath:indexPath];
-        SEL action = @selector(unlockThisChallenge);
-        if ([footer.unlockChallengeBtn respondsToSelector:action]==NO) {
-            [footer.unlockChallengeBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+        YGChosenChallengeFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:CHALLENGE_CHOOSEN_FOOTERID forIndexPath:indexPath];
+        SEL action = @selector(chooseThisChallenge);
+        if ([footer.choosenChallengeBtn respondsToSelector:action]==NO) {
+            [footer.choosenChallengeBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
         }
         return footer;
     }
@@ -193,19 +176,21 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 #pragma mark UICollectionView-Layout
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     CGFloat scale = self.scale;
-    return section==0?UIEdgeInsetsMake(8*scale,16*scale,16*scale,16*scale):UIEdgeInsetsMake(8*scale,16*scale,68*scale,16*scale);
+    return section==0?UIEdgeInsetsMake(0,0,16,0):UIEdgeInsetsMake(8*scale,16*scale,68*scale,16*scale);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    CGFloat retW = collectionView.frame.size.width-32*self.scale;
-    return CGSizeMake(indexPath.section==0?retW:collectionView.frame.size.width,indexPath.section==0?retW*((float)386/686.0):retW*(128/686.0));
+    CGFloat retW = collectionView.frame.size.width;
+    if (indexPath.section==0) {
+        return CGSizeMake(retW,retW*(153.0/375));
+    }
+    return CGSizeMake(retW,(retW-32)*(128/686.0));
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section{
     CGSize size = CGSizeZero;
     if (section==1) {
-        size = CGSizeMake(collectionView.frame.size.width,margin*2+(self.collectionView.frame.size.width-margin*2)*(96/686.0));
+        size = CGSizeMake(collectionView.frame.size.width,32+(self.collectionView.frame.size.width-32)*(44/343.0));
     }
     return size;
 }
@@ -221,12 +206,13 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
             if ([YGStringUtil notNull:string]) {
                 NSMutableAttributedString *aString = [[NSMutableAttributedString alloc] initWithString:string];
                 NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-                style.tailIndent = -16;
-                style.headIndent = 16;
-                style.firstLineHeadIndent = 16;
+                style.tailIndent = -32;
+                style.headIndent = 32;
+                style.minimumLineHeight = 22;
+                style.firstLineHeadIndent = 32;
                 NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                [params setObject:[UIColor colorWithHexString:@"#4A4A4A"] forKey:NSForegroundColorAttributeName];
-                [params setObject:[UIFont fontWithName:@"Lato-Regular" size:16*self.scale] forKey:NSFontAttributeName];
+                [params setObject:[UIColor colorWithHexString:@"#A4A3A3"] forKey:NSForegroundColorAttributeName];
+                [params setObject:[UIFont fontWithName:@"Lato-Regular" size:14] forKey:NSFontAttributeName];
                 [params setObject:style forKey:NSParagraphStyleAttributeName];
                 [aString addAttributes:params range:NSMakeRange(0,string.length)];
                 size = [YGStringUtil boundString:aString inSize:CGSizeMake(collectionView.frame.size.width,MAXFLOAT)];
@@ -243,10 +229,11 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
         YGSessionController *controller = [[YGSessionController alloc] init];
         YGSession *workout = self.challenge.workoutList[indexPath.row];
         controller.workoutID = workout.ID;
-        controller.challenge = self.challenge;
-        controller.workoutIndex = indexPath.row;
-        controller.shouldLight = workout.avail.boolValue;
+        controller.challengeID = self.challenge.ID;
         controller.isMineChallenge = self.isMineChallenge;
+        controller.canPlay = self.isMineChallenge&&workout.avail.boolValue;
+        controller.fromChallenge = self.challenge;
+        controller.userCurrentChallenge = self.userCurrentChallenge;
         controller.navigationItem.title = workout.title;
         [self.navigationController pushViewController:controller animated:YES];
     }
@@ -256,41 +243,19 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 -(void)startWorkout{
     YGSession *currentWorkout = [self.challenge currentWorkout];
     if (currentWorkout) {
-        YGSessionController *controller = [[YGSessionController alloc] init];
-        controller.isMineChallenge = YES;
-        controller.challenge = self.challenge;
-        controller.workoutID = currentWorkout.ID;
-        controller.hidesBottomBarWhenPushed = YES;
-        controller.shouldLight = currentWorkout.avail.boolValue;
-        controller.navigationItem.title = currentWorkout.title;
-        controller.workoutIndex = [self.challenge.workoutList indexOfObject:currentWorkout];
+        YGPlayController *controller = [[YGPlayController alloc] init];
+        controller.session = currentWorkout;
+        controller.challengeID = self.challenge.ID;
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
--(void)unlockThisChallenge{
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    if ([window.subviews.lastObject isKindOfClass:[YGChallengeUnCompletedAlert class]]==NO) {
-        challengeUnCompletedAlert = [[YGChallengeUnCompletedAlert alloc] initWithFrame:window.bounds];
-        [window addSubview:challengeUnCompletedAlert];
-        SEL backToCurrentWorkoutAction = @selector(backToCurrentWorkout:);
-        if ([challengeUnCompletedAlert.backToCurrentWorkoutBtn respondsToSelector:backToCurrentWorkoutAction]==NO) {
-            [challengeUnCompletedAlert.backToCurrentWorkoutBtn addTarget:self action:backToCurrentWorkoutAction forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-}
--(void)backToCurrentWorkout:(UIButton*)sender{
-    [challengeUnCompletedAlert hide];
-    YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
-    [delegate backToWorkout];
-}
-
 -(void)chooseThisChallenge{
-    if (self.currentChallenge.status.intValue>2) {
+    if (self.userCurrentChallenge.status.intValue>2) {
         [self changeChallengeNetwork];
     }else{
         UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
-        NSString *alertMsg = [NSString stringWithFormat:@"Are you sure you want to change from %@ to %@?",self.currentChallenge.title,self.challenge.title];
+        NSString *alertMsg = [NSString stringWithFormat:@"Are you sure you want to change from %@ to %@?",self.userCurrentChallenge.title,self.challenge.title];
         changeChallengeAlert = [[YGChangeChallengeAlert alloc] initWithFrame:mainWindow.bounds contentTittle:alertMsg];
         SEL action = @selector(changeChallengeNetwork);
         if ([changeChallengeAlert.changeBtn respondsToSelector:action]==NO) {
@@ -319,4 +284,14 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     }];
 }
 
+#pragma share
+-(void)didSelectShareItem{
+    if (self.challenge.workoutList.count) {
+        YGSession *workout = self.challenge.workoutList[0];
+        if (workout.shareUrl) {
+            NSString *shareTitle = [NSString stringWithFormat:@"I found this interesting yoga challenge on the Fitflow app. It's called %@. Want to try it with me? It's free. %@",self.challenge.title,workout.shareUrl];
+            [self shareWithContent:@[shareTitle]];
+        }
+    }
+}
 @end

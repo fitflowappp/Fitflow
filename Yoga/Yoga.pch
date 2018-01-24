@@ -18,9 +18,12 @@
 
 #define SCALE MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT)/375.0
 
+#define IS_IPHONE_X     (( fabs((double)[[UIScreen mainScreen] bounds].size.height - (double)812) < DBL_EPSILON ) || (fabs((double)[[UIScreen mainScreen] bounds].size.width - (double)812) < DBL_EPSILON ))
 /*导航栏高度*/
-#define NAV_HEIGHT 80*SCALE
-/*TabBar 高度*/
-#define TAB_BAR_HEIGHT 56*SCALE
+#define NAV_HEIGHT       (IS_IPHONE_X?88:64)
+///*TabBar 高度*/
+#define TAB_BAR_HEIGHT   (IS_IPHONE_X?83:49)
+
+
 
 #endif /* Yoga_pch */

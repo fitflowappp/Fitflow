@@ -11,7 +11,4 @@
 @interface YGSessionCommand : YGNetworkBaseCommand
 @property (nonatomic,strong) NSString *sessionID;
 @property (nonatomic,strong) NSString *challengeID;
-
-
-
 @end

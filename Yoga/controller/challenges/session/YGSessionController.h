@@ -10,10 +10,11 @@
 #import "YGBaseController.h"
 
 @interface YGSessionController : YGBaseController
-@property (nonatomic) BOOL shouldLight;
+@property (nonatomic) BOOL canPlay;
+@property (nonatomic) BOOL fromSingle;
 @property (nonatomic) BOOL isMineChallenge;
-@property (nonatomic) NSInteger workoutIndex;
 @property (nonatomic,strong) NSString    *workoutID;
-@property (nonatomic,strong) YGChallenge *challenge;
-@property (nonatomic,strong) YGChallenge *currentUserChalleng;
+@property (nonatomic,strong) NSString    *challengeID;
+@property (nonatomic,strong) YGChallenge *fromChallenge;
+@property (nonatomic,strong) YGChallenge *userCurrentChallenge;
 @end

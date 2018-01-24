@@ -12,7 +12,6 @@
 #import "YGDownVideoService.h"
 #import "YGDownVideoCommand.h"
 @interface YGDownVideoService()
-@property (nonatomic) dispatch_semaphore_t downSemaphore;
 @end
 @implementation YGDownVideoService
 + (YGDownVideoService *)instance{
@@ -20,7 +19,6 @@
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
         downLoadVideoService = [[YGDownVideoService alloc] init];
-        downLoadVideoService.downSemaphore = dispatch_semaphore_create(1);
     });
     return downLoadVideoService;
 }
@@ -60,15 +58,16 @@
         /*down load currentRoutineIndex*/
         [downloadSequenceList addObject:@(currentPlayRoutineIndex)];
         
+        dispatch_semaphore_t downSemaphore = dispatch_semaphore_create(1);
         for (NSNumber *number in downloadSequenceList) {
             YGRoutine *needDownRoutine = sesssion.routineList[number.integerValue];
             if ([needDownRoutine downLoaded]==NO) {
-                dispatch_semaphore_wait(self.downSemaphore,DISPATCH_TIME_FOREVER);
+                dispatch_semaphore_wait(downSemaphore,DISPATCH_TIME_FOREVER);
                 [self downVideoWithRoutine:needDownRoutine successBlock:^(id data) {
-                    dispatch_semaphore_signal(self.downSemaphore);
+                    dispatch_semaphore_signal(downSemaphore);
                     NSLog(@"%@ finish",needDownRoutine.title);
                 } errorBlock:^(NSError *error) {
-                    dispatch_semaphore_signal(self.downSemaphore);
+                    dispatch_semaphore_signal(downSemaphore);
                 }];
             }else{
                 NSLog(@"video has loaded");

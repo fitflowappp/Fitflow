@@ -6,38 +6,49 @@
 //  Copyright © 2017年 lyj. All rights reserved.
 //
 #import "YGHUD.h"
+#import "YGUserInfoCell.h"
 #import "YGChallenge.h"
 #import "YGStringUtil.h"
-#import "YGTextHeader.h"
-#import "YGWorkoutCell.h"
 #import "YGAppDelegate.h"
+#import "YGUserService.h"
+#import "YGUserNetworkService.h"
 #import "YGNetworkService.h"
 #import "YGRefreshHeader.h"
 #import "YGShareInfoAlert.h"
 #import "YGPlayController.h"
-#import "UIColor+Extension.h"
 #import "YGChallengeService.h"
-#import "YGWorkoutBannerCell.h"
 #import "YGWorkoutController.h"
 #import "YGSessionController.h"
-#import "YGStartWorkoutFooter.h"
 #import "YGChallenge+Extension.h"
+#import "YGGuideLoginController.h"
 #import "YGChallengeCompletedAlert.h"
-#import <FBSDKShareKit/FBSDKShareKit.h>
-#define margin 16*SCALE
-static NSString *WORKOUT_BANNER_CELLID     = @"challengesCellID";
+#import "YGHomeSectionHeader.h"
+#import "YGHomeCurrentChallengeCell.h"
+#import "YGSessionService.h"
+#import "YGSingleCell.h"
+#import "YGPlayController.h"
+#import "YGHomeAddSinglesFooter.h"
+#import "YGDiscoverController.h"
+#import "YGHomeNoSinglesCell.h"
+#import "YGHomeCurrentChallengeCompleteCell.h"
 
-static NSString *WORKOUT_SESSION_CELLID    = @"currentChallengeCellID";
+static NSString *WORKOUT_USERINFO_CELLID  = @"userInfoCellID";
+static NSString *WORKOUT_USER_SINGLES_CELLID   = @"userSinglesCellID";
+static NSString *WORKOUT_CURRENT_CHALLENGE_CELLID  = @"currentChallengeCellID";
+static NSString *WORKOUT_CURRENT_CHALLENGE_COMPLETE_CELLID  = @"currentChallengeCompleteCellID";
+static NSString *WORKOUT_NO_SINGLES_CELLID  = @"noSinglesCellID";
+static NSString *WORKOUT_SECTION_HEADERID  = @"homeSectionHeaderID";
+static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 
-static NSString *WORKOUT_SESSION_HEADERID  = @"challengesHeaderID";
-
-static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
-
-@interface YGWorkoutController ()<UICollectionViewDelegate,UICollectionViewDataSource,FBSDKSharingDelegate>
+@interface YGWorkoutController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGHomeCurrentChallengeCellDelegate,YGSingleCellDelegate,YGHomeCurrentChallengeCellCompleteDelegate>
 @property (nonatomic,strong) YGChallenge *userChallenge;
 @property (nonatomic,strong) UICollectionView *collectionView;
+@property (nonatomic,strong) NSMutableArray *achievementList;
+@property (nonatomic,strong) NSMutableArray *userSinglesList;
 @property (nonatomic,strong) NSMutableArray *needShareInfoList;
 @property (nonatomic,strong) NSMutableArray *completedChallengeIDList;
+@property (nonatomic,assign) BOOL hasAlertSinglesTip;
+@property (nonatomic,assign) BOOL hasAlertChallengesTip;
 @end
 
 @implementation YGWorkoutController{
@@ -49,18 +60,19 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self addNotification];
+    self.userSinglesList = [NSMutableArray array];
+    self.achievementList = [NSMutableArray array];
     self.needShareInfoList = [NSMutableArray array];
     self.completedChallengeIDList = [NSMutableArray array];
-    self.navigationItem.title =@"My Next Workout";
+    self.navigationItem.title =@"FITFLOW";
     [self setCollectionView];
     [YGHUD loading:self.view];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self fetchUserChallenge];
+    [self beginFetch];
     [self.collectionView reloadData];
-    [self handleShareInfo];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -69,11 +81,11 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
 }
 
 -(void)addNotification{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(generateNewShareInfo:) name:KEY_GENERATE_NEW_SHARE_INFO object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(generateNewShareInfo:) name:KEY_GENERATE_SHARE_INFO_WHEN_PLAYING object:nil];
 }
 
 -(void)removeNotification{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:KEY_GENERATE_NEW_SHARE_INFO object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:KEY_GENERATE_SHARE_INFO_WHEN_PLAYING object:nil];
 }
 
 -(void)dealloc{
@@ -84,32 +96,65 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
     [super didReceiveMemoryWarning];
 }
 
+-(void)beginFetch{
+    [self fetchUserInfo];
+    [self fetchUserChallenge];
+    [self fetchUserSinglesList];
+}
+
+-(void)fetchUserInfo{
+    [[YGUserNetworkService instance] fetchUserAchievementSucessBlock:^(NSMutableArray* achievementList) {
+        if (achievementList.count) {
+            [self.achievementList removeAllObjects];
+            [self.achievementList addObjectsFromArray:achievementList];
+        }
+        [self endLoading];
+        
+    } failureBlcok:^(NSError *error) {
+        [self endLoading];
+    }];
+}
+
 -(void)fetchUserChallenge{
-    __weak typeof(self) ws = self;
     [[YGChallengeService instance] fetchUserCurrentChallengeSucessBlock:^(YGChallenge *challenge) {
         if (challenge) {
-            ws.userChallenge = challenge;
+            self.userChallenge = challenge;
         }
-        [ws endLoading];
+        [self fetchUserChallengeEndLoading];
     } errorBlock:^(NSError *error) {
-        [ws endLoading];
-        if (ws.userChallenge==nil) {
-            [YGHUD alertNetworkErrorIn:ws.view target:ws];
+        [self endLoading];
+        if (self.userChallenge==nil) {
+            [YGHUD alertNetworkErrorIn:self.view target:self];
         }else{
-            [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
+            [YGHUD alertMsg:NETWORK_ERROR_ALERT at:self.view];
+        }
+    }];
+}
+
+-(void)fetchUserSinglesList{
+    [[YGSessionService instance] fetchUserSinglesListSucessBlock:^(NSMutableArray *singlesList) {
+        [self.userSinglesList removeAllObjects];
+        if (singlesList.count) {
+            [self.userSinglesList addObjectsFromArray:singlesList];
+        }
+        [self endLoading];
+    } errorBlock:^(NSError *error) {
+        [self endLoading];
+        if (self.userChallenge==nil) {
+            [YGHUD alertNetworkErrorIn:self.view target:self];
+        }else{
+            [YGHUD alertMsg:NETWORK_ERROR_ALERT at:self.view];
         }
     }];
 }
 
 -(void)retryWhenNetworkError{
     [YGHUD loading:self.view];
-    [self fetchUserChallenge];
+    [self beginFetch];
 }
 
--(void)endLoading{
-    [YGHUD hide:self.view];
-    [self.collectionView reloadData];
-    [self.collectionView.mj_header endRefreshing];
+-(void)fetchUserChallengeEndLoading{
+    [self endLoading];
     if (self.userChallenge.status.intValue>2) {
         BOOL findCompletedChallengeID = NO;
         for (NSString * completedChallengeID in self.completedChallengeIDList) {
@@ -120,8 +165,17 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
         }
         if (findCompletedChallengeID==NO) {
             [self alertIfChallengeCompleted];
+            [self.needShareInfoList removeAllObjects];
+            return;
         }
     }
+    [self handleShareInfo];
+}
+
+-(void)endLoading{
+    [YGHUD hide:self.view];
+    [self.collectionView reloadData];
+    [self.collectionView.mj_header endRefreshing];
 }
 
 -(void)alertIfChallengeCompleted{
@@ -130,7 +184,7 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
         [window.subviews.lastObject isKindOfClass:[YGShareInfoAlert class]]==NO) {
         challengeCompletedAlert = [[YGChallengeCompletedAlert alloc] initWithFrame:window.bounds challengeTittle:self.userChallenge.title];
         [window addSubview:challengeCompletedAlert];
-        [challengeCompletedAlert.shareToFacebookBtn addTarget:self action:@selector(shareToFaceBookWhenChallengeCompleted) forControlEvents:UIControlEventTouchUpInside];
+        [challengeCompletedAlert.shareBtn addTarget:self action:@selector(shareWhenChallengeCompleted) forControlEvents:UIControlEventTouchUpInside];
         [challengeCompletedAlert.startNewChallengeBtn addTarget:self action:@selector(startNewChallengeWhenChallengeCompleted) forControlEvents:UIControlEventTouchUpInside];
         if ([YGStringUtil notNull:self.userChallenge.ID]) {
             [self.completedChallengeIDList addObject:self.userChallenge.ID];
@@ -140,14 +194,26 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
 
 -(void)startNewChallengeWhenChallengeCompleted{
     [challengeCompletedAlert hide];
-    YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
-    UITabBarController *rootController = (UITabBarController*)delegate.window.rootViewController;
-    rootController.selectedIndex = 1;
+    YGUser *localUser = [[YGUserService instance] localUser];
+    if (localUser.unRegistered==NO) {
+        [self gotoDiscoverOptionIndex:0];
+    }else{
+        YGGuideLoginController *controller = [[YGGuideLoginController alloc] init];
+        controller.hidesBottomBarWhenPushed = YES;
+        controller.fromWorkourChangeNewChallenge = YES;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
--(void)shareToFaceBookWhenChallengeCompleted{
+-(void)shareWhenChallengeCompleted{
     [challengeCompletedAlert hide];
-    [self beginShareToFacebook];
+    if (self.userChallenge.workoutList) {
+        YGSession *workout = self.userChallenge.workoutList[0];
+        if (workout.shareUrl) {
+            NSString *shareTitle = [NSString stringWithFormat:@"I just finished this yoga challenge '%@' on the Fitflow app. I loved it. I think you will too. And it's free. %@",workout.title,workout.shareUrl];
+            [self shareWithContent:@[shareTitle]];
+        }
+    }
 }
 
 -(void)handleShareInfo{
@@ -155,9 +221,9 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
         UIWindow *mainWidow = [UIApplication sharedApplication].delegate.window;
         if ([mainWidow.subviews.lastObject isKindOfClass:[YGChallengeCompletedAlert class]]==NO&&
             [mainWidow.subviews.lastObject isKindOfClass:[YGShareInfoAlert class]]==NO) {
-            shareInfoAlert = [[YGShareInfoAlert alloc] initWithFrame:mainWidow.bounds shareInfo:self.needShareInfoList[0]];
+            shareInfoAlert = [[YGShareInfoAlert alloc] initWithFrame:mainWidow.bounds shareInfo:self.needShareInfoList];
             [mainWidow addSubview:shareInfoAlert];
-            [shareInfoAlert.shareToFacebookBtn addTarget:self action:@selector(shareOnFaceBookWhenGenerateNewShareInfo) forControlEvents:UIControlEventTouchUpInside];
+            [shareInfoAlert.shareBtn addTarget:self action:@selector(shareWhenGenerateNewShareInfo) forControlEvents:UIControlEventTouchUpInside];
             [shareInfoAlert.cancelShareToFacebookBtn addTarget:self action:@selector(cancelShareToFacebookWhenGenerateNewShareInfo) forControlEvents:UIControlEventTouchUpInside];
         }
     }
@@ -169,207 +235,263 @@ static NSString *WORKOUT_SESSION_FOOTERID  = @"challengesFooterID";
     [self.needShareInfoList addObject:shareInfo];
 }
 
+-(void)shareWhenGenerateNewShareInfo{
+    if (self.needShareInfoList.count) {
+        NSDictionary *shareInfo = self.needShareInfoList[0];
+        NSMutableArray *shareItems = [NSMutableArray array];
+        NSString *shareUrl = [shareInfo objectForKey:@"shareUrl"];
+        NSString *shareTitle = [shareInfo objectForKey:@"shareTitle"];
+        if (shareTitle&&shareUrl) {
+            [shareItems addObject:[NSString stringWithFormat:@"%@ %@",shareTitle,shareUrl]];
+        }
+        if (shareItems.count) {
+            [self shareWithContent:shareItems];
+        }
+        [self.needShareInfoList removeAllObjects];
+    }
+    [shareInfoAlert hide];
+}
+
 -(void)cancelShareToFacebookWhenGenerateNewShareInfo{
     [shareInfoAlert hide];
-    [self.needShareInfoList removeAllObjects];
 }
-
--(void)shareOnFaceBookWhenGenerateNewShareInfo{
-    [shareInfoAlert hide];
-    [self beginShareToFacebook];
-    [self.needShareInfoList removeAllObjects];
-}
-
--(void)beginShareToFacebook{
-    FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
-    content.contentURL = [NSURL URLWithString:@"http://www.fitflow.io/ios/download"];
-    FBSDKShareDialog *shareDialog = [[FBSDKShareDialog alloc] init];
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"fbauth2://"]]) {
-        shareDialog.mode = FBSDKShareDialogModeNative;
-    }else{
-        shareDialog.mode = FBSDKShareDialogModeBrowser;
-    }
-    shareDialog.delegate = self;
-    shareDialog.shareContent = content;
-    shareDialog.fromViewController = self;
-    [shareDialog show];
-    NSString *requestUrl = [NSString stringWithFormat:@"%@/yoga/share",cRequestDomain];
-    [[YGNetworkService instance] networkWithUrl:requestUrl requsetType:PUT successBlock:^(id data) {
-        NSLog(@"post yoga share sucess");
-    } errorBlock:^(NSError *error) {
-        
-    }];
-}
-
-- (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results{
-    
-}
-
-- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error{
-    
-    
-}
-
-- (void)sharerDidCancel:(id<FBSDKSharing>)sharer{
-    
-    
-}
-
 #pragma mark UI
 -(void)setCollectionView{
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.minimumLineSpacing = 0;
-    layout.sectionFootersPinToVisibleBounds = YES;
+    layout.minimumLineSpacing = 8;
+    layout.sectionFootersPinToVisibleBounds = NO;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,0,GET_SCREEN_WIDTH, GET_SCREEN_HEIGHT-TAB_BAR_HEIGHT-NAV_HEIGHT) collectionViewLayout:layout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchUserChallenge) view:self.collectionView];
-    [self.collectionView registerClass:[YGWorkoutBannerCell class] forCellWithReuseIdentifier:WORKOUT_BANNER_CELLID];
-    [self.collectionView registerClass:[YGWorkoutCell class] forCellWithReuseIdentifier:WORKOUT_SESSION_CELLID];
-    [self.collectionView registerClass:[YGTextHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:WORKOUT_SESSION_HEADERID];
-    [self.collectionView registerClass:[YGStartWorkoutFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:WORKOUT_SESSION_FOOTERID];
+    self.collectionView.contentInset = UIEdgeInsetsMake(0,0,48, 0);
+    self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(beginFetch) view:self.collectionView];
+    [self.collectionView registerClass:[YGUserInfoCell class] forCellWithReuseIdentifier:WORKOUT_USERINFO_CELLID];
+    [self.collectionView registerClass:[YGSingleCell class] forCellWithReuseIdentifier:WORKOUT_USER_SINGLES_CELLID];
+    [self.collectionView registerClass:[YGHomeNoSinglesCell class] forCellWithReuseIdentifier:WORKOUT_NO_SINGLES_CELLID];
+    [self.collectionView registerClass:[YGHomeCurrentChallengeCell class] forCellWithReuseIdentifier:WORKOUT_CURRENT_CHALLENGE_CELLID];
+    [self.collectionView registerClass:[YGHomeCurrentChallengeCompleteCell class] forCellWithReuseIdentifier:WORKOUT_CURRENT_CHALLENGE_COMPLETE_CELLID];
+    [self.collectionView registerClass:[YGHomeSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:WORKOUT_SECTION_HEADERID];
+    [self.collectionView registerClass:[YGHomeAddSinglesFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:WORKOUT_ADD_SINGLES_FOOTERID];
     [self.view addSubview:self.collectionView];
 }
 
 #pragma UICollectionView-Datasouce
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 2;
+    return 3;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return section==0?1:self.userChallenge.workoutList.count;
+    if (section==0) {
+        return 1;
+    }
+    if (section==1) {
+        return 1;
+    }
+    if (self.userSinglesList.count==0) {
+        return 1;
+    }
+    return self.userSinglesList.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section==0) {
-        YGWorkoutBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_BANNER_CELLID forIndexPath:indexPath];
-        cell.challenge = self.userChallenge;
+        YGUserInfoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_USERINFO_CELLID forIndexPath:indexPath];
+        cell.achievementList = self.achievementList;
         return cell;
     }
-    YGWorkoutCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_SESSION_CELLID forIndexPath:indexPath];
-    if (indexPath.row==0) {
-        if ([self collectionView:self.collectionView numberOfItemsInSection:1]==1) {
-            cell.workoutIndexType = WORKOUT_INDEX_ONLY_ONE;
-        }else{
-            cell.workoutIndexType = WORKOUT_INDEX_TOP;
+    if (indexPath.section==1) {
+        if (self.userChallenge.status.intValue>2) {
+            YGHomeCurrentChallengeCompleteCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_CURRENT_CHALLENGE_COMPLETE_CELLID forIndexPath:indexPath];
+            cell.challenge = self.userChallenge;
+            cell.delegate = self;
+            return cell;
         }
-    }else if(indexPath.row==[self collectionView:self.collectionView numberOfItemsInSection:1]-1){
-        cell.workoutIndexType = WORKOUT_INDEX_BOTTOM;
-        
-    }else{
-        cell.workoutIndexType = WORKOUT_INDEX_CENTER;
+        YGHomeCurrentChallengeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_CURRENT_CHALLENGE_CELLID forIndexPath:indexPath];
+        cell.challenge = self.userChallenge;
+        cell.delegate = self;
+        return cell;
     }
-    cell.isMineChallengeWorkout = YES;
-    cell.workoutIndex = indexPath.row+1;
-    cell.workout = self.userChallenge.workoutList[indexPath.row];
+    if (self.userSinglesList.count==0) {
+        YGHomeNoSinglesCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_NO_SINGLES_CELLID forIndexPath:indexPath];
+        return cell;
+    }
+    YGSingleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_USER_SINGLES_CELLID forIndexPath:indexPath];
+    cell.delegate = self;
+    cell.workout = self.userSinglesList[indexPath.row];
     return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    
-    /*START WORKOUT*/
-    if ([kind isEqualToString:UICollectionElementKindSectionFooter]){
-        YGStartWorkoutFooter *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:WORKOUT_SESSION_FOOTERID forIndexPath:indexPath];
-        if ([header.startWorkoutBtn respondsToSelector:@selector(startWorkout)]==NO) {
-            [header.startWorkoutBtn addTarget:self action:@selector(startWorkout) forControlEvents:UIControlEventTouchUpInside];
-        }
-        if (self.userChallenge.status.intValue>2) {
-            [header.startWorkoutBtn setTitle:@"CHOOSE NEW CHALLENGE" forState:UIControlStateNormal];
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        YGHomeSectionHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:WORKOUT_SECTION_HEADERID forIndexPath:indexPath];
+        header.alertTipLabel.hidden = YES;
+        header.cancelAlertBtn.hidden = YES;
+        YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
+        if (indexPath.section==0) {
+            header.textLabel.text = @"MY ACHIEVEMENTS";
         }else{
-            [header.startWorkoutBtn setTitle:@"START WORKOUT" forState:UIControlStateNormal];
+            SEL challengesTipAction = @selector(didSelectCloseChallengesHeaderTip:);
+            SEL singlesTipAction = @selector(didSelectCloseSinglesHeaderTip:);
+            if (indexPath.section==1){
+                header.textLabel.text = @"MY CHALLENGE";
+                if (appDelegate.fitflowUpdated&&self.hasAlertChallengesTip==NO) {
+                    header.alertTipLabel.hidden = NO;
+                    header.cancelAlertBtn.hidden = NO;
+                    header.alertTipLabel.text = @"Challenges are 1-4 week programs\nthat help you achieve your goals";
+                    [header.cancelAlertBtn removeTarget:self action:singlesTipAction forControlEvents:UIControlEventTouchUpInside];
+                    if ([header.cancelAlertBtn respondsToSelector:challengesTipAction]==NO) {
+                        [header.cancelAlertBtn addTarget:self action:challengesTipAction forControlEvents:UIControlEventTouchUpInside];
+                    }
+                }
+                
+            }else{
+                header.textLabel.text = @"MY SINGLES";
+                if (appDelegate.fitflowUpdated&&self.hasAlertSinglesTip==NO) {
+                    header.alertTipLabel.hidden = NO;
+                    header.cancelAlertBtn.hidden = NO;
+                    header.alertTipLabel.text = @"Singles are one-off sessions\nwith specific themes";
+                    [header.cancelAlertBtn removeTarget:self action:challengesTipAction forControlEvents:UIControlEventTouchUpInside];
+                    if ([header.cancelAlertBtn respondsToSelector:singlesTipAction]==NO) {
+                        [header.cancelAlertBtn addTarget:self action:singlesTipAction forControlEvents:UIControlEventTouchUpInside];
+                    }
+                }
+            }
         }
         return header;
     }
-    else{
-        YGTextHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:WORKOUT_SESSION_HEADERID forIndexPath:indexPath];
-        header.text = self.userChallenge.attributedDescription;
-        return header;
+    YGHomeAddSinglesFooter *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:WORKOUT_ADD_SINGLES_FOOTERID forIndexPath:indexPath];
+    SEL action = @selector(didSelectAddMoreSingles:);
+    if ([header.addSinglesBtn respondsToSelector:action]==NO) {
+        [header.addSinglesBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     }
+    return header;
 }
 
 #pragma mark UICollectionView-Layout
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    CGFloat scale = self.scale;
-    return section==0?UIEdgeInsetsMake(8*scale,16*scale,16*scale,16*scale):UIEdgeInsetsMake(8*scale,16*scale,68*scale,16*scale);
+    UIEdgeInsets insets = UIEdgeInsetsZero;
+    if (section==2&&self.userSinglesList.count) {
+        insets = UIEdgeInsetsMake(16,16,24,16);
+    }
+    return insets;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    CGFloat retW = collectionView.frame.size.width-32*self.scale;
-    return CGSizeMake(indexPath.section==0?retW:collectionView.frame.size.width,indexPath.section==0?retW*((float)280/686.0):retW*(128/686.0));
+    CGFloat retW = collectionView.frame.size.width;
+    if (indexPath.section==0) {
+        return CGSizeMake(retW,80*MAX(1,SCALE));
+    }
+    if (indexPath.section==1) {
+        return CGSizeMake(retW,retW*(219/375.0));
+    }
+    if (self.userSinglesList.count==0) {
+        return CGSizeMake(retW,retW*(52/375.0));
+    }
+    retW = retW-32;
+    return CGSizeMake(retW,retW*(140/343.0));
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section{
-    CGSize size = CGSizeZero;
-    if (section==1&&self.userChallenge.workoutList.count) {
-        size = CGSizeMake(collectionView.frame.size.width,margin*2+(self.collectionView.frame.size.width-margin*2)*(96/686.0));
+    CGFloat retW = collectionView.frame.size.width;
+    if (section==2) {
+        return CGSizeMake(retW,(44/343.0)*(retW-32));
     }
-    return size;
+    return CGSizeZero;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
-    CGSize size = CGSizeZero;
-    if (section>0) {
-        if (self.userChallenge.decriptionHeight.floatValue) {
-            size = CGSizeMake(collectionView.frame.size.width,self.userChallenge.decriptionHeight.floatValue);
-        }else{
-            NSString *string = self.userChallenge.challengeDescription;
-            if ([YGStringUtil notNull:string]) {
-                NSMutableAttributedString *aString = [[NSMutableAttributedString alloc] initWithString:string];
-                NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-                style.tailIndent = -margin;
-                style.headIndent = margin;
-                style.firstLineHeadIndent = margin;
-                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                [params setObject:[UIFont fontWithName:@"Lato-Regular" size:16*self.scale] forKey:NSFontAttributeName];
-                [params setObject:[UIColor colorWithHexString:@"#4A4A4A"] forKey:NSForegroundColorAttributeName];
-                [params setObject:style forKey:NSParagraphStyleAttributeName];
-                [aString addAttributes:params range:NSMakeRange(0,string.length)];
-                size = [YGStringUtil boundString:aString inSize:CGSizeMake(collectionView.frame.size.width,MAXFLOAT)];
-                self.userChallenge.decriptionHeight = @(size.height);
-                self.userChallenge.attributedDescription = aString;
-            }
+    CGFloat retW = collectionView.frame.size.width;
+    CGFloat retH = ((32)/375.0)*retW;
+    if (section==0) {
+        return CGSizeMake(retW,((32)/375.0)*retW);
+    }
+    YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
+    if (appDelegate.fitflowUpdated) {
+        if (section==1&&self.hasAlertChallengesTip==NO) {
+            retH = retH+ ((58)/375.0)*retW;
+        }
+        if (section==2&&self.hasAlertSinglesTip==NO) {
+            retH = retH+ ((58)/375.0)*retW;
         }
     }
-    return size;
+    return CGSizeMake(retW,retH);
 }
 #pragma mark UICollectionView-Delegate
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section>0) {
-        YGSessionController *controller = [[YGSessionController alloc] init];
-        YGSession *workout = self.userChallenge.workoutList[indexPath.row];
-        controller.isMineChallenge = YES;
-        controller.workoutIndex = indexPath.row;
-        controller.workoutID = workout.ID;
-        controller.hidesBottomBarWhenPushed = YES;
-        controller.challenge = self.userChallenge;
-        controller.shouldLight = workout.avail.boolValue;
-        controller.navigationItem.title = workout.title;
-        [self.navigationController pushViewController:controller animated:YES];
-    }
-}
-
-#pragma mark Do-Method
--(void)startWorkout{
-    if (self.userChallenge.status.intValue>2) {
-        YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
-        UITabBarController *rootController = (UITabBarController*)delegate.window.rootViewController;
-        rootController.selectedIndex = 1;
-    }else{
-        YGSession *currentWorkout = [self.userChallenge currentWorkout];
-        if (currentWorkout) {
+        if (indexPath.section==1) {
+            if (self.userChallenge.status.intValue>2) {
+                return;
+            }
+            YGSession *workout = [self.userChallenge currentWorkout];
+            if (workout.routineList.count) {
+                YGSessionController *controller = [[YGSessionController alloc] init];
+                controller.canPlay = YES;
+                controller.workoutID = workout.ID;
+                controller.hidesBottomBarWhenPushed = YES;
+                controller.challengeID = self.userChallenge.ID;
+                [self.navigationController pushViewController:controller animated:YES];
+            }
+        }else{
+            YGSession *workout = self.userSinglesList[indexPath.row];
             YGSessionController *controller = [[YGSessionController alloc] init];
-            controller.isMineChallenge = YES;
-            controller.workoutID = currentWorkout.ID;
+            controller.canPlay = YES;
+            controller.fromSingle = YES;
+            controller.workoutID = workout.ID;
             controller.hidesBottomBarWhenPushed = YES;
-            controller.challenge = self.userChallenge;
-            controller.shouldLight  = currentWorkout.avail.boolValue;
-            controller.navigationItem.title = currentWorkout.title;
-            controller.workoutIndex = [self.userChallenge.workoutList indexOfObject:currentWorkout];
+            controller.challengeID = workout.singleChallengeID;
             [self.navigationController pushViewController:controller animated:YES];
         }
     }
 }
+
+#pragma mark Do-Method
+-(void)didSelectPlayCurrentWorkout:(YGSession *)workout{
+    YGPlayController *controller = [[YGPlayController alloc] init];
+    controller.session = workout;
+    controller.hidesBottomBarWhenPushed = YES;
+    controller.challengeID = self.userChallenge.ID;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)playWorkoutInSingle:(YGSession *)workout{
+    YGPlayController *controller = [[YGPlayController alloc] init];
+    controller.session = workout;
+    controller.hidesBottomBarWhenPushed = YES;
+    controller.challengeID = self.userChallenge.ID;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)didSelectAddMoreSingles:(UIButton*)sender{
+    [self gotoDiscoverOptionIndex:1];
+}
+
+-(void)didSelectChooseNewChallangeInHomeCompleteChallengeCell{
+    [self gotoDiscoverOptionIndex:0];
+}
+
+-(void)didSelectCloseChallengesHeaderTip:(UIButton*)sender{
+    self.hasAlertChallengesTip = YES;
+    [self.collectionView reloadData];
+}
+
+-(void)didSelectCloseSinglesHeaderTip:(UIButton*)sender{
+    self.hasAlertSinglesTip = YES;
+    [self.collectionView reloadData];
+}
+
+-(void)gotoDiscoverOptionIndex:(int)index{
+    YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
+    UITabBarController *tabBarController = (UITabBarController*)appDelegate.window.rootViewController;
+    UINavigationController *discoverNav = tabBarController.viewControllers[1];
+    [discoverNav popToRootViewControllerAnimated:NO];
+    tabBarController.selectedIndex = 1;
+    if (discoverNav.viewControllers.count) {
+        YGDiscoverController *discoverController = (YGDiscoverController*)discoverNav.viewControllers[0];
+        [discoverController setOptionIndex:index];
+    }
+}
+
 @end

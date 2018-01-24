@@ -9,4 +9,6 @@ pod 'Heap'
 pod 'Firebase/Core'
 pod 'Firebase/Crash'
 pod 'Firebase/Performance'
+pod 'FBNotifications'
+pod 'BuglyHotfix'
 end

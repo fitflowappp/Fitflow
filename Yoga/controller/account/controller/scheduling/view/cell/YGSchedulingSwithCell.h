@@ -11,4 +11,5 @@
 @interface YGSchedulingSwithCell : UICollectionViewCell
 @property (nonatomic,strong) NSString *titleText;
 @property (nonatomic,strong) UISwitch *switchBtn;
+@property (nonatomic,strong) UIView   *linev;
 @end

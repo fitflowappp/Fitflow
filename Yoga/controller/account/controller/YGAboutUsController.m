@@ -31,12 +31,10 @@
 }
 
 -(void)setAboutUsSubviews{
-    CGFloat scale = self.scale;
+    CGFloat scale = 1;//self.scale;
     CGFloat width = self.view.frame.size.width;
     CGFloat loginoutBtnMargin = 16*scale;
     CGFloat loginoutBtnHeight = (width-loginoutBtnMargin*2)*(96/686.0);
-    
-    
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0,width,GET_SCREEN_HEIGHT-NAV_HEIGHT-32*scale-loginoutBtnHeight)];
     scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:scrollView];
@@ -92,17 +90,16 @@
     [scrollView addSubview:emailLabel];
     scrollView.contentSize = CGSizeMake(0,CGRectGetMaxY(emailLabel.frame));
     /**/
-    UIButton *loginOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    loginOutBtn.frame = CGRectMake(loginoutBtnMargin,GET_SCREEN_HEIGHT-NAV_HEIGHT-loginoutBtnHeight-loginoutBtnMargin,width-loginoutBtnMargin*2,loginoutBtnHeight);
-    loginOutBtn.layer.masksToBounds = YES;
-    loginOutBtn.layer.cornerRadius = loginOutBtn.frame.size.height/2;
-    loginOutBtn.layer.borderWidth = 2.0f;
-    loginOutBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
-    [loginOutBtn setTitle:@"LOGOUT" forState:UIControlStateNormal];
-    [loginOutBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
-    [loginOutBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:16*scale]];
-    [loginOutBtn addTarget:self action:@selector(loginOut) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:loginOutBtn];
+    NSString *musicCopyrightString = @"Music: www.bensound.com";
+    UILabel *musicCopyrightLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(companyNumberLabel.frame)+19*scale,width,MAXFLOAT)];
+    musicCopyrightLabel.text=musicCopyrightString;
+    musicCopyrightLabel.textAlignment = NSTextAlignmentCenter;
+    musicCopyrightLabel.textColor = [UIColor colorWithHexString:@"#4A4A4A"];
+    musicCopyrightLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16*scale];
+    [musicCopyrightLabel sizeToFit];
+    musicCopyrightLabel.frame = CGRectMake(0,CGRectGetMaxY(emailLabel.frame)+19*scale,width,emailLabel.frame.size.height);
+    [scrollView addSubview:musicCopyrightLabel];
+    scrollView.contentSize = CGSizeMake(0,CGRectGetMaxY(musicCopyrightLabel.frame));
 }
 
 -(void)loginOut{
@@ -121,7 +118,6 @@
     } failureBlcok:^(NSError *error) {
         [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
     }];
-    
 }
 
 -(void)openLocalEmail{
@@ -134,9 +130,8 @@
 }
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(nullable NSError *)error{
     [self dismissViewControllerAnimated:YES completion:nil];
-
+    
 }
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

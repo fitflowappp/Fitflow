@@ -21,5 +21,11 @@
 
 -(void)fetchUserScheduleInfoSucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock;
 
+-(void)resetPassword:(NSString*)password key:(NSString*)key sucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock;
+
+-(void)loginWithEmail:(NSString*)email password:(NSString*)password sucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock;
+
+-(void)signupWithEmail:(NSString*)email password:(NSString*)password sucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock;
+
 
 @end

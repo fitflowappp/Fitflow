@@ -9,17 +9,21 @@
 #ifndef server_h
 #define server_h
 
-#define admin 0
+#define Debug 1
 
-#define Debug 0
+#define Debug_Heap  0
 
 #if Debug
-#define cRequestDomain            @"http://192.168.1.2:9009"     /**/
-#define cHttpRequestDomain        @"http://192.168.1.2:9009"
+#define cRequestDomain            @"http://test.manage.fitflow.io" /**/
+#define cHttpRequestDomain        @"http://test.app.fitflow.io"
 #else
 #define cRequestDomain            @"https://app.fitflow.io"     /**/
 #define cHttpRequestDomain        @"http://manage.fitflow.io"
 #endif
+
+#define URLForge(tail)            URLCombine(cRequestDomain,tail)
+
+#define URLCombine(domain,tail)   [NSString stringWithFormat:@"%@%@",domain,tail]
 
 #define NETWORK_ERROR_ALERT @"Network error. \nPlease try again."
 

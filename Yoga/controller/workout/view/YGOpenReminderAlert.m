@@ -37,7 +37,7 @@
         self.tipLabel = [[UILabel alloc] initWithFrame:tipRect];
         self.tipLabel.numberOfLines = 0;
         self.tipLabel.textAlignment = NSTextAlignmentCenter;
-        self.tipLabel.text = @"Welcome to the Fitflow community!";
+        self.tipLabel.text = @"Results take time!";
         self.tipLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
         self.tipLabel.font = [UIFont fontWithName:@"Lato-Bold" size:12*scale];
         [self.tipLabel sizeToFit];
@@ -45,7 +45,7 @@
         self.tipLabel.frame = tipRect;
         [self.backGroundv addSubview:self.tipLabel];
         //
-        NSString *content = @"Schedule regular reminders to build healthy workout habits";
+        NSString *content = @"It takes regular practice to see results. Set a reminder so you won't miss the next class.";
         CGRect contentRect = CGRectMake(24*scale,CGRectGetMaxY(self.tipLabel.frame)+8*scale,self.backGroundv.frame.size.width-48*scale,100);
         self.contentLabel = [[UILabel alloc] initWithFrame:contentRect];
         self.contentLabel.numberOfLines = 0;
@@ -67,12 +67,20 @@
         self.openReminderBtn.layer.borderWidth = 1.0f;
         self.openReminderBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
         self.openReminderBtn.layer.cornerRadius = self.openReminderBtn.frame.size.height/2;
-        [self.openReminderBtn setTitle:@"SCHEDULE REMINDERS" forState:UIControlStateNormal];
+        [self.openReminderBtn setTitle:@"SCHEDULE NEXT CLASS" forState:UIControlStateNormal];
         [self.openReminderBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
         [self.openReminderBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
         [self.backGroundv addSubview:self.openReminderBtn];
         //
-        backGroundRect.size.height = CGRectGetMaxY(self.openReminderBtn.frame)+openReminderMargin;
+        self.notShowAgainBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.notShowAgainBtn.frame = CGRectMake(openReminderMargin,CGRectGetMaxY(self.openReminderBtn.frame),openReminderWidth,60*SCALE);
+        [self.notShowAgainBtn setBackgroundColor:[UIColor clearColor]];
+        [self.notShowAgainBtn setTitle:@"Don't show this again" forState:UIControlStateNormal];
+        [self.notShowAgainBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Regular" size:12*scale]];
+        [self.notShowAgainBtn setTitleColor:[UIColor colorWithHexString:@"#4A90E2"] forState:UIControlStateNormal];
+        [self.backGroundv addSubview:self.notShowAgainBtn];
+        //
+        backGroundRect.size.height = CGRectGetMaxY(self.notShowAgainBtn.frame);
         self.backGroundv.frame = backGroundRect;
         self.backGroundv.center = self.center;
         [self addSubview:self.backGroundv];
@@ -90,6 +98,7 @@
         self.alpha = 0;
         self.cancelBtn.alpha = 0;
         self.backGroundv.alpha = 0;
+        self.notShowAgainBtn.alpha = 0;
         [self show];
     }
     return self;
@@ -105,12 +114,14 @@
         self.backGroundv.alpha = 0;
         self.contentLabel.alpha = 0;
         self.openReminderBtn.alpha = 0;
+        self.notShowAgainBtn.alpha = 0;
     } completion:^(BOOL finished) {
         [self.logoImgv removeFromSuperview];
         [self.tipLabel removeFromSuperview];
         [self.openReminderBtn removeFromSuperview];
         [self.backGroundv removeFromSuperview];
         [self.cancelBtn removeFromSuperview];
+        [self.notShowAgainBtn removeFromSuperview];
         [self removeFromSuperview];
     }];
 }
@@ -119,6 +130,7 @@
     [UIView animateWithDuration:0.2 animations:^{
         self.cancelBtn.alpha = 1;
         self.backGroundv.alpha = 1;
+        self.notShowAgainBtn.alpha = 1;
         self.alpha = 1;
     } completion:^(BOOL finished) {
     }];

@@ -41,6 +41,10 @@
         int currentWorkoutIndex = 0;
         for (int i=0; i<self.workoutList.count;i++) {
             YGSession *workout = self.workoutList[i];
+//            if ([workout.ID isEqualToString:self.currentWorkoutID]) {
+//                currentWorkoutIndex = i;
+//                break;
+//            }
             if (workout.status.intValue<3) {
                 currentWorkoutIndex = i;
                 break;

@@ -14,9 +14,12 @@
     YGSession *session = [[YGSession alloc] init];
     if ([YGStringUtil notNull:dictionary]) {
         session.ID = [dictionary objectForKey:@"id"];
-        session.status = [dictionary objectForKey:@"status"];
         session.avail = [dictionary objectForKey:@"avail"];
+        session.status = [dictionary objectForKey:@"status"];
+        session.favorate = [dictionary objectForKey:@"isfollow"];
         session.duration = [dictionary objectForKey:@"duration"];
+        session.shareUrl = [dictionary objectForKey:@"shareUrl"];
+        session.singleChallengeID = [dictionary objectForKey:@"singleChallengeId"];
         session.currentRoutineID = [dictionary objectForKey:@"currentRoutineId"];
         session.coverImg = [YGImage objectFrom:[dictionary objectForKey:@"coverImg"]];
         NSString *title = [dictionary objectForKey:@"title"];

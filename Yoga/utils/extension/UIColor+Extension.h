@@ -10,4 +10,7 @@
 
 @interface UIColor (Extension)
 + (UIColor*)colorWithHexString:(NSString*)hexString;
++ (UIImage *)imageWithHexString:(NSString*)hexString;
++ (UIColor*)colorWithRGBHex:(UInt32)hex alpha:(float)alpha;
++ (UIColor*)colorWithHexString:(NSString*)hexString alpha:(float)alpha;
 @end

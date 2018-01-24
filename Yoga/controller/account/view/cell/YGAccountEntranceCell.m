@@ -39,9 +39,8 @@
 }
 
 -(void)addIconImgv{
-    CGFloat scale = SCALE;
     self.iconImgv = [[UIImageView alloc] init];
-    self.iconImgv.frame = CGRectMake(0,(self.frame.size.height-1-24*scale)/2,24*scale,24*scale);
+    self.iconImgv.frame = CGRectMake(0,(self.frame.size.height-1-24)/2,24,24);
     [self addSubview:self.iconImgv];
 }
 
@@ -52,12 +51,11 @@
 }
 
 -(void)addTitleLabel{
-    CGFloat scale = SCALE;
-    CGFloat titleX = CGRectGetMaxX(self.iconImgv.frame)+8*scale;
+    CGFloat titleX = CGRectGetMaxX(self.iconImgv.frame)+8;
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.frame = CGRectMake(titleX,0,self.arrowImgv.frame.origin.x-titleX,self.frame.size.height-1);
     self.titleLabel.textColor = [UIColor colorWithHexString:@"#000000"];
-    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16*scale];
+    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16];
     [self addSubview:self.titleLabel];
 }
 -(void)setEntranceIndex:(NSInteger)entranceIndex{

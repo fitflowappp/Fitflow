@@ -6,7 +6,8 @@
 //  Copyright © 2017年 lyj. All rights reserved.
 //
 #import "YGHUD.h"
-#import "YGTextHeader.h"
+#import "YGDeviceUtil.h"
+#import "YGHomeSectionHeader.h"
 #import "YGAppDelegate.h"
 #import "YGKeychainUtil.h"
 #import "YGRefreshHeader.h"
@@ -26,25 +27,26 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
 
 @interface YGSchedulingController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property (nonatomic,strong) UICollectionView *collectionView;
-@property (nonatomic) BOOL optenPushNotification;
 @property (nonatomic,strong) NSMutableDictionary *scheduleInfo;
+@property (nonatomic,assign) BOOL hasAlertReminderTip;
+@property (nonatomic,assign) BOOL hasAlertNotificationTip;
 @end
 
 @implementation YGSchedulingController{
     YGWorkoutScheduleView   *workoutScheduleView;
     YGReminderScheduleView  *reminderScheduleView;
-    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    BOOL hasEntered = [YGDeviceUtil hasEnteredScheduling];
+    self.hasAlertReminderTip = hasEntered;
+    self.hasAlertNotificationTip = hasEntered;
+    [self addNotification];
     [self setLeftNavigationItem];
     [self setCollectionView];
     [self.navigationItem setTitle:@"Scheduling"];
     [YGHUD loading:self.view];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -53,8 +55,18 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
     self.navigationController.navigationBarHidden = NO;
 }
 
--(void)dealloc{
+-(void)addNotification{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(grantedNotification:) name:@"KEY_USER_NOTIFICATIONSETTINGS_GRANTED" object:nil];
+}
+
+-(void)removeNotification{
     [[NSNotificationCenter defaultCenter ] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"KEY_USER_NOTIFICATIONSETTINGS_GRANTED" object:nil];
+}
+
+-(void)dealloc{
+    [self removeNotification];
 }
 
 -(void)WillEnterForeground{
@@ -67,37 +79,32 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
 -(void)handleLocalSettings{
     /*同步本地设置*/
     if (self.scheduleInfo.allKeys.count) {
+        BOOL shouldSy = NO;
         if ([[UIApplication sharedApplication] isRegisteredForRemoteNotifications]==YES) {
             /*本地通知关闭*/
             if ([[UIApplication sharedApplication] currentUserNotificationSettings].types==UIUserNotificationTypeNone){
                 [self.scheduleInfo setObject:@(0) forKey:@"notification"];
-            }else{
-                /*本地通知打开*/
-                if ([[self.scheduleInfo objectForKey:@"notification"] boolValue]==NO) {
-                    //[self.scheduleInfo setObject:@(1) forKey:@"notification"];
-                }
+                shouldSy = YES;
             }
-        }else{
-            [self.scheduleInfo setObject:@(0) forKey:@"notification"];
-            
         }
         EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
         if (status!=EKAuthorizationStatusAuthorized) {
             /*本地日历关闭*/
             [self.scheduleInfo setObject:@(0) forKey:@"remider"];
-        }else{
-            //[self.scheduleInfo setObject:@(1) forKey:@"remider"];
+            shouldSy = YES;
         }
-        [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {
-            int code = [[result objectForKey:@"code"] intValue];
-            if (code==1) {
-                NSLog(@"msg: post local settings sucess");
-            }else{
+        if (shouldSy) {
+            [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {
+                int code = [[result objectForKey:@"code"] intValue];
+                if (code==1) {
+                    NSLog(@"msg: post local settings sucess");
+                }else{
+                    NSLog(@"msg: post local settings error");
+                }
+            } failureBlcok:^(NSError *error) {
                 NSLog(@"msg: post local settings error");
-            }
-        } failureBlcok:^(NSError *error) {
-            NSLog(@"msg: post local settings error");
-        }];
+            }];
+        }
     }
 }
 
@@ -138,82 +145,47 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
     self.collectionView.backgroundColor = [UIColor clearColor];
     [self.collectionView registerClass:[YGSchedulingSwithCell class] forCellWithReuseIdentifier:SCHEDULING_SWITCH_CELLID];
     [self.collectionView registerClass:[YGSchedulingEntranceCell class] forCellWithReuseIdentifier:SCHEDULING_ENTRANCE_CELLID];
-    [self.collectionView registerClass:[YGTextHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:SCHEDULING_TEXT_HEADERID];
+    [self.collectionView registerClass:[YGHomeSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:SCHEDULING_TEXT_HEADERID];
     self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchUserScheduleInfo) view:self.collectionView];
     [self.view addSubview:self.collectionView];
 }
 
 #pragma mark UICollectionView-Datasouce
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     if (self.scheduleInfo.allKeys.count==0) {
         return 0;
     }
-    BOOL openPush = [[self.scheduleInfo objectForKey:@"notification"] boolValue];
-    BOOL openCalendar = [[self.scheduleInfo objectForKey:@"remider"] boolValue];
-    if (openPush==NO&&openCalendar==NO) {
-        return 2;
-    }
-    return 4;
+    return 2;
 }
 
-- ( UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row>1) {
-        YGSchedulingEntranceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SCHEDULING_ENTRANCE_CELLID forIndexPath:indexPath];
-        if (indexPath.row==2) {
-            cell.titleText = @"Set your workout schedule";
-            NSArray *scheduleDays = [self.scheduleInfo objectForKey:@"schedulingDays"];
-            NSMutableString *scheduleSubtitle = [[NSMutableString alloc] init];
-            BOOL allOpen = YES;
-            for (int i=0;i<scheduleDays.count;i++) {
-                NSNumber *status = scheduleDays[i];
-                if (status.boolValue==YES) {
-                    if (i==0) {
-                        [scheduleSubtitle appendString:@"Mon "];
-                    }else if (i==1){
-                        [scheduleSubtitle appendString:@"Tue "];
-                    }else if (i==2){
-                        [scheduleSubtitle appendString:@"Wed "];
-                    }else if (i==3){
-                        [scheduleSubtitle appendString:@"Thu "];
-                    }else if (i==4){
-                        [scheduleSubtitle appendString:@"Fri "];
-                    }else if (i==5){
-                        [scheduleSubtitle appendString:@"Sat "];
-                    }else if (i==6){
-                        [scheduleSubtitle appendString:@"Sun "];
-                    }
-                }else{
-                    allOpen = NO;
-                }
-            }
-            if (allOpen==YES) {
-                cell.subTitleText = @"Every day";
-            }else{
-                cell.subTitleText = [scheduleSubtitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            }
-        }else{
-            cell.titleText = @"Set your reminder time";
-            NSNumber *reminderTimeNumber = [self.scheduleInfo objectForKey:@"schedulingTime"];
-            NSDate *reminderTimeDate = [NSDate dateWithTimeIntervalSince1970:reminderTimeNumber.longLongValue/1000];
-            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"hh:mm a"];
-            dateFormatter.locale=[[NSLocale alloc]initWithLocaleIdentifier:@"en_US"];
-            NSString* remiderDateString = [dateFormatter stringFromDate:reminderTimeDate];
-            cell.subTitleText = remiderDateString;
-        }
-        return cell;
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section==0) {
+        return 1;
     }
-    YGSchedulingSwithCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SCHEDULING_SWITCH_CELLID forIndexPath:indexPath];
-    if (indexPath.row==0) {
+    BOOL openCalendar = [[self.scheduleInfo objectForKey:@"remider"] boolValue];
+    if (openCalendar==NO) {
+        return 1;
+    }
+    return 3;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section==0) {
+        YGSchedulingSwithCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SCHEDULING_SWITCH_CELLID forIndexPath:indexPath];
         cell.titleText = @"Push Notifications";
-        SEL action = @selector(optenPushNotification:);
+        SEL action = @selector(willOpenPushNotification:);
         if ([cell.switchBtn respondsToSelector:action]==NO) {
             [cell.switchBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
         }
         NSNumber *reminder = [self.scheduleInfo objectForKey:@"notification"];
         [cell.switchBtn setOn:reminder.boolValue animated:NO];
         cell.switchBtn.tag = 10000;
-    }else{
+        cell.linev.hidden = YES;
+        return cell;
+    }
+    if (indexPath.row==0) {
+        YGSchedulingSwithCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SCHEDULING_SWITCH_CELLID forIndexPath:indexPath];
         cell.titleText = @"Calendar Reminders";
         SEL action = @selector(openCalendar:);
         if ([cell.switchBtn respondsToSelector:action]==NO) {
@@ -222,44 +194,118 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
         NSNumber *openPush = [self.scheduleInfo objectForKey:@"remider"];
         [cell.switchBtn setOn:openPush.boolValue animated:NO];
         cell.switchBtn.tag =10001;
+        cell.linev.hidden = NO;
+        return cell;
+    }
+    YGSchedulingEntranceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SCHEDULING_ENTRANCE_CELLID forIndexPath:indexPath];
+    if (indexPath.row==1) {
+        cell.titleText = @"Set your workout schedule";
+        NSArray *scheduleDays = [self.scheduleInfo objectForKey:@"schedulingDays"];
+        NSMutableString *scheduleSubtitle = [[NSMutableString alloc] init];
+        BOOL allOpen = YES;
+        for (int i=0;i<scheduleDays.count;i++) {
+            NSNumber *status = scheduleDays[i];
+            if (status.boolValue==YES) {
+                if (i==0) {
+                    [scheduleSubtitle appendString:@"Mon "];
+                }else if (i==1){
+                    [scheduleSubtitle appendString:@"Tue "];
+                }else if (i==2){
+                    [scheduleSubtitle appendString:@"Wed "];
+                }else if (i==3){
+                    [scheduleSubtitle appendString:@"Thu "];
+                }else if (i==4){
+                    [scheduleSubtitle appendString:@"Fri "];
+                }else if (i==5){
+                    [scheduleSubtitle appendString:@"Sat "];
+                }else if (i==6){
+                    [scheduleSubtitle appendString:@"Sun "];
+                }
+            }else{
+                allOpen = NO;
+            }
+        }
+        if (allOpen==YES) {
+            cell.subTitleText = @"Every day";
+        }else{
+            cell.subTitleText = [scheduleSubtitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        }
+    }else{
+        cell.titleText = @"Set your reminder time";
+        NSNumber *reminderTimeNumber = [self.scheduleInfo objectForKey:@"schedulingTime"];
+        NSDate *reminderTimeDate = [NSDate dateWithTimeIntervalSince1970:reminderTimeNumber.longLongValue/1000];
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"hh:mm a"];
+        dateFormatter.locale=[[NSLocale alloc]initWithLocaleIdentifier:@"en_US"];
+        NSString* remiderDateString = [dateFormatter stringFromDate:reminderTimeDate];
+        cell.subTitleText = remiderDateString;
     }
     return cell;
-    
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    YGTextHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:SCHEDULING_TEXT_HEADERID forIndexPath:indexPath];
-    NSString *headerText = @"Schedule reminders to help keep you on track";
-    NSMutableAttributedString *aHeaderText = [[NSMutableAttributedString alloc] initWithString:headerText];
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.tailIndent = -16*self.scale;
-    style.headIndent = 16*self.scale;
-    style.firstLineHeadIndent = 16*self.scale;
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setObject:[UIFont fontWithName:@"Lato-Regular" size:16*self.scale] forKey:NSFontAttributeName];
-    [params setObject:[UIColor colorWithHexString:@"#4A4A4A"]forKey:NSForegroundColorAttributeName];
-    [params setObject:style forKey:NSParagraphStyleAttributeName];
-    [aHeaderText addAttributes:params range:NSMakeRange(0,aHeaderText.length)];
-    header.text = aHeaderText;
-    
+    YGHomeSectionHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:SCHEDULING_TEXT_HEADERID forIndexPath:indexPath];
+    header.alertTipLabel.hidden = YES;
+    header.cancelAlertBtn.hidden = YES;
+    if (indexPath.section==0) {
+        header.textLabel.text = @"NOTIFICATIONS";
+        if (self.hasAlertNotificationTip==NO) {
+            header.alertTipLabel.hidden = NO;
+            header.cancelAlertBtn.hidden = NO;
+            header.alertTipLabel.text = @"Switch notifications on to stay informed\nabout important events";
+            SEL action = @selector(didSelectCloseNotificationHeaderTip:);
+            [header.cancelAlertBtn removeTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+            if ([header.cancelAlertBtn respondsToSelector:action]==NO) {
+                [header.cancelAlertBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+        return header;
+    }else{
+        header.textLabel.text = @"CALENDAR";
+        if (self.hasAlertReminderTip==NO) {
+            header.alertTipLabel.hidden = NO;
+            header.cancelAlertBtn.hidden = NO;
+            header.alertTipLabel.text = @"Connect Fitflow with your calendar\nto receive regular reminders";
+            SEL action = @selector(didSelectCloseReminderHeaderTip:);
+            [header.cancelAlertBtn removeTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+            if ([header.cancelAlertBtn respondsToSelector:action]==NO) {
+                [header.cancelAlertBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+    }
     return header;
+}
+
+-(void)didSelectCloseNotificationHeaderTip:(UIButton*)sender{
+    self.hasAlertNotificationTip = YES;
+    [self.collectionView reloadData];
+}
+
+-(void)didSelectCloseReminderHeaderTip:(UIButton*)sender{
+    self.hasAlertReminderTip = YES;
+    [self.collectionView reloadData];
 }
 
 #pragma mark UICollectionView-Layout
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     
-    return UIEdgeInsetsMake(8*self.scale,16*self.scale,0,16*self.scale);
+    return UIEdgeInsetsMake(0,16,0,16);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(collectionView.frame.size.width-32*self.scale,64*self.scale);
+    return CGSizeMake(collectionView.frame.size.width-32,64*((collectionView.frame.size.width-32)/343.0));
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
-    if (self.scheduleInfo.allKeys.count==0) {
-        return CGSizeZero;
+    CGFloat retW = collectionView.frame.size.width;
+    CGFloat retH = ((32)/375.0)*retW;
+    if (section==0&&self.hasAlertNotificationTip==NO) {
+        retH = retH+ ((58)/375.0)*retW;
     }
-    return CGSizeMake(collectionView.frame.size.width,19*self.scale);
+    if (section==1&&self.hasAlertReminderTip==NO) {
+        retH = retH+ ((58)/375.0)*retW;
+    }
+    return CGSizeMake(retW,retH);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -267,7 +313,10 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row==2) {
+    if (indexPath.section==0) {
+        return;
+    }
+    if (indexPath.row==1) {
         workoutScheduleView = [[YGWorkoutScheduleView alloc] initWithFrame:CGRectMake(0,0,GET_SCREEN_WIDTH, GET_SCREEN_HEIGHT)];
         workoutScheduleView.scheduleStatusList = [self.scheduleInfo objectForKey:@"schedulingDays"];
         [[UIApplication sharedApplication].delegate.window addSubview:workoutScheduleView];
@@ -275,7 +324,7 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
         if ([workoutScheduleView.sureBtn respondsToSelector:action]==NO) {
             [workoutScheduleView.sureBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
         }
-    }else if (indexPath.row==3){
+    }else if (indexPath.row==2){
         reminderScheduleView = [[YGReminderScheduleView alloc] initWithFrame:CGRectMake(0,0,GET_SCREEN_WIDTH, GET_SCREEN_HEIGHT)];
         [[UIApplication sharedApplication].delegate.window addSubview:reminderScheduleView];
         SEL action = @selector(reminderSchedule);
@@ -329,11 +378,17 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
     }];
 }
 
--(void)optenPushNotification:(UISwitch*)sender{
+-(void)grantedNotification:(NSNotification*)notic{
+    NSNumber *granted = notic.object;
+    if (granted.boolValue==YES) {
+        [self openLocalNotification:YES];
+    }
+}
+
+-(void)willOpenPushNotification:(UISwitch*)sender{
     if (sender.tag ==10001) {
         return;
     }
-    
     if ([[UIApplication sharedApplication] isRegisteredForRemoteNotifications]==NO) {
         YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
         [delegate registerUserNotification];
@@ -347,14 +402,19 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
                 [sender setOn:!sender.isOn animated:YES];
             });
             
-            [[[UIAlertView alloc] initWithTitle:@"\"Fitflow\" Would like to Send you Notifications" message:@"Notifications may include alerts,sounds,and icon badges.These can be configured in Settings." delegate:self cancelButtonTitle:@"Don't Allow" otherButtonTitles:@"OK", nil] show];
+            [[[UIAlertView alloc] initWithTitle:@"\"Fitflow\" Would Like to Send You Notifications" message:@"In Settings, click on Notifications, then Allow Notifications." delegate:self cancelButtonTitle:@"Don't Allow" otherButtonTitles:@"OK", nil] show];
             return;
         }
     }
-    
+    [self openLocalNotification:sender.isOn];
+}
+
+-(void)openLocalNotification:(BOOL)open{
     __weak typeof(self) ws = self;
-    BOOL staus = sender.isOn;
-    [YGHUD loading:self.view];
+    BOOL staus = open;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [YGHUD loading:self.view];
+    });
     [ws.scheduleInfo setObject:@(staus) forKey:@"notification"];
     [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {
         int code = [[result objectForKey:@"code"] intValue];
@@ -375,6 +435,7 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
         });
     }];
 }
+
 
 -(void)openCalendar:(UISwitch*)sender{
     if (sender.tag==10000) {
@@ -397,7 +458,7 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
         dispatch_async(dispatch_get_main_queue(), ^{
             [sender setOn:!sender.isOn animated:YES];
         });
-        [[[UIAlertView alloc] initWithTitle:@"\"Fitflow\" Would like to Access Your Calendar" message:@"Build a habit. Change start today.Turn off anytime." delegate:self cancelButtonTitle:@"Don't Allow" otherButtonTitles:@"OK", nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"\"Fitflow\" Would like to Access Your Calendar" message:@"In Settings, switch on Calendars access to receive regular reminders." delegate:self cancelButtonTitle:@"Don't Allow" otherButtonTitles:@"OK", nil] show];
         /**/
         return;
     }
@@ -560,7 +621,23 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex==1) {
         NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-        [[UIApplication sharedApplication] openURL:url];
+        if ([[UIDevice currentDevice].systemVersion doubleValue] >= 10.0) {
+            
+            //iOS10.0以上  使用的操作
+            
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+            
+        } else
+            
+        {
+            
+            //iOS10.0以下  使用的操作
+            
+            [[UIApplication sharedApplication] openURL:url];
+            
+        }
+        
+    
     }
     
 }

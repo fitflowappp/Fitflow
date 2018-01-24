@@ -14,12 +14,17 @@
 @property (nonatomic,strong) UILabel      *contentLabel;
 
 @end
-@implementation YGShareInfoAlert
+@implementation YGShareInfoAlert{
+    NSMutableArray *_shareInfoList;
+    
+}
 
--(id)initWithFrame:(CGRect)frame shareInfo:(NSDictionary*)shareInfo{
+-(id)initWithFrame:(CGRect)frame shareInfo:(NSMutableArray*)shareInfoList{
     self = [super initWithFrame:frame];
     if (self) {
-        CGFloat scale = SCALE;
+        CGFloat scale = 1;
+        _shareInfoList = shareInfoList;
+        NSDictionary *shareInfo = _shareInfoList[0];
         self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
         //
         CGRect backGroundRect = CGRectMake(32*scale,0,self.frame.size.width-64*scale,700);
@@ -53,20 +58,20 @@
         self.contentLabel.frame = contentRect;
         [self.backGroundv addSubview:self.contentLabel];
         //
-        CGFloat shareToFacebookMargin = 24*scale;
-        CGFloat shareToFacebookWidth  = (self.backGroundv.frame.size.width-shareToFacebookMargin*2);
-        CGFloat shareToFacebookHeight = shareToFacebookWidth*(88/526.0);
-        self.shareToFacebookBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.shareToFacebookBtn.frame = CGRectMake(shareToFacebookMargin,CGRectGetMaxY(self.contentLabel.frame)+shareToFacebookMargin,shareToFacebookWidth,shareToFacebookHeight);
-        self.shareToFacebookBtn.layer.masksToBounds = YES;
-        self.shareToFacebookBtn.backgroundColor = [UIColor colorWithHexString:@"#4A90E2"];
-        self.shareToFacebookBtn.layer.cornerRadius = self.shareToFacebookBtn.frame.size.height/2;
-        [self.shareToFacebookBtn setTitle:@"SHARE ON FACEBOOK" forState:UIControlStateNormal];
-        [self.shareToFacebookBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
-        [self.shareToFacebookBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
-        [self.backGroundv addSubview:self.shareToFacebookBtn];
+        CGFloat shareBtnMargin = 24*scale;
+        CGFloat shareBtnWidth  = (self.backGroundv.frame.size.width-shareBtnMargin*2);
+        CGFloat shareBtnHeight = shareBtnWidth*(88/526.0);
+        self.shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.shareBtn.frame = CGRectMake(shareBtnMargin,CGRectGetMaxY(self.contentLabel.frame)+shareBtnMargin,shareBtnWidth,shareBtnHeight);
+        self.shareBtn.layer.masksToBounds = YES;
+        self.shareBtn.backgroundColor = [UIColor colorWithHexString:@"#41D395"];
+        self.shareBtn.layer.cornerRadius = self.shareBtn.frame.size.height/2;
+        [self.shareBtn setTitle:@"SHARE WITH FRIENDS" forState:UIControlStateNormal];
+        [self.shareBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+        [self.shareBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
+        [self.backGroundv addSubview:self.shareBtn];
         //
-        backGroundRect.size.height = CGRectGetMaxY(self.shareToFacebookBtn.frame)+shareToFacebookMargin;
+        backGroundRect.size.height = CGRectGetMaxY(self.shareBtn.frame)+shareBtnMargin;
         self.backGroundv.frame = backGroundRect;
         self.backGroundv.center = self.center;
         [self addSubview:self.backGroundv];
@@ -86,7 +91,7 @@
 -(void)hide{
     [UIView animateWithDuration:0.5 animations:^{
         self.cancelShareToFacebookBtn.alpha = 0;
-        self.shareToFacebookBtn.alpha = 0;
+        self.shareBtn.alpha = 0;
         self.tipLabel.alpha = 0;
         self.contentLabel.alpha = 0;
         self.logoImgv.alpha = 0;
@@ -94,9 +99,10 @@
     } completion:^(BOOL finished) {
         [self.logoImgv removeFromSuperview];
         [self.tipLabel removeFromSuperview];
-        [self.shareToFacebookBtn removeFromSuperview];
+        [self.shareBtn removeFromSuperview];
         [self.cancelShareToFacebookBtn removeFromSuperview];
         [self removeFromSuperview];
     }];
+    [_shareInfoList removeAllObjects];
 }
 @end

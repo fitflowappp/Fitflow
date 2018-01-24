@@ -12,5 +12,7 @@
 @property (nonatomic) CGFloat scale;
 -(void)setLeftNavigationItem;
 -(void)retryWhenNetworkError;
+-(void)setRightShareNavigationItem;
+-(void)shareWithContent:(NSArray*)content;
 @end
 

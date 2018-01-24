@@ -13,4 +13,6 @@
 + (UIImage*)imageWithColor:(UIColor*)color;
 - (UIImage*)boxblurImageWithBlur:(CGFloat)blur;
 - (UIImage*)subImgageInRect:(CGRect)rect;
+- (UIImage*)scaleImgInSize:(CGSize)size;
+- (UIImage*)roundedRadius:(NSInteger)radius;
 @end

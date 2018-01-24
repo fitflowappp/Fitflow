@@ -9,6 +9,7 @@
 #import "YGUserService.h"
 #import "YGNetworkService.h"
 #import "UIColor+Extension.h"
+#import "YGLoginController.h"
 #import "YGAboutUsController.h"
 #import "YGAccountLoginFooter.h"
 #import "YGAccountController.h"
@@ -16,7 +17,7 @@
 #import "YGAccountEntranceCell.h"
 #import "YGSchedulingController.h"
 #import "YGAchievementController.h"
-#import "YGFacebookLoginController.h"
+#import "YGLoginController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
@@ -46,12 +47,12 @@ static NSString *ACCOUNT_LOGIN_FOOTERID   = @"accountLoginFooterID";
 
 -(void)setLocalUserInfo{
     YGUser *localUser = [[YGUserService instance] localUser];
-    self.userNameLabel.text = localUser.name;
     if (localUser.profileData) {
         self.userProfileImgv.image = [UIImage imageWithData:localUser.profileData];
     }else{
         self.userProfileImgv.image = [UIImage imageNamed:@"user"];
     }
+    self.userNameLabel.text = localUser.name;
 }
 #pragma mark UI
 
@@ -61,7 +62,7 @@ static NSString *ACCOUNT_LOGIN_FOOTERID   = @"accountLoginFooterID";
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.contentInset = UIEdgeInsetsMake(295*self.scale,0,52*self.scale,0);
+    self.collectionView.contentInset = UIEdgeInsetsMake(295,0,55,0);
     self.collectionView.showsVerticalScrollIndicator = NO;
     [self.collectionView registerClass:[YGAccountEntranceCell class] forCellWithReuseIdentifier:ACCOUNT_ENTRANCE_CELLID];
     [self.collectionView registerClass:[YGAccountLoginFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:ACCOUNT_LOGIN_FOOTERID];
@@ -72,16 +73,16 @@ static NSString *ACCOUNT_LOGIN_FOOTERID   = @"accountLoginFooterID";
     /*头像*/
     self.userProfileImgv = [[UIImageView alloc] init];
     self.userProfileImgv.contentMode = UIViewContentModeScaleAspectFill;
-    self.userProfileImgv.frame = CGRectMake((self.collectionView.frame.size.width-128*self.scale)/2,-self.collectionView.contentInset.top+97*self.scale,128*self.scale,128*self.scale);
+    self.userProfileImgv.frame = CGRectMake((self.collectionView.frame.size.width-128)/2,-self.collectionView.contentInset.top+97,128,128);
     self.userProfileImgv.layer.masksToBounds = YES;
     self.userProfileImgv.layer.cornerRadius = self.userProfileImgv.frame.size.height/2;
     self.userProfileImgv.image = [UIImage imageNamed:@"user"];
     [self.collectionView addSubview:self.userProfileImgv];
     /*用户名称*/
     self.userNameLabel = [[UILabel alloc] init];
-    self.userNameLabel.frame = CGRectMake(0,CGRectGetMaxY(self.userProfileImgv.frame)+16*self.scale,self.collectionView.frame.size.width,22*self.scale);
+    self.userNameLabel.frame = CGRectMake(0,CGRectGetMaxY(self.userProfileImgv.frame),self.collectionView.frame.size.width,54);
     self.userNameLabel.textAlignment = NSTextAlignmentCenter;
-    self.userNameLabel.font = [UIFont fontWithName:@"Lato-Bold" size:18*self.scale];
+    self.userNameLabel.font = [UIFont fontWithName:@"Lato-Bold" size:18];
     self.userNameLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
     [self.collectionView addSubview:self.userNameLabel];
 }
@@ -89,7 +90,6 @@ static NSString *ACCOUNT_LOGIN_FOOTERID   = @"accountLoginFooterID";
 #pragma mark UICollectionView-Datasouce
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    
     return 3;
 }
 
@@ -105,93 +105,65 @@ static NSString *ACCOUNT_LOGIN_FOOTERID   = @"accountLoginFooterID";
     if ([header.loginBtn respondsToSelector:action]==NO) {
         [header.loginBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     }
+    YGUser *localUser = [[YGUserService instance] localUser];
+    [header setRegisterStatus:localUser.unRegistered];
     return header;
 }
 
-
 #pragma mark UICollectionView-Layout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(collectionView.frame.size.width-32*self.scale,64*self.scale);
+    return CGSizeMake(collectionView.frame.size.width-32,64*((collectionView.frame.size.width-32)/343.0));
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    return UIEdgeInsetsMake(0,16*self.scale,24*self.scale,16*self.scale);
+    return UIEdgeInsetsMake(0,16,24,16);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section{
-    YGUser *localUser = [[YGUserService instance] localUser];
-    if (localUser.unRegistered==NO&&localUser.isLogin==YES) {
-        return CGSizeZero;
-    }
-    return CGSizeMake(collectionView.frame.size.width,48*self.scale);
+    
+    return CGSizeMake(collectionView.frame.size.width,44*((collectionView.frame.size.width-32)/343.0));
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    /**/
-    YGUser *localUser = [[YGUserService instance] localUser];
-    if ((localUser.isLogin==NO||localUser.unRegistered==YES)) {
-        YGFacebookLoginController *controller = [[YGFacebookLoginController alloc] init];
+    if (indexPath.row==0) {
+        YGSchedulingController *controller = [[YGSchedulingController alloc] init];
         controller.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:controller animated:YES];
-    }
-    else{
-        if (indexPath.row==0) {
-            YGSchedulingController *controller = [[YGSchedulingController alloc] init];
-            controller.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:controller animated:YES];
-        }else if (indexPath.row==1){
-            YGAchievementController *controller = [[YGAchievementController alloc] init];
-            controller.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:controller animated:YES];
-        }else if (indexPath.row==2){
-            YGAboutUsController *controller = [[YGAboutUsController alloc] init];
-            controller.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:controller animated:YES];
-        }
+    }else if (indexPath.row==1){
+        YGAchievementController *controller = [[YGAchievementController alloc] init];
+        controller.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else if (indexPath.row==2){
+        YGAboutUsController *controller = [[YGAboutUsController alloc] init];
+        controller.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
 -(void)loginWithFaceBook{
-    __weak typeof(self) ws = self;
-    [YGHUD loading:self.view];
-    FBSDKLoginManager *mannger = [[FBSDKLoginManager alloc] init];
-    [mannger logOut];
-    [mannger logInWithReadPermissions:@[@"email",
-                                        @"user_friends",
-                                        @"public_profile"]
-                   fromViewController:self handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-                       if (!error) {
-                           if (result.isCancelled==YES) {
-                               [YGHUD hide:ws.view];
-                           }else{
-                               
-                               [[YGUserNetworkService instance] loginWithFacebookToken:result.token.tokenString sucessBlock:^(NSDictionary *result) {
-                                   [YGHUD hide:ws.view];
-                                   int code = [[result objectForKey:@"code"] intValue];
-                                   if (code==1) {
-                                       NSLog(@"msg: facebook logins sucess");
-                                       [ws setLocalUserInfo];
-                                       [ws.collectionView reloadData];
-                                   }else{
-                                       [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
-                                    }
-                               } failureBlcok:^(NSError *error) {
-                                   [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
-                               }];
-                           }
-                           
-                       }else{
-                           [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
-                       }
-                   }];
-    
-    /**/
-    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/fblogin/wish",cRequestDomain];
-    [[YGNetworkService instance] networkWithUrl:requestUrl requsetType:POST successBlock:^(id data) {
-        NSLog(@"post yoga facebook login sucess");
-    } errorBlock:^(NSError *error) {
-        
-    }];
+    YGUser *localUser = [[YGUserService instance] localUser];
+    if (localUser.unRegistered==YES) {
+        YGLoginController *controller = [[YGLoginController alloc] init];
+        controller.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else{
+        [YGHUD loading:self.view];
+        __weak typeof(self) ws = self;
+        [[YGUserNetworkService instance] anonymousLoginSucessBlock:^(NSDictionary *result) {
+            [YGHUD hide:ws.view];
+            int code = [[result objectForKey:@"code"] intValue];
+            if (code==1) {
+                FBSDKLoginManager *mannger = [[FBSDKLoginManager alloc] init];
+                [mannger logOut];
+                [self setLocalUserInfo];
+                [self.collectionView reloadData];
+            }else{
+                [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
+            }
+        } failureBlcok:^(NSError *error) {
+            [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
+        }];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

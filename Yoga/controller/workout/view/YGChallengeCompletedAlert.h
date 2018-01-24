@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YGBaseAlert.h"
 @interface YGChallengeCompletedAlert : YGBaseAlert
-@property (nonatomic,strong) UIButton *shareToFacebookBtn;
+@property (nonatomic,strong) UIButton *shareBtn;
 @property (nonatomic,strong) UIButton *startNewChallengeBtn;
 -(id)initWithFrame:(CGRect)frame challengeTittle:(NSString*)tittle;
 @end

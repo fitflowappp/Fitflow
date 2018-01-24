@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface YGShareInfoAlert : YGBaseAlert
-@property (nonatomic,strong) UIButton *shareToFacebookBtn;
+@property (nonatomic,strong) UIButton *shareBtn;
 @property (nonatomic,strong) UIButton *cancelShareToFacebookBtn;
-
--(id)initWithFrame:(CGRect)frame shareInfo:(NSDictionary*)shareInfo;
-
+-(id)initWithFrame:(CGRect)frame shareInfo:(NSMutableArray*)shareInfoList;
 @end

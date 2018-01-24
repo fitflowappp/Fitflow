@@ -11,5 +11,10 @@
 @interface YGSessionService : NSObject
 +(YGSessionService*)instance;
 
+-(void)fetchSinglesListSucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
+
+-(void)fetchUserSinglesListSucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
+
 -(void)fetchSessionWithChallengeID:(NSString*)challengeID sessionID:(NSString*)sessionID sucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
+
 @end

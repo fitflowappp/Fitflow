@@ -21,7 +21,7 @@
 -(id)initWithFrame:(CGRect)frame challengeTittle:(NSString*)tittle{
     self = [super initWithFrame:frame];
     if (self) {
-        CGFloat scale = SCALE;
+        CGFloat scale = 1;
         self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
         //
         CGRect backGroundRect = CGRectMake(32*scale,0,self.frame.size.width-64*scale,700);
@@ -54,21 +54,21 @@
         self.contentLabel.frame = contentRect;
         [self.backGroundv addSubview:self.contentLabel];
         //
-        CGFloat shareToFacebookMargin = 24*scale;
-        CGFloat shareToFacebookWidth  = (self.backGroundv.frame.size.width-shareToFacebookMargin*2);
-        CGFloat shareToFacebookHeight = shareToFacebookWidth*(88/526.0);
-        self.shareToFacebookBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.shareToFacebookBtn.frame = CGRectMake(shareToFacebookMargin,CGRectGetMaxY(self.contentLabel.frame)+shareToFacebookMargin,shareToFacebookWidth,shareToFacebookHeight);
-        self.shareToFacebookBtn.layer.masksToBounds = YES;
-        self.shareToFacebookBtn.backgroundColor = [UIColor colorWithHexString:@"#4A90E2"];
-        self.shareToFacebookBtn.layer.cornerRadius = self.shareToFacebookBtn.frame.size.height/2;
-        [self.shareToFacebookBtn setTitle:@"SHARE ON FACEBOOK" forState:UIControlStateNormal];
-        [self.shareToFacebookBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
-        [self.shareToFacebookBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
-        [self.backGroundv addSubview:self.shareToFacebookBtn];
+        CGFloat shareBtnMargin = 24*scale;
+        CGFloat shareBtnWidth  = (self.backGroundv.frame.size.width-shareBtnMargin*2);
+        CGFloat shareBtnHeight = shareBtnWidth*(88/526.0);
+        self.shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.shareBtn.frame = CGRectMake(shareBtnMargin,CGRectGetMaxY(self.contentLabel.frame)+shareBtnMargin,shareBtnWidth,shareBtnHeight);
+        self.shareBtn.layer.masksToBounds = YES;
+        self.shareBtn.backgroundColor = [UIColor colorWithHexString:@"#41D395"];
+        self.shareBtn.layer.cornerRadius = self.shareBtn.frame.size.height/2;
+        [self.shareBtn setTitle:@"SHARE THIS CHALLENGE" forState:UIControlStateNormal];
+        [self.shareBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+        [self.shareBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
+        [self.backGroundv addSubview:self.shareBtn];
         //
         self.startNewChallengeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.startNewChallengeBtn.frame = CGRectMake(self.shareToFacebookBtn.frame.origin.x,CGRectGetMaxY(self.shareToFacebookBtn.frame)+16*scale,self.backGroundv.frame.size.width-self.shareToFacebookBtn.frame.origin.x*2,self.shareToFacebookBtn.frame.size.height);
+        self.startNewChallengeBtn.frame = CGRectMake(self.shareBtn.frame.origin.x,CGRectGetMaxY(self.shareBtn.frame)+16*scale,self.backGroundv.frame.size.width-self.shareBtn.frame.origin.x*2,self.shareBtn.frame.size.height);
         self.startNewChallengeBtn.layer.masksToBounds = YES;
         self.startNewChallengeBtn.layer.cornerRadius = self.startNewChallengeBtn.frame.size.height/2;
         self.startNewChallengeBtn.layer.borderWidth = 1.0f;
@@ -78,7 +78,7 @@
         [self.startNewChallengeBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
         [self.backGroundv addSubview:self.startNewChallengeBtn];
         
-        backGroundRect.size.height = CGRectGetMaxY(self.startNewChallengeBtn.frame)+shareToFacebookMargin;
+        backGroundRect.size.height = CGRectGetMaxY(self.startNewChallengeBtn.frame)+shareBtnMargin;
         self.backGroundv.frame = backGroundRect;
         self.backGroundv.center = self.center;
         [self addSubview:self.backGroundv];
@@ -99,7 +99,7 @@
 -(void)hide{
     [UIView animateWithDuration:0.5 animations:^{
         self.cancelBtn.alpha = 0;
-        self.shareToFacebookBtn.alpha = 0;
+        self.shareBtn.alpha = 0;
         self.startNewChallengeBtn.alpha = 0;
         self.tipLabel.alpha = 0;
         self.contentLabel.alpha = 0;
@@ -108,120 +108,10 @@
     } completion:^(BOOL finished) {
         [self.logoImgv removeFromSuperview];
         [self.tipLabel removeFromSuperview];
-        [self.shareToFacebookBtn removeFromSuperview];
+        [self.shareBtn removeFromSuperview];
         [self.startNewChallengeBtn removeFromSuperview];
         [self.cancelBtn removeFromSuperview];
         [self removeFromSuperview];
     }];
 }
-
-
-
-
-
-
-
-//-(id)initWithAlertMsg:(NSString*)msg{
-//    self = [super initWithFrame:[self mainWindow].bounds];
-//    if (self) {
-//        [self setChallengeAlertWithMsg:msg];
-//        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-//    }
-//    return self;
-//
-//}
-//
-//-(void)setChallengeAlertWithMsg:(NSString*)msg{
-//    [self addBackGroundv];
-//    [self addChangeIconImgv];
-//    [self addChangeTipLabel];
-//    [self addMessageLabel];
-//    [self addShareToFacebookBtn];
-//    [self addStartNewChallengeBtn];
-//    self.backGroundv.frame = CGRectMake(0,0,self.backGroundv.frame.size.width,CGRectGetMaxY(self.startNewChallengeBtn.frame)+24);
-//    self.backGroundv.center = self.center;
-//    [self addCancelBtn];
-//    self.messageLabel.text = msg;
-//}
-//
-//-(void)addBackGroundv{
-//    self.backGroundv = [[UIView alloc] initWithFrame:CGRectMake(32,0,self.frame.size.width-32*2,self.frame.size.height)];
-//    self.backGroundv.backgroundColor = [UIColor whiteColor];
-//    self.backGroundv.layer.masksToBounds = YES;
-//    self.backGroundv.layer.cornerRadius = 10;
-//    [self addSubview:self.backGroundv];
-//}
-//
-//-(void)addChangeIconImgv{
-//    self.changeIconImgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Challenge-c"]];
-//    self.changeIconImgv.center = CGPointMake(self.backGroundv.frame.size.width/2,40+self.changeIconImgv.frame.size.height/2);
-//    [self.backGroundv addSubview:self.changeIconImgv];
-//}
-//
-//-(void)addChangeTipLabel{
-//    self.changeTipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.changeIconImgv.frame)+24,self.backGroundv.frame.size.width,30)];
-//    self.changeTipLabel.text = @"CONGRATULATIONS, YOU HAVE \nCOMPLETED:";
-//    self.changeTipLabel.numberOfLines = 0;
-//    self.changeTipLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
-//    self.changeTipLabel.textAlignment = NSTextAlignmentCenter;
-//    self.changeTipLabel.font = [UIFont fontWithName:@"Lato-Bold" size:12];
-//    [self.backGroundv addSubview:self.changeTipLabel];
-//}
-//
-//-(void)addCancelBtn{
-//    self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.cancelBtn setImage:[UIImage imageNamed:@"Cancel-green"] forState:UIControlStateNormal];
-//    self.cancelBtn.bounds = CGRectMake(0,0,32,32);
-//    self.cancelBtn.backgroundColor = [UIColor whiteColor];
-//    self.cancelBtn.layer.masksToBounds = YES;
-//    self.cancelBtn.layer.cornerRadius = self.cancelBtn.frame.size.width/2;
-//    [self.cancelBtn addTarget:self action:@selector(didSelectCancelBtn) forControlEvents:UIControlEventTouchUpInside];
-//    self.cancelBtn.center = CGPointMake(CGRectGetMaxX(self.backGroundv.frame),self.backGroundv.frame.origin.y);
-//    [self addSubview:self.cancelBtn];
-//}
-//
-//-(void)addMessageLabel{
-//    CGFloat messageMarginY = CGRectGetMaxY(self.changeTipLabel.frame)+8;
-//    self.messageLabel = [[UILabel alloc] init];
-//    self.messageLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16];
-//    self.messageLabel.textColor = [UIColor colorWithHexString:@"#000000"];
-//    self.messageLabel.textAlignment = NSTextAlignmentCenter;
-//    self.messageLabel.frame = CGRectMake(24,messageMarginY,self.backGroundv.frame.size.width-48,19);
-//    [self.backGroundv addSubview:self.messageLabel];
-//}
-//
-//-(void)addShareToFacebookBtn{
-//    self.shareToFacebookBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    self.shareToFacebookBtn.frame = CGRectMake(24,CGRectGetMaxY(self.messageLabel.frame)+24,self.backGroundv.frame.size.width-48,48);
-//    self.shareToFacebookBtn.layer.masksToBounds = YES;
-//    self.shareToFacebookBtn.layer.cornerRadius = self.shareToFacebookBtn.frame.size.height/2;
-//    self.shareToFacebookBtn.backgroundColor = [UIColor colorWithHexString:@"#4A90E2"];
-//    [self.shareToFacebookBtn setTitle:@"SHARE ON FACEBOOK" forState:UIControlStateNormal];
-//    [self.shareToFacebookBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [self.shareToFacebookBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14]];
-//    self.shareToFacebookBtn.hidden = YES;
-//    [self.backGroundv addSubview:self.shareToFacebookBtn];
-//}
-//
-//-(void)addStartNewChallengeBtn{
-//    self.startNewChallengeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    self.startNewChallengeBtn.frame = CGRectMake(24,CGRectGetMaxY(self.messageLabel.frame)+24,self.backGroundv.frame.size.width-48,48);
-//    self.startNewChallengeBtn.layer.masksToBounds = YES;
-//    self.startNewChallengeBtn.layer.cornerRadius = self.startNewChallengeBtn.frame.size.height/2;
-//    self.startNewChallengeBtn.layer.borderWidth = 1.0f;
-//    self.startNewChallengeBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
-//    [self.startNewChallengeBtn setTitle:@"START NEW CHALLENGE" forState:UIControlStateNormal];
-//    [self.startNewChallengeBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
-//    [self.startNewChallengeBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:16]];
-//    [self.backGroundv addSubview:self.startNewChallengeBtn];
-//}
-//
-//-(UIWindow*)mainWindow{
-//    return [UIApplication sharedApplication].delegate.window;
-//}
-//
-//-(void)didSelectCancelBtn{
-//    [self removeFromSuperview];
-//}
-
 @end

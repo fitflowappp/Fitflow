@@ -40,6 +40,9 @@
 + (Boolean) isEmpty:(id)string;
 + (Boolean) notNull:(id)object;
 + (Boolean) isNull:(id)object;
++(BOOL)validEmail:(NSString *)string;
+
++ (NSDictionary *)parseURLParams:(NSString *)query;
 
 +(CGSize)boundString:(NSMutableAttributedString*)string inSize:(CGSize)size;
 @end

@@ -8,7 +8,7 @@
 #import "YGStringUtil.h"
 #import "YGUserPersistence.h"
 #import "YGAnonymousLoginCommand.h"
-
+#define admin 0
 @implementation YGAnonymousLoginCommand
 -(void)execute{
     NSString *requestUrl = nil;

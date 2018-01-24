@@ -37,6 +37,8 @@
     securityPolicy.pinnedCertificates = [NSSet setWithObject:certData];
     mannger.securityPolicy=securityPolicy;
     mannger.requestSerializer=[AFJSONRequestSerializer serializer];
+    mannger.responseSerializer = [AFJSONResponseSerializer serializer];
+    ((AFJSONResponseSerializer*)(mannger.responseSerializer)).removesKeysWithNullValues = YES;
     [mannger.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",
                                          [mannger.requestSerializer.HTTPRequestHeaders objectForKey:@"User-Agent" ], [YGDeviceUtil version]] forHTTPHeaderField:@"User-Agent"];
 }

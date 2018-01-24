@@ -14,19 +14,34 @@
     self = [super init];
     if (self) {
         self.name = @"Unregistered User";
+        self.email = @"";
         self.sessionId = @"";
-        self.profileUrl = @"";
+        //self.profileUrl = @"";
     }
     return self;
 }
 
 -(void)setName:(NSString *)name{
     if ([YGStringUtil notNull:name]) {
-        if ([name isEqualToString:_name]==NO) {
+        //if ([name isEqualToString:_name]==NO) {
             _name = name;
-        }
+       // }
     }else{
-        self.name = @"Unregistered User";
+        if ([YGStringUtil notEmpty:self.email]) {
+            _name = self.email;
+        }else{
+            _name = @"Unregistered User";
+        }
+    }
+}
+
+-(void)setEmail:(NSString *)email{
+    if ([YGStringUtil notNull:email]) {
+        //if ([email isEqualToString:_email]==NO) {
+            _email = email;
+        //}
+    }else{
+        _email = @"";
     }
 }
 
@@ -34,14 +49,6 @@
     if ([YGStringUtil notNull:sessionId]) {
         if ([sessionId isEqualToString:_sessionId]==NO) {
             _sessionId = sessionId;
-        }
-    }
-}
-
--(void)setProfileUrl:(NSString *)profileUrl{
-    if ([YGStringUtil notNull:profileUrl]) {
-        if ([profileUrl isEqualToString:_profileUrl]==NO) {
-            _profileUrl = profileUrl;
         }
     }
 }

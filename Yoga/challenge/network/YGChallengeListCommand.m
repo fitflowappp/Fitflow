@@ -26,9 +26,11 @@
             NSString *currentChallengeID = [content objectForKey:@"currentChallengeId"];
             for(NSDictionary *challengeDictionary in challenges) {
                 YGChallenge *challenge = [YGChallenge objectFrom:challengeDictionary];
-                [challengeList addObject:challenge];
                 if ([challenge.ID isEqualToString:currentChallengeID]) {
                     challenge.isMineChallenge = @(YES);
+                    [challengeList insertObject:challenge atIndex:0];
+                }else{
+                    [challengeList addObject:challenge];
                 }
             }
         }

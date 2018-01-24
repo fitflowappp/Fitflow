@@ -47,21 +47,19 @@
 
 
 -(void)addTitleLabel{
-    CGFloat scale = SCALE;
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.frame = CGRectMake(0,0,self.subtitleLabel.frame.origin.x-10,self.frame.size.height-1);
-    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16*scale];
+    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16];
     self.titleLabel.textColor = [UIColor colorWithHexString:@"#000000"];
     [self addSubview:self.titleLabel];
 }
 
 -(void)addSubtitleLabel{
-    CGFloat scale = SCALE;
     self.subtitleLabel = [[UILabel alloc] init];
-    self.subtitleLabel.frame = CGRectMake(self.arrowImgv.frame.origin.x-16*scale-70*scale,0,70*scale,self.frame.size.height-1);
+    self.subtitleLabel.frame = CGRectMake(self.arrowImgv.frame.origin.x-16-70,0,70,self.frame.size.height-1);
     self.subtitleLabel.textAlignment = NSTextAlignmentRight;
     self.subtitleLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
-    self.subtitleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:12*scale];
+    self.subtitleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:12];
     [self addSubview:self.subtitleLabel];
 }
 

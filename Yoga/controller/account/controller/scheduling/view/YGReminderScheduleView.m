@@ -42,7 +42,7 @@
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.backgroundColor = [UIColor colorWithHexString:@"#ECECEC"];
     self.titleLabel.textColor = [UIColor colorWithHexString:@"#000000"];
-    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16*scale];
+    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16];
     [self addSubview:self.titleLabel];
 }
 
@@ -52,7 +52,7 @@
     self.cancelBtn.frame = CGRectMake(0,self.titleLabel.frame.origin.y,45*scale+32*scale,self.titleLabel.frame.size.height);
     [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
     [self.cancelBtn setTitleColor:[UIColor colorWithHexString:@"#41D395"] forState:UIControlStateNormal];
-    [self.cancelBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Semibold" size:14*scale]];
+    [self.cancelBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Semibold" size:14]];
     [self.cancelBtn addTarget:self action:@selector(hide) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.cancelBtn];
 }
@@ -62,7 +62,7 @@
     self.sureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.sureBtn.frame = CGRectMake(self.frame.size.width-45*scale-32*scale,self.titleLabel.frame.origin.y,45*scale+32*scale,self.titleLabel.frame.size.height);
     [self.sureBtn setTitle:@"Accept" forState:UIControlStateNormal];
-    [self.sureBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Semibold" size:14*scale]];
+    [self.sureBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Semibold" size:14]];
     [self.sureBtn setTitleColor:[UIColor colorWithHexString:@"#41D395"] forState:UIControlStateNormal];
     [self addSubview:self.sureBtn];
 }

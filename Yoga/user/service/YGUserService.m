@@ -33,12 +33,12 @@
 }
 
 -(YGUser*)localUser{
-    NSData *userData = [[NSUserDefaults standardUserDefaults] objectForKey:@"KEY_USER_DATA"];
+    NSData *userData = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_LOCAL_DATA];
     if ([YGStringUtil notNull:userData]) {
         NSDictionary *userInfo = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
         _localUser.name = [userInfo objectForKey:@"name"];
+        _localUser.email= [userInfo objectForKey:@"email"];
         _localUser.sessionId= [userInfo objectForKey:@"sessionId"];
-        _localUser.profileUrl = [userInfo objectForKey:@"headerImgUrl"];
         _localUser.unRegistered = [[userInfo objectForKey:@"unRegistered"] boolValue];
         NSString *headerImgContent = [userInfo objectForKey:@"headerImgContent"];
         if ([YGStringUtil notNull:headerImgContent]) {
@@ -51,5 +51,4 @@
     }
     return _localUser;
 }
-
 @end

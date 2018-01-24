@@ -6,10 +6,13 @@
 //  Copyright © 2017年 lyj. All rights reserved.
 //
 #import "YGSheduleCommand.h"
+#import "YGEmailLoginCommand.h"
+#import "YGEmailSignupCommand.h"
 #import "YGAchievementCommand.h"
 #import "YGUserNetworkService.h"
 #import "YGFetchSheduleCommand.h"
 #import "YGFacebookLoginCommand.h"
+#import "YGResetPasswordCommand.h"
 #import "YGAnonymousLoginCommand.h"
 @implementation YGUserNetworkService
 + (YGUserNetworkService *)instance{
@@ -57,5 +60,35 @@
     command.successBlock = sucessBlock;
     [command execute];
 }
+
+-(void)loginWithEmail:(NSString*)email password:(NSString*)password sucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock{
+    YGEmailLoginCommand *command = [[YGEmailLoginCommand alloc] init];
+    command.email = email;
+    command.password = password;
+    command.successBlock = sucessBlock;
+    command.errorBlock = errorBlock;
+    [command execute];
+}
+
+-(void)signupWithEmail:(NSString*)email password:(NSString*)password sucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock{
+    YGEmailSignupCommand *command = [[YGEmailSignupCommand alloc] init];
+    command.email = email;
+    command.password = password;
+    command.successBlock = sucessBlock;
+    command.errorBlock = errorBlock;
+    [command execute];
+}
+
+-(void)resetPassword:(NSString*)password key:(NSString*)key sucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock{
+    YGResetPasswordCommand *command = [[YGResetPasswordCommand alloc] init];
+    command.key = key;
+    command.password = password;
+    command.successBlock = sucessBlock;
+    command.errorBlock = errorBlock;
+    [command execute];
+    
+}
+
+
 
 @end

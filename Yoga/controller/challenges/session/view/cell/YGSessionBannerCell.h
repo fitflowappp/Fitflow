@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "YGSession.h"
+@protocol YGSessionBannerCellDelegate<NSObject>
+-(void)handleFavorate:(BOOL)favorate;
+@end
 @interface YGSessionBannerCell : UICollectionViewCell
+//@property (nonatomic) BOOL shouldLight;
+@property (nonatomic) BOOL shouldFavorate;
 @property (nonatomic,strong) YGSession *session;
-@property (nonatomic) BOOL shouldLight;
+@property (nonatomic,weak) id<YGSessionBannerCellDelegate> delegate;
 @end

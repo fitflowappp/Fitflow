@@ -9,17 +9,16 @@
 #import "YGTabBarController.h"
 #import "YGWorkoutController.h"
 #import "YGAccountController.h"
+#import "YGDiscoverController.h"
 #import "YGChallengeListController.h"
 #import "YGBaseNavigationController.h"
 @interface YGTabBarController ()
-
 @end
 
 @implementation YGTabBarController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setTabBar];
+    //[self setTabBar];
     [self setControllers];
     [self.tabBar setTranslucent:NO];
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -28,43 +27,38 @@
 
 -(void)setTabBar{
     /*设置字体颜色*/
-    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#414142"], NSForegroundColorAttributeName,nil]  forState:UIControlStateNormal];
-    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#000000"], NSForegroundColorAttributeName,nil]  forState:UIControlStateSelected];
+    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#A4A3A3"], NSForegroundColorAttributeName,[UIFont fontWithName:@"Lato-Regular" size:10],NSFontAttributeName,nil]  forState:UIControlStateNormal];
+    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithHexString:@"#0EC07F"], NSForegroundColorAttributeName,[UIFont fontWithName:@"Lato-Regular" size:10],NSFontAttributeName,nil]  forState:UIControlStateSelected];
 }
 
 - (void)viewWillLayoutSubviews{
-    CGRect tabBarFrame = self.tabBar.frame;
-    tabBarFrame.size.height = TAB_BAR_HEIGHT;
-    tabBarFrame.origin.y = self.view.frame.size.height - TAB_BAR_HEIGHT;
-    self.tabBar.frame = tabBarFrame;
-    self.tabBar.backgroundColor = [UIColor whiteColor];
+    for (UITabBarItem *tabBar in self.tabBar.items) {
+        tabBar.imageInsets = UIEdgeInsetsMake(6,0,-6,0);
+    }
 }
 
 -(void)setControllers{
     /*workout*/
     YGWorkoutController *workoutController = [[YGWorkoutController alloc] init];
     YGBaseNavigationController *workoutNavController = [[YGBaseNavigationController alloc] initWithRootViewController:workoutController];
-    workoutNavController.tabBarItem.image = [[UIImage imageNamed:@"Bar-fire"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    workoutNavController.tabBarItem.selectedImage=[[UIImage imageNamed:@"Bar-fire-c"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    workoutNavController.tabBarItem.title=@"Workout";
+    workoutNavController.tabBarItem.image = [[UIImage imageNamed:@"Bar-home"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    workoutNavController.tabBarItem.selectedImage=[[UIImage imageNamed:@"Bar-home-c"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    workoutController.tabBarItem.imageInsets = UIEdgeInsetsMake(6,0,-6,0);
     /*chanllenge*/
-    YGChallengeListController *chanlengeController = [[YGChallengeListController alloc] init];
-    YGBaseNavigationController *chanlengeNavController = [[YGBaseNavigationController alloc] initWithRootViewController:chanlengeController];
-    chanlengeController.tabBarItem.image = [[UIImage imageNamed:@"Bar-star"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    chanlengeController.tabBarItem.selectedImage=[[UIImage imageNamed:@"Bar-star-c"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    chanlengeController.tabBarItem.title=@"Challenges";
+    YGDiscoverController *discoverController = [[YGDiscoverController alloc] init];
+    YGBaseNavigationController *discoverNavController = [[YGBaseNavigationController alloc] initWithRootViewController:discoverController];
+    discoverNavController.tabBarItem.image = [[UIImage imageNamed:@"Bar-discover"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    discoverNavController.tabBarItem.selectedImage=[[UIImage imageNamed:@"Bar-discover-c"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     /*account*/
     YGAccountController *accountController = [[YGAccountController alloc] init];
     YGBaseNavigationController *accountNavController = [[YGBaseNavigationController alloc] initWithRootViewController:accountController];
     accountNavController.tabBarItem.image = [[UIImage imageNamed:@"Bar-user"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     accountNavController.tabBarItem.selectedImage=[[UIImage imageNamed:@"Bar-user-c"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    accountNavController.tabBarItem.title=@"Account";
-    [self setViewControllers:@[workoutNavController,chanlengeNavController,accountNavController]];
+    [self setViewControllers:@[workoutNavController,discoverNavController,accountNavController]];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    
 }
 
 @end

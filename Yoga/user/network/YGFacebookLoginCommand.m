@@ -5,7 +5,6 @@
 //  Created by lyj on 2017/10/12.
 //  Copyright © 2017年 lyj. All rights reserved.
 //
-#import "YGAppDelegate.h"
 #import "YGStringUtil.h"
 #import "YGUserPersistence.h"
 #import "YGFacebookLoginCommand.h"
@@ -22,8 +21,6 @@
     if (code==1) {
         NSDictionary *content = [data objectForKey:@"content"];
         [[YGUserPersistence instance] updateLocalUser:content];
-        YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
-        [delegate initOpenReminderAlert];
     }else{
         NSString *msg = [result objectForKey:@"msg"];
         NSLog(@"msg: facebool login error\n %@",msg);

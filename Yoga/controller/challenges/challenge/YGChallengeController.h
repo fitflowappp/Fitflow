@@ -13,5 +13,5 @@
 @property (nonatomic) BOOL shouldLigth;
 @property (nonatomic) BOOL isMineChallenge;
 @property (nonatomic,strong) NSString *challengeID;
-@property (nonatomic,strong) YGChallenge *currentChallenge;
+@property (nonatomic,strong) YGChallenge *userCurrentChallenge;
 @end

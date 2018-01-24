@@ -10,7 +10,6 @@
 #import "YGStringUtil.h"
 @implementation YGRoutine
 +(YGRoutine*)objectFrom:(NSDictionary*)dictionary{
-    
     YGRoutine *routine = [[YGRoutine alloc] init];
     if ([YGStringUtil notNull:dictionary]) {
         routine.ID = [dictionary objectForKey:@"id"];
@@ -22,8 +21,14 @@
         NSDictionary *videoInfo = [dictionary objectForKey:@"video"];
         if ([YGStringUtil notNull:videoInfo]) {
             routine.vedioID = [videoInfo objectForKey:@"id"];
-            routine.videoUrl = [NSString stringWithFormat:@"%@%@",cHttpRequestDomain,[videoInfo objectForKey:@"contentUri"]];
+            NSString *vedioUrl = [videoInfo objectForKey:@"contentUri"];
+            if ([vedioUrl hasPrefix:@"http"]) {
+                routine.videoUrl = vedioUrl;
+            }else{
+                routine.videoUrl = [NSString stringWithFormat:@"%@%@",cHttpRequestDomain,vedioUrl];
+            }
         }
+        routine.coverImg = [YGImage objectFrom:[dictionary objectForKey:@"coverImg"]];
     }
     return routine;
 }

@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <GTSDK/GeTuiSdk.h>
-#import "YGOpenReminderAlert.h"
 #import <UserNotifications/UserNotifications.h>
 @interface YGAppDelegate : UIResponder <UIApplicationDelegate,GeTuiSdkDelegate,UNUserNotificationCenterDelegate>
 
@@ -16,13 +15,13 @@
 
 @property (assign , nonatomic) BOOL forceLandscape;
 
+@property (nonatomic,assign) BOOL fitflowUpdated;
+
 -(void)backToWorkout;
 
 -(void)initTabBarController;
 
 -(void)registerUserNotification;
-
--(void)initOpenReminderAlert;
 
 @end
 

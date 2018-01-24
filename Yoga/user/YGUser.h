@@ -12,7 +12,7 @@
 @property (nonatomic) BOOL   isLogin;
 @property (nonatomic) BOOL   unRegistered;
 @property (nonatomic,strong) NSString *name;
+@property (nonatomic,strong) NSString *email;
 @property (nonatomic,strong) NSString *sessionId;
 @property (nonatomic,strong) NSData   *profileData;
-@property (nonatomic,strong) NSString *profileUrl;
 @end

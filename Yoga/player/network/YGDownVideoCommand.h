@@ -9,7 +9,7 @@
 #import "YGNetworkBaseCommand.h"
 
 @interface YGDownVideoCommand : YGNetworkBaseCommand
-@property (nonatomic,strong) NSString *requestUrl;
+@property (nonatomic,copy) NSString *requestUrl;
 @property (nonatomic,strong) NSString *filePath;
 -(void)downVideoWithRequestUrl:(NSString *)url filePath:(NSString*)filePath;
 @end

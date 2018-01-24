@@ -10,5 +10,5 @@
 #import "YGChallenge.h"
 @interface YGChallengeBannerCell : UICollectionViewCell
 @property (nonatomic,strong) YGChallenge *challenge;
-@property (nonatomic) BOOL shouldLight;
+//@property (nonatomic) BOOL shouldLight;
 @end

@@ -141,24 +141,24 @@ static NSString *SESSION_UNLOCKED_FOOTERID  = @"sessionUnlockedFooterID";
     if (indexPath.section==0) {
         YGSessionBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SESSION_BANNER_CELLID forIndexPath:indexPath];
         cell.session = defaultSession;
-        cell.shouldLight = YES;
+        //cell.shouldLight = YES;
         return cell;
     }
     YGRoutineCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ROUTINE_CELLID forIndexPath:indexPath];
     cell.routine = defaultSession.displayRoutineList[indexPath.row];
-    cell.routineIndex = indexPath.row+1;
-    if (indexPath.row==0) {
-        if ([self collectionView:self.collectionView numberOfItemsInSection:1]==1) {
-            cell.routineIndexType = ROUTINE_INDEX_ONLY_ONE;
-        }else{
-            cell.routineIndexType = ROUTINE_INDEX_TOP;
-        }
-    }else if(indexPath.row==[self collectionView:self.collectionView numberOfItemsInSection:1]-1){
-        cell.routineIndexType = ROUTINE_INDEX_BOTTOM;
-        
-    }else{
-        cell.routineIndexType = ROUTINE_INDEX_CENTER;
-    }
+//    cell.routineIndex = indexPath.row+1;
+//    if (indexPath.row==0) {
+//        if ([self collectionView:self.collectionView numberOfItemsInSection:1]==1) {
+//            cell.routineIndexType = ROUTINE_INDEX_ONLY_ONE;
+//        }else{
+//            cell.routineIndexType = ROUTINE_INDEX_TOP;
+//        }
+//    }else if(indexPath.row==[self collectionView:self.collectionView numberOfItemsInSection:1]-1){
+//        cell.routineIndexType = ROUTINE_INDEX_BOTTOM;
+//        
+//    }else{
+//        cell.routineIndexType = ROUTINE_INDEX_CENTER;
+//    }
     return cell;
 }
 
@@ -250,8 +250,8 @@ static NSString *SESSION_UNLOCKED_FOOTERID  = @"sessionUnlockedFooterID";
     if (defaultSession.routineList.count) {
         YGPlayController *controller = [[YGPlayController alloc] init];
         controller.session =defaultSession;
-        controller.challenge = self.currentChallenge;
-        controller.fromDefaultWorkout = YES;
+        controller.challengeID = self.currentChallenge.ID;
+        //controller.fromDefaultWorkout = YES;
         [self.navigationController pushViewController:controller animated:YES];
     }
 }

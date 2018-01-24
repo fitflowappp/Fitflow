@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "YGImage.h"
 @interface YGRoutine : NSObject
 @property (nonatomic,strong) NSString *ID;
 @property (nonatomic,strong) NSString *vedioID;
@@ -18,5 +18,6 @@
 @property (nonatomic,strong) NSNumber *duration;
 @property (nonatomic,strong) NSNumber *seconds;
 @property (nonatomic,strong) NSString *videoUrl;
+@property (nonatomic,strong) YGImage  *coverImg;
 +(YGRoutine*)objectFrom:(NSDictionary*)dictionary;
 @end

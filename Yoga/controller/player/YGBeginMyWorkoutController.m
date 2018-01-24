@@ -6,13 +6,12 @@
 //  Copyright © 2017年 lyj. All rights reserved.
 //
 #import "YGHUD.h"
-#import "YGAppDelegate.h"
 #import "YGUserService.h"
+#import "YGLoginController.h"
+#import "YGSignUpController.h"
 #import "YGUserNetworkService.h"
 #import "YGBeginMyWorkoutPlayer.h"
 #import "YGBeginMyWorkoutController.h"
-#import "YGDefaultSessionController.h"
-#import "YGFacebookLoginController.h"
 @interface YGBeginMyWorkoutController ()<YGBeginMyWorkoutPlayerDelegate>
 @property (nonatomic,strong) YGBeginMyWorkoutPlayer *beginMyWorkoutPlayer;
 @end
@@ -28,6 +27,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 -(void)anonymousLogin{
@@ -42,18 +42,14 @@
 }
 
 -(void)addPlayer{
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"player" ofType:@"mp4"];
-//    self.beginMyWorkoutPlayer = [[YGBeginMyWorkoutPlayer alloc] initWithUrl:[NSURL fileURLWithPath:path]];
-    //NSString *path = [[NSBundle mainBundle] pathForResource:@"player" ofType:@"mp4"];
     self.beginMyWorkoutPlayer = [[YGBeginMyWorkoutPlayer alloc] init];
     self.beginMyWorkoutPlayer.delegate = self;
     [self.view addSubview:self.beginMyWorkoutPlayer];
-    //[self.beginMyWorkoutPlayer play];
 }
 
 -(void)login{
-    YGFacebookLoginController *controller = [[YGFacebookLoginController alloc] init];
-    controller.fromBeginMyWorkout = YES;
+    YGLoginController *controller = [[YGLoginController alloc] init];
+    controller.fromBeginWorkout = YES;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -65,8 +61,9 @@
             [YGHUD hide:self.view];
             int code = [[result objectForKey:@"code"] intValue];
             if (code==1) {
-                YGDefaultSessionController *controller = [[YGDefaultSessionController alloc] init];
-                [ws.navigationController pushViewController:controller animated:YES];
+                YGSignUpController *controller = [[YGSignUpController alloc] init];
+                controller.fromBeginWorkout = YES;
+                [self.navigationController pushViewController:controller animated:YES];
             }else{
                 [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
             }
@@ -74,13 +71,10 @@
             [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];
         }];
     }else{
-        YGDefaultSessionController *controller = [[YGDefaultSessionController alloc] init];
+        YGSignUpController *controller = [[YGSignUpController alloc] init];
+        controller.fromBeginWorkout = YES;
         [self.navigationController pushViewController:controller animated:YES];
     }
-}
-
--(void)dealloc{
-    [self.beginMyWorkoutPlayer stop];
 }
 
 - (void)didReceiveMemoryWarning {

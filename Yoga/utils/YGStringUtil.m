@@ -151,7 +151,22 @@
     if ([YGStringUtil isNull:string]) {
         return CGSizeZero;
     }
-    return [string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading context:nil].size;
+    return [string boundingRectWithSize:size options:NSStringDrawingUsesFontLeading|NSStringDrawingUsesLineFragmentOrigin context:nil].size;
 }
 
++(BOOL)validEmail:(NSString *)string{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [predicate evaluateWithObject:string];
+}
+
++ (NSDictionary *)parseURLParams:(NSString *)query{
+    NSURLComponents* urlComponents =  [NSURLComponents componentsWithString:query];
+    NSMutableDictionary* params = [NSMutableDictionary dictionary];
+    NSArray* queryItems = urlComponents.queryItems;
+    for (NSURLQueryItem* item in queryItems) {
+        [params setObject:item.value forKey:item.name];
+    }
+    return params;
+}
 @end

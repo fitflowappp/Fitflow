@@ -7,7 +7,10 @@
 //
 #import "YGStringUtil.h"
 #import "YGUserPersistence.h"
-
+#import "YGBackgroundMusicService.h"
+#define KEY_SERVICE_BACKGROUND_MUSIC_TYPE        @"musicType"
+#define KEY_SERVICE_BACKGROUND_MUSIC_VOLUME      @"musicVolume"
+#define KEY_SERVICE_BACKGROUND_MUSIC_STATUS      @"musicStatus"
 @implementation YGUserPersistence
 + (YGUserPersistence *)instance{
     static YGUserPersistence *userPersistence = nil;
@@ -20,7 +23,21 @@
 -(void)updateLocalUser:(id)data{
     if ([YGStringUtil notNull:data]) {
         NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:data];
-        [[NSUserDefaults standardUserDefaults] setObject:userData forKey:@"KEY_USER_DATA"];
+        [[NSUserDefaults standardUserDefaults] setObject:userData forKey:KEY_USER_LOCAL_DATA];
+        /*背景音乐*/
+        NSDictionary *userInfo = (NSDictionary*)data;
+        if ([userInfo.allKeys containsObject:KEY_SERVICE_BACKGROUND_MUSIC_STATUS]) {
+            BOOL musicStaus = [[userInfo objectForKey:KEY_SERVICE_BACKGROUND_MUSIC_STATUS] boolValue];
+            [YGBackgroundMusicService setBackgroundMusicOpen:musicStaus];
+        }
+        if ([userInfo.allKeys containsObject:KEY_SERVICE_BACKGROUND_MUSIC_TYPE]) {
+            NSInteger musicType = [[userInfo objectForKey:KEY_SERVICE_BACKGROUND_MUSIC_TYPE] integerValue];
+            [YGBackgroundMusicService setBackgroundMusicType:musicType];
+        }
+        if ([userInfo.allKeys containsObject:KEY_SERVICE_BACKGROUND_MUSIC_VOLUME]) {
+            float musicVolume = [[userInfo objectForKey:KEY_SERVICE_BACKGROUND_MUSIC_VOLUME] floatValue];
+            [YGBackgroundMusicService setBackgroundMusicVolume:musicVolume];
+        }
     }
 }
 @end

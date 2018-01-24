@@ -31,7 +31,7 @@
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
-    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:14*SCALE];
+    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:14];
     [self addSubview:self.titleLabel];
 }
 

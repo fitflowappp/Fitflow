@@ -42,7 +42,7 @@
         self.tipLabel.font = [UIFont fontWithName:@"Lato-Bold" size:12*scale];
         [self.backGroundv addSubview:self.tipLabel];
         //
-        NSString *content = @"Complete your first challenge to unlock additional materials.";
+        NSString *content = @"Complete your current class in this challenge to unlock additional content.";
         CGRect contentRect = CGRectMake(24*scale,CGRectGetMaxY(self.tipLabel.frame)+8*scale,self.backGroundv.frame.size.width-48*scale,100);
         self.contentLabel = [[UILabel alloc] initWithFrame:contentRect];
         self.contentLabel.numberOfLines = 0;
@@ -64,7 +64,7 @@
         self.backToCurrentWorkoutBtn.layer.borderWidth = 1.0f;
         self.backToCurrentWorkoutBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
         self.backToCurrentWorkoutBtn.layer.cornerRadius = self.backToCurrentWorkoutBtn.frame.size.height/2;
-        [self.backToCurrentWorkoutBtn setTitle:@"GO TO MY WORKOUT" forState:UIControlStateNormal];
+        [self.backToCurrentWorkoutBtn setTitle:@"GO TO MY NEXT CLASS" forState:UIControlStateNormal];
         [self.backToCurrentWorkoutBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
         [self.backToCurrentWorkoutBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
         [self.backGroundv addSubview:self.backToCurrentWorkoutBtn];

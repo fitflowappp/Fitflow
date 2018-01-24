@@ -8,7 +8,6 @@
 #import "UIColor+Extension.h"
 #import "YGSchedulingSwithCell.h"
 @interface YGSchedulingSwithCell ()
-@property (nonatomic,strong) UIView   *linev;
 @property (nonatomic,strong) UILabel  *titleLabel;
 @end
 @implementation YGSchedulingSwithCell
@@ -35,10 +34,9 @@
 }
 
 -(void)addTitleLabel{
-    CGFloat scacle = SCALE;
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.frame = CGRectMake(0,0,self.frame.size.width-self.switchBtn.frame.size.width-5,self.frame.size.height);
-    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16*scacle];
+    self.titleLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16];
     self.titleLabel.textColor = [UIColor colorWithHexString:@"#000000"];
     [self addSubview:self.titleLabel];
 }

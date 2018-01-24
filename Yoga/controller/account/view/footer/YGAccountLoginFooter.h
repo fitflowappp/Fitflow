@@ -9,4 +9,5 @@
 #import <UIKit/UIKit.h>
 @interface YGAccountLoginFooter : UICollectionReusableView
 @property (nonatomic,strong) UIButton *loginBtn;
+-(void)setRegisterStatus:(BOOL)unRegister;
 @end

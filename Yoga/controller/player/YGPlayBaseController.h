@@ -9,5 +9,8 @@
 #import "YGBaseController.h"
 
 @interface YGPlayBaseController : YGBaseController<YGPlayerDelegate>
-
+-(void)playBackgroundMusic;
+-(void)pauseBackgroundMusic;
+-(void)setBackGroundMusicVolume:(float)volume;
+-(void)playBackgroundMusicItemIndex:(NSInteger)index;
 @end

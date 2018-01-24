@@ -17,17 +17,16 @@
     return self;
 }
 -(void)setSessionLockedFooter{
-    CGFloat margin = 16*SCALE;
+    CGFloat margin = 16;
     self.backgroundColor = [UIColor whiteColor];
     self.startChallengeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.startChallengeBtn.frame = CGRectMake(margin,margin,self.frame.size.width-margin*2,self.frame.size.height-margin*2);
     self.startChallengeBtn.layer.masksToBounds = YES;
     self.startChallengeBtn.layer.cornerRadius = self.startChallengeBtn.frame.size.height/2;
-    self.startChallengeBtn.layer.borderWidth = 2.0f;
-    self.startChallengeBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
-    [self.startChallengeBtn setTitle:@"UNLOCK WORKOUT" forState:UIControlStateNormal];
-    [self.startChallengeBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
-    [self.startChallengeBtn.titleLabel setFont:[UIFont fontWithName:@"lato-Black" size:16*SCALE]];
+    [self.startChallengeBtn setTitle:@"UNLOCK THIS SINGLE" forState:UIControlStateNormal];
+    [self.startChallengeBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+    [self.startChallengeBtn.titleLabel setFont:[UIFont fontWithName:@"lato-Bold" size:14]];
+    self.startChallengeBtn.backgroundColor = [UIColor colorWithHexString:@"#41D395"];
     [self addSubview:self.startChallengeBtn];
 }
 

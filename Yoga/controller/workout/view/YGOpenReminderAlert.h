@@ -10,4 +10,5 @@
 
 @interface YGOpenReminderAlert : YGBaseAlert
 @property (nonatomic,strong) UIButton *openReminderBtn;
+@property (nonatomic,strong) UIButton *notShowAgainBtn;
 @end

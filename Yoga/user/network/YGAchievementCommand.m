@@ -12,8 +12,8 @@
 -(void)execute{
     NSString *requestUrl  = [NSString stringWithFormat:@"%@%@",cRequestDomain,@"/yoga/my/achievements"];
     [self sendRequestWithUrl:requestUrl method:GET];
-    
 }
+
 -(void)successHandle:(id)data{
     NSDictionary *result = [data objectForKey:@"result"];
     int code = [[result objectForKey:@"code"] intValue];

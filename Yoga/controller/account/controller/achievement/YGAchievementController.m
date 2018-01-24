@@ -65,7 +65,7 @@ static NSString *ACHIEVEMENT_TEXT_HEADERID = @"achievementTextHeaderID";
 #pragma mark UI
 -(void)setCollectionView{
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.minimumInteritemSpacing = 8*self.scale;
+    layout.minimumInteritemSpacing = 8;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,0,GET_SCREEN_WIDTH, GET_SCREEN_HEIGHT-NAV_HEIGHT) collectionViewLayout:layout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -99,7 +99,7 @@ static NSString *ACHIEVEMENT_TEXT_HEADERID = @"achievementTextHeaderID";
     YGTextHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:ACHIEVEMENT_TEXT_HEADERID forIndexPath:indexPath];
     NSString *headerText = nil;
     if (indexPath.section==0) {
-        headerText = @"WORKOUTS\nCOMPLETED";
+        headerText = @"CLASSES\nCOMPLETED";
     }else if (indexPath.section==1){
         headerText = @"MINUTES\nCOMPLETED";
     }else if (indexPath.section==2){
@@ -124,12 +124,14 @@ static NSString *ACHIEVEMENT_TEXT_HEADERID = @"achievementTextHeaderID";
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     
     NSInteger count = [self collectionView:collectionView numberOfItemsInSection:section];
-    CGFloat margin = (GET_SCREEN_WIDTH-count*44*self.scale-(count-1)*8*self.scale)/2;
+    CGFloat margin = (GET_SCREEN_WIDTH-count*44*self.scale-(count-1)*8)/2;
     
     return UIEdgeInsetsMake(16*self.scale,margin,48*self.scale,0);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
     return CGSizeMake(44*self.scale,64*self.scale);
 }
 

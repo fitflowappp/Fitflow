@@ -18,7 +18,7 @@
 
 @property (nonatomic,strong) UILabel *subTitleLabel;
 
-@property (nonatomic,strong) UIImageView *lockedImgv;
+//@property (nonatomic,strong) UIImageView *lockedImgv;
 
 @end
 
@@ -33,24 +33,24 @@
 }
 
 -(void)setChallengeCell{
-    [self.layer setMasksToBounds:YES];
-    [self.layer setCornerRadius:10];
     [self addChallengeCoverImgv];
     [self addDarkv];
     [self addTitleLabel];
     [self addSubTitleLabel];
-    [self addLockedImgv];
+    //[self addLockedImgv];
 }
 
 -(void)addChallengeCoverImgv{
     self.challengeCoverImgv = [[UIImageView alloc] initWithFrame:self.bounds];
     self.challengeCoverImgv.contentMode = UIViewContentModeScaleAspectFill;
+    self.challengeCoverImgv.clipsToBounds = YES;
     [self addSubview:self.challengeCoverImgv];
 }
 
 -(void)addDarkv{
-    self.darkv = [[UIView alloc] initWithFrame:self.challengeCoverImgv.bounds];
-    [self.challengeCoverImgv addSubview:self.darkv];
+    self.darkv = [[UIView alloc] initWithFrame:self.bounds];
+    self.darkv.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
+    [self addSubview:self.darkv];
 }
 
 -(void)addTitleLabel{
@@ -73,11 +73,11 @@
     [self addSubview:self.subTitleLabel];
 }
 
--(void)addLockedImgv{
-    self.lockedImgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Lock-w"]];
-    self.lockedImgv.center = CGPointMake(self.frame.size.width/2,CGRectGetMaxY(self.subTitleLabel.frame)+22+self.lockedImgv.frame.size.height/2);
-    [self addSubview:self.lockedImgv];
-}
+//-(void)addLockedImgv{
+//    self.lockedImgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Lock-w"]];
+//    self.lockedImgv.center = CGPointMake(self.frame.size.width/2,CGRectGetMaxY(self.subTitleLabel.frame)+22+self.lockedImgv.frame.size.height/2);
+//    [self addSubview:self.lockedImgv];
+//}
 
 -(void)setChallenge:(YGChallenge *)challenge{
     if (challenge!=_challenge) {
@@ -89,7 +89,7 @@
 }
 
 -(void)setShouldLight:(BOOL)shouldLight{
-    self.lockedImgv.hidden = shouldLight;
-    self.darkv.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:shouldLight?0.3:0.45];
+    //self.lockedImgv.hidden = shouldLight;
+    //self.darkv.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:shouldLight?0.3:0.45];
 }
 @end

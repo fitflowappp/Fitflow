@@ -9,5 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface YGDeviceUtil : NSObject
++(BOOL)updated;
 +(NSString*)version;
++(BOOL)firstInstallFitflow;
++(BOOL)hasEnteredSinglesInDiscover;
++(BOOL)hasEnteredChallengesInDiscover;
++(BOOL)hasEnteredScheduling;
 @end

@@ -7,10 +7,8 @@
 //
 
 #import "YGSession+Extension.h"
-#import "YGChallenge.h"
 #import "YGPlayBaseController.h"
 @interface YGPlayController : YGPlayBaseController
-@property (nonatomic) BOOL fromDefaultWorkout;
 @property (nonatomic,strong) YGSession    *session;
-@property (nonatomic,strong) YGChallenge  *challenge;
+@property (nonatomic,strong) NSString *challengeID;
 @end

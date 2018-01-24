@@ -6,7 +6,9 @@
 //  Copyright © 2017年 lyj. All rights reserved.
 //
 #import "Heap.h"
-#import "YGKeychainUtil.h"
+#import "YGDeviceUtil.h"
+#import "YGStringUtil.h"
+#import "FBNotifications.h"
 #import "YGStringUtil.h"
 #import "YGUserService.h"
 #import "YGAppDelegate.h"
@@ -14,6 +16,7 @@
 #import "YGUserPersistence.h"
 #import "YGTabBarController.h"
 #import "YGSchedulingController.h"
+#import "YGResetPasswordController.h"
 #import "YGBeginMyWorkoutController.h"
 #import "YGBaseNavigationController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -33,18 +36,19 @@
     [self prepareGeTuiSdk];
     [self initRootController];
     [Heap setAppId:HeapAppID];
-#ifdef DEBUG
-    [Heap enableVisualizer];
+#if Debug
+    NSLog(@"msg: service is Debug version");
 #endif
-    [self registerUserNotification];
+#if Debug_Heap
+    [Heap enableVisualizer];
+    NSLog(@"msg: Heap Debug open");
+#endif
+    if ([[UIApplication sharedApplication] isRegisteredForRemoteNotifications]) {
+        [self registerUserNotification];
+    }
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
     return YES;
-    /*# Replace this with the GOOGLE_APP_ID from your GoogleService-Info.plist file
-     GOOGLE_APP_ID=1:393772736025:ios:51aa693951c87a8a
-     
-     # Replace the /Path/To/ServiceAccount.json with the path to the key you just downloaded
-     "${PODS_ROOT}"/FirebaseCrash/upload-sym "/Users/lyj/Desktop/Yoga/Yoga/FirebaseCrash.json"*/
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -94,9 +98,8 @@
                                                        annotation:annotation];
 }
 
-
-
 -(void)initRootController{
+    self.fitflowUpdated = [YGDeviceUtil updated];
     if ([YGUserService instance].localUser.isLogin) {
         [self initTabBarController];
     }else{
@@ -109,12 +112,14 @@
     beginMyWorkoutNav.navigationBarHidden = YES;
     self.window.rootViewController = beginMyWorkoutNav;
     [self.window makeKeyAndVisible];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 -(void)initTabBarController{
     YGTabBarController *tabBarController = [[YGTabBarController alloc] init];
     self.window.rootViewController = tabBarController;
     [self.window makeKeyAndVisible];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 -(void)backToWorkout{
@@ -130,9 +135,10 @@
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
         center.delegate = self;
         [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionCarPlay) completionHandler:^(BOOL granted, NSError *_Nullable error) {
-            if (!error) {
-                NSLog(@"request authorization succeeded!");
-            }
+            //
+            dispatch_async(dispatch_get_global_queue(0,0), ^{
+                [self handleRegisterUserNotificationSettings:granted];
+            });
         }];
         
         [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -143,6 +149,20 @@
         [[UIApplication sharedApplication] registerForRemoteNotifications];
     }
 }
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
+    BOOL granted = NO;
+    if (notificationSettings.types==!UIUserNotificationTypeNone) {
+        granted = YES;
+    }
+    [self handleRegisterUserNotificationSettings:granted];
+}
+
+-(void)handleRegisterUserNotificationSettings:(BOOL)granted{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"KEY_USER_NOTIFICATIONSETTINGS_GRANTED" object:@(granted)];
+}
+
+
 #pragma mark - iOS 10中收到推送消息
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 //  iOS 10: App在前台获取到通知
@@ -158,21 +178,39 @@
 #pragma mark - APP运行中接收到通知(推送)处理
 /** APP已经接收到“远程”通知(推送)*/
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    [FBSDKAppEvents logPushNotificationOpen:userInfo];
     [GeTuiSdk handleRemoteNotification:userInfo];
+    FBNotificationsManager *notificationsManager = [FBNotificationsManager sharedManager];
+    [notificationsManager presentPushCardForRemoteNotificationPayload:userInfo
+                                                   fromViewController:nil
+                                                           completion:^(FBNCardViewController * _Nullable viewController, NSError * _Nullable error) {
+                                                               if (error) {
+                                                                   completionHandler(UIBackgroundFetchResultFailed);
+                                                               } else {
+                                                                   completionHandler(UIBackgroundFetchResultNewData);
+                                                               }
+                                                           }];
     completionHandler(UIBackgroundFetchResultNewData);
 }
+
+/*注册推送失败*/
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
+    NSLog(@"didFailToRegisterForRemoteNotificationsWithError:%@", error.localizedDescription);
+}
+
 /*上传diviceToken*/
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken  {
     /*个推*/
     NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if ([GeTuiSdk registerDeviceToken:token]==YES) {//a8a84d5a0ad73f48f834f8abeebe6ea355fc6c9bf746f1f24e501dc2b25f280c
+    if ([GeTuiSdk registerDeviceToken:token]==YES) {
         NSLog(@"GeTuiSdk setDeviceToken success");
     }
+    [FBSDKAppEvents setPushNotificationsDeviceToken:deviceToken];
 }
-/*注册推送失败*/
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    NSLog(@"didFailToRegisterForRemoteNotificationsWithError:%@", error.localizedDescription);
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(nullable NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler{
+    [FBSDKAppEvents logPushNotificationOpen:userInfo action:identifier];
 }
 
 #pragma mark - GeTuiSdk
@@ -250,31 +288,4 @@
     }
     NSLog(@"\n>>[GTSdk SetModeOff]:%@\n\n", isModeOff ? @"开启" : @"关闭");
 }
-
-#pragma mark
--(void)initOpenReminderAlert{
-    if ([[YGKeychainUtil load:KEY_IN_KEYCHAIN_FACEBOOK_FIRST_LOGIN] boolValue]==NO&&[[NSUserDefaults standardUserDefaults] boolForKey:KEY_IN_KEYCHAIN_FACEBOOK_FIRST_LOGIN]==NO) {
-        if ([self.window.subviews.lastObject isKindOfClass:[YGOpenReminderAlert class]]==NO) {
-            YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:self.window.bounds];
-            [openReminder.openReminderBtn addTarget:self action:@selector(openReminder:) forControlEvents:UIControlEventTouchUpInside];
-            [self.window addSubview:openReminder];
-            [YGKeychainUtil save:@{KEY_IN_KEYCHAIN_FACEBOOK_FIRST_LOGIN:@(YES)}];
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:KEY_IN_KEYCHAIN_FACEBOOK_FIRST_LOGIN];
-        }
-    }
-}
-
--(void)openReminder:(UIButton*)sender{
-    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
-    [openReminder hide];
-    UIViewController *rootController  = self.window.rootViewController;
-    if ([rootController isKindOfClass:[YGTabBarController class]]) {
-        YGTabBarController *tabBarController = ((YGTabBarController*)rootController);
-        UINavigationController *rootNav = tabBarController.viewControllers[tabBarController.selectedIndex];
-        YGSchedulingController *controller = [[YGSchedulingController alloc] init];
-        controller.hidesBottomBarWhenPushed = YES;
-        [rootNav pushViewController:controller animated:YES];
-    }
-}
-
 @end
