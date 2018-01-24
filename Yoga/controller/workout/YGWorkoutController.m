@@ -210,7 +210,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     if (self.userChallenge.workoutList) {
         YGSession *workout = self.userChallenge.workoutList[0];
         if (workout.shareUrl) {
-            NSString *shareTitle = [NSString stringWithFormat:@"I just finished this yoga challenge '%@' on the Fitflow app. I loved it. I think you will too. And it's free. %@",workout.title,workout.shareUrl];
+            NSString *shareTitle = [NSString stringWithFormat:@"I just finished this yoga challenge '%@' on the Fitflow app. I loved it. I think you will too. And it's free. %@",self.userChallenge.title,workout.shareUrl];
             [self shareWithContent:@[shareTitle]];
         }
     }
