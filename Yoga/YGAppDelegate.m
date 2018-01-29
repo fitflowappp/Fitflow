@@ -23,8 +23,13 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "FBSDKMessengerShareKit/FBSDKMessengerSharer.h"
+#import "YGSessionService.h"
+#import "YGHomeUpdataAlert.h"
 @import Firebase;
 @interface YGAppDelegate ()
+
+@property (nonatomic,strong) NSDictionary *updateResponse;//更新有效
+@property (nonatomic, assign) YGHomeUpdataAlert *updataAlertView;
 
 @end
 
@@ -48,8 +53,13 @@
     }
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
+    
+    [self fetchOtherCommandData];// 更新
     return YES;
 }
+
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     
@@ -105,6 +115,33 @@
     }else{
         [self initBeginMyWorkoutController];
     }
+}
+
+// 更新loaddata
+- (void)fetchOtherCommandData
+{
+    [[YGSessionService instance] fetchOtherCommandsucessBlock:^(id data) {
+        
+        self.updateResponse = data;
+        [self setUpdateView];
+        
+    } errorBlock:^(NSError *error) {
+        
+    }];
+}
+// 更新UI
+- (void)setUpdateView
+{
+    UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+    YGHomeUpdataAlert *alertView = [[YGHomeUpdataAlert alloc] initWithFrame:mainWindow.bounds contentTittle:self.updateResponse[@"desc"] UpdataType:[self.updateResponse[@"type"] integerValue]];
+    [alertView.updataBtn addTarget:self action:@selector(updateAction:) forControlEvents:UIControlEventTouchUpInside];
+    [mainWindow addSubview:alertView];
+    self.updataAlertView = alertView;
+}
+// 更新事件响应
+- (void)updateAction:(UIButton *)sender
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.updateResponse[@"downloadUrl"]]];
 }
 
 -(void)initBeginMyWorkoutController{
@@ -289,3 +326,4 @@
     NSLog(@"\n>>[GTSdk SetModeOff]:%@\n\n", isModeOff ? @"开启" : @"关闭");
 }
 @end
+

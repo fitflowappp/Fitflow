@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05FF2F19201DC90200BF67B2 /* YGHomeUpdataAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FF2F17201DC90100BF67B2 /* YGHomeUpdataAlert.m */; };
+		05FF2F1C201DC96600BF67B2 /* YGUserOtherCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FF2F1B201DC96500BF67B2 /* YGUserOtherCommand.m */; };
 		2A56665B1F6A84DE00069411 /* YGChosenChallengeFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A56665A1F6A84DE00069411 /* YGChosenChallengeFooter.m */; };
 		2A5666621F6A97DB00069411 /* YGWorkoutBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A5666611F6A97DB00069411 /* YGWorkoutBannerCell.m */; };
 		2A5666651F6A98BE00069411 /* YGStartWorkoutFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A5666641F6A98BE00069411 /* YGStartWorkoutFooter.m */; };
@@ -314,6 +316,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		05FF2F17201DC90100BF67B2 /* YGHomeUpdataAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGHomeUpdataAlert.m; sourceTree = "<group>"; };
+		05FF2F18201DC90100BF67B2 /* YGHomeUpdataAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGHomeUpdataAlert.h; sourceTree = "<group>"; };
+		05FF2F1A201DC96500BF67B2 /* YGUserOtherCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGUserOtherCommand.h; sourceTree = "<group>"; };
+		05FF2F1B201DC96500BF67B2 /* YGUserOtherCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGUserOtherCommand.m; sourceTree = "<group>"; };
 		24E0721853822A59E961DDF6 /* Pods-Yoga.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yoga.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Yoga/Pods-Yoga.debug.xcconfig"; sourceTree = "<group>"; };
 		2A5666591F6A84DE00069411 /* YGChosenChallengeFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGChosenChallengeFooter.h; sourceTree = "<group>"; };
 		2A56665A1F6A84DE00069411 /* YGChosenChallengeFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGChosenChallengeFooter.m; sourceTree = "<group>"; };
@@ -790,6 +796,8 @@
 				2C6FB55E1F95E947003AE7A0 /* YGNeedRegisterAlert.m */,
 				2C6FB5601F95F4A1003AE7A0 /* YGOpenReminderAlert.h */,
 				2C6FB5611F95F4A2003AE7A0 /* YGOpenReminderAlert.m */,
+				05FF2F18201DC90100BF67B2 /* YGHomeUpdataAlert.h */,
+				05FF2F17201DC90100BF67B2 /* YGHomeUpdataAlert.m */,
 				2C309A1B1F9DBA2000D5D407 /* YGChangeChallengeAlert.h */,
 				2C309A1A1F9DBA2000D5D407 /* YGChangeChallengeAlert.m */,
 				2C70E8CC1F95CF01003FC59C /* YGChallengeCompletedAlert.h */,
@@ -1885,6 +1893,8 @@
 				2CA94AD81FFCB31D003A2036 /* YGSinglesListCommand.m */,
 				2CA94AE31FFCEFEC003A2036 /* YGUserSinglesListCommand.h */,
 				2CA94AE41FFCEFEC003A2036 /* YGUserSinglesListCommand.m */,
+				05FF2F1A201DC96500BF67B2 /* YGUserOtherCommand.h */,
+				05FF2F1B201DC96500BF67B2 /* YGUserOtherCommand.m */,
 			);
 			path = network;
 			sourceTree = "<group>";
@@ -2018,7 +2028,7 @@
 					2CA5A6E11F67778100547CF1 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = MF2Q9YT333;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2245,9 +2255,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Yoga/Pods-Yoga-resources.sh",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2260,13 +2273,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Yoga-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B21F44C563107FB6BF7F8D50 /* [CP] Embed Pods Frameworks */ = {
@@ -2343,6 +2359,7 @@
 				2C9EACDF1FF0CBC800DCDB2B /* YGEmailSignupCommand.m in Sources */,
 				2CB1D7811F6FCEB500199E4C /* YGNetworkBaseCommand.m in Sources */,
 				2C9EACE21FF1076D00DCDB2B /* YGTopAlert.m in Sources */,
+				05FF2F19201DC90200BF67B2 /* YGHomeUpdataAlert.m in Sources */,
 				2CB4ED021F78DB8F0018902F /* YGRoutineEndCommand.m in Sources */,
 				2CB1D75B1F6F988E00199E4C /* YGAccountLoginFooter.m in Sources */,
 				2CA5A6ED1F67778100547CF1 /* YGBaseController.m in Sources */,
@@ -2384,6 +2401,7 @@
 				2C4559681F8DF2F8006A6C27 /* YGAboutUsController.m in Sources */,
 				2C4D67E8200F2845003A2041 /* YGBackgroundMusicService.m in Sources */,
 				2CA76E5E2005E7E8009D4DFA /* YGHomeCurrentChallengeCompleteCell.m in Sources */,
+				05FF2F1C201DC96600BF67B2 /* YGUserOtherCommand.m in Sources */,
 				2C9804631F8F96C700336611 /* YGReminderScheduleView.m in Sources */,
 				2CA5A7AC1F67C3A200547CF1 /* UIImage+Extension.m in Sources */,
 				2C309A1F1F9DBFBA00D5D407 /* YGBaseAlert.m in Sources */,
@@ -2591,22 +2609,23 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Yoga/Yoga.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Xin Song (3UJ437377Y)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Xin Song (3UJ437377Y)";
-				DEVELOPMENT_TEAM = MF2Q9YT333;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/lyj/Downloads/FacebookSDKs-iOS-4.27.1",
 					"$(PROJECT_DIR)",
 				);
-				GCC_PREFIX_HEADER = /Users/lyj/Desktop/Yoga/Yoga/Yoga.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Yoga/Yoga.pch";
 				INFOPLIST_FILE = Yoga/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Fitflow.BundleID;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c9ce05bc-cbc0-473b-9dd7-4ab7ea424527";
-				PROVISIONING_PROFILE_SPECIFIER = "iOS-Fitflow-Development";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2620,22 +2639,23 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Yoga/Yoga.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Zone Internet Limited (MF2Q9YT333)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zone Internet Limited (MF2Q9YT333)";
-				DEVELOPMENT_TEAM = MF2Q9YT333;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/lyj/Downloads/FacebookSDKs-iOS-4.27.1",
 					"$(PROJECT_DIR)",
 				);
-				GCC_PREFIX_HEADER = /Users/lyj/Desktop/Yoga/Yoga/Yoga.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Yoga/Yoga.pch";
 				INFOPLIST_FILE = Yoga/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Fitflow.BundleID;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a653b474-5149-42ce-88fd-45c0a59e04e5";
-				PROVISIONING_PROFILE_SPECIFIER = "iOS-Fitflow-Distribution";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -9,6 +9,7 @@
 #import "YGSessionService.h"
 #import "YGSinglesListCommand.h"
 #import "YGUserSinglesListCommand.h"
+#import "YGUserOtherCommand.h"
 @implementation YGSessionService
 +(YGSessionService*)instance{
     static YGSessionService *sessionService = nil;
@@ -42,4 +43,15 @@
     command.successBlock = sucessBlock;
     [command execute];
 }
+
+-(void)fetchOtherCommandsucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock{
+    YGUserOtherCommand *command = [[YGUserOtherCommand alloc] init];
+    command.errorBlock = errorBlock;
+    command.successBlock = sucessBlock;
+    [command execute];
+}
+
+
+
 @end
+

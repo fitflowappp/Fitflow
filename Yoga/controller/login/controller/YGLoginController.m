@@ -20,6 +20,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
+
 @interface YGLoginController ()<UITextFieldDelegate>
 @property (nonatomic,strong) UIButton    *loginBtn;
 @property (nonatomic,strong) UIButton    *singupBtn;
@@ -342,3 +343,4 @@
     [super didReceiveMemoryWarning];
 }
 @end
+

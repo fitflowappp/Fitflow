@@ -60,7 +60,7 @@
 -(void)setUpSubviews{
     [super setUpSubviews];
     [self.backGroundImgv setImage:[UIImage imageNamed:@"signup-bk.jpg"]];
-    [self addSkipBtn];
+    //    [self addSkipBtn];
     [self addSignupTipLabel];
     [self addSingupPolicyTextview];
     [self addEmailAccountTf];
@@ -70,18 +70,19 @@
     [self addFaceBookLoginBtn];
 }
 
--(void)addSkipBtn{
-    CGFloat marginY = (IS_IPHONE_X?72:32*SCALE)-10;
-    CGFloat marginRight = IS_IPHONE_X?32:32*SCALE;
-    self.skipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.skipBtn.frame = CGRectMake(self.view.frame.size.width-marginRight-70,marginY,70,16*SCALE+20);
-    [self.skipBtn setTitle:@"Skip" forState:UIControlStateNormal];
-    [self.skipBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
-    [self.skipBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Regular" size:14]];
-    [self.skipBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    [self.skipBtn addTarget:self action:@selector(skip) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.skipBtn];
-}
+// V1.4.2 hidden
+//-(void)addSkipBtn{
+//    CGFloat marginY = (IS_IPHONE_X?72:32*SCALE)-10;
+//    CGFloat marginRight = IS_IPHONE_X?32:32*SCALE;
+//    self.skipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    self.skipBtn.frame = CGRectMake(self.view.frame.size.width-marginRight-70,marginY,70,16*SCALE+20);
+//    [self.skipBtn setTitle:@"Skip" forState:UIControlStateNormal];
+//    [self.skipBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+//    [self.skipBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Regular" size:14]];
+//    [self.skipBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+//    [self.skipBtn addTarget:self action:@selector(skip) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:self.skipBtn];
+//}
 
 
 -(void)addSignupTipLabel{
