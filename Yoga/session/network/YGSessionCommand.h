@@ -11,4 +11,7 @@
 @interface YGSessionCommand : YGNetworkBaseCommand
 @property (nonatomic,strong) NSString *sessionID;
 @property (nonatomic,strong) NSString *challengeID;
+@property (nonatomic, strong) NSString *workoutID;
+@property (nonatomic,copy) FAILURE_BLOCK actionErrorBlock;
+@property (nonatomic,copy) SUCCESS_BLOCK actionsuccessBlock;
 @end

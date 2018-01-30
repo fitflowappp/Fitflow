@@ -14,5 +14,7 @@
 -(void)retryWhenNetworkError;
 -(void)setRightShareNavigationItem;
 -(void)shareWithContent:(NSArray*)content;
+- (void)didSelectShareCompleted;
+- (void)back;
 @end
 

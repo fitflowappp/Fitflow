@@ -22,6 +22,7 @@
 #endif
 
 #define URLForge(tail)            URLCombine(cRequestDomain,tail)
+#define URLImageForge(tail)       URLCombine(cHttpRequestDomain,tail)
 
 #define URLCombine(domain,tail)   [NSString stringWithFormat:@"%@%@",domain,tail]
 

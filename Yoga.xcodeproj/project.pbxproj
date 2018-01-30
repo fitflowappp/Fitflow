@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05F49F2F201EB3ED003C018F /* YGLockSingleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */; };
+		05F49F32201EC8F2003C018F /* YGUnSessionBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F31201EC8F2003C018F /* YGUnSessionBannerCell.m */; };
+		05F49F38201ECD56003C018F /* YGSessionShareLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F37201ECD56003C018F /* YGSessionShareLockView.m */; };
+		05F49F42201ED7E3003C018F /* YGShareCompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F41201ED7E3003C018F /* YGShareCompleteViewController.m */; };
+		05F49F48201F25E4003C018F /* YGSessionShareAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F47201F25E4003C018F /* YGSessionShareAlert.m */; };
 		05FF2F19201DC90200BF67B2 /* YGHomeUpdataAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FF2F17201DC90100BF67B2 /* YGHomeUpdataAlert.m */; };
 		05FF2F1C201DC96600BF67B2 /* YGUserOtherCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FF2F1B201DC96500BF67B2 /* YGUserOtherCommand.m */; };
 		2A56665B1F6A84DE00069411 /* YGChosenChallengeFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A56665A1F6A84DE00069411 /* YGChosenChallengeFooter.m */; };
@@ -316,6 +321,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		05F49F2D201EB3ED003C018F /* YGLockSingleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGLockSingleCell.h; sourceTree = "<group>"; };
+		05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGLockSingleCell.m; sourceTree = "<group>"; };
+		05F49F30201EC8F2003C018F /* YGUnSessionBannerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGUnSessionBannerCell.h; sourceTree = "<group>"; };
+		05F49F31201EC8F2003C018F /* YGUnSessionBannerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGUnSessionBannerCell.m; sourceTree = "<group>"; };
+		05F49F36201ECD56003C018F /* YGSessionShareLockView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGSessionShareLockView.h; sourceTree = "<group>"; };
+		05F49F37201ECD56003C018F /* YGSessionShareLockView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGSessionShareLockView.m; sourceTree = "<group>"; };
+		05F49F39201ECEC7003C018F /* YGEUNM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGEUNM.h; sourceTree = "<group>"; };
+		05F49F40201ED7E3003C018F /* YGShareCompleteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGShareCompleteViewController.h; sourceTree = "<group>"; };
+		05F49F41201ED7E3003C018F /* YGShareCompleteViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGShareCompleteViewController.m; sourceTree = "<group>"; };
+		05F49F46201F25E4003C018F /* YGSessionShareAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGSessionShareAlert.h; sourceTree = "<group>"; };
+		05F49F47201F25E4003C018F /* YGSessionShareAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGSessionShareAlert.m; sourceTree = "<group>"; };
 		05FF2F17201DC90100BF67B2 /* YGHomeUpdataAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGHomeUpdataAlert.m; sourceTree = "<group>"; };
 		05FF2F18201DC90100BF67B2 /* YGHomeUpdataAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGHomeUpdataAlert.h; sourceTree = "<group>"; };
 		05FF2F1A201DC96500BF67B2 /* YGUserOtherCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGUserOtherCommand.h; sourceTree = "<group>"; };
@@ -782,6 +798,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05F49F3E201ED7C2003C018F /* share */ = {
+			isa = PBXGroup;
+			children = (
+				05F49F3F201ED7C2003C018F /* Controller */,
+			);
+			path = share;
+			sourceTree = "<group>";
+		};
+		05F49F3F201ED7C2003C018F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				05F49F40201ED7E3003C018F /* YGShareCompleteViewController.h */,
+				05F49F41201ED7E3003C018F /* YGShareCompleteViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		2A56665C1F6A94FC00069411 /* view */ = {
 			isa = PBXGroup;
 			children = (
@@ -798,6 +831,8 @@
 				2C6FB5611F95F4A2003AE7A0 /* YGOpenReminderAlert.m */,
 				05FF2F18201DC90100BF67B2 /* YGHomeUpdataAlert.h */,
 				05FF2F17201DC90100BF67B2 /* YGHomeUpdataAlert.m */,
+				05F49F46201F25E4003C018F /* YGSessionShareAlert.h */,
+				05F49F47201F25E4003C018F /* YGSessionShareAlert.m */,
 				2C309A1B1F9DBA2000D5D407 /* YGChangeChallengeAlert.h */,
 				2C309A1A1F9DBA2000D5D407 /* YGChangeChallengeAlert.m */,
 				2C70E8CC1F95CF01003FC59C /* YGChallengeCompletedAlert.h */,
@@ -894,6 +929,8 @@
 				2A56666A1F6AB09800069411 /* YGRoutineCell.m */,
 				2A5666661F6AAD1F00069411 /* YGSessionBannerCell.h */,
 				2A5666671F6AAD1F00069411 /* YGSessionBannerCell.m */,
+				05F49F30201EC8F2003C018F /* YGUnSessionBannerCell.h */,
+				05F49F31201EC8F2003C018F /* YGUnSessionBannerCell.m */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -912,6 +949,8 @@
 				2A56666D1F6AB4A300069411 /* YGSessionLockedFooter.m */,
 				2A56666F1F6ABB6E00069411 /* YGSessionUnlockedFooter.h */,
 				2A5666701F6ABB6E00069411 /* YGSessionUnlockedFooter.m */,
+				05F49F36201ECD56003C018F /* YGSessionShareLockView.h */,
+				05F49F37201ECD56003C018F /* YGSessionShareLockView.m */,
 			);
 			path = footer;
 			sourceTree = "<group>";
@@ -1060,6 +1099,8 @@
 			children = (
 				2CA94AC51FFC73A0003A2036 /* YGSingleCell.h */,
 				2CA94AC61FFC73A0003A2036 /* YGSingleCell.m */,
+				05F49F2D201EB3ED003C018F /* YGLockSingleCell.h */,
+				05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */,
 				2CA94AC91FFC7414003A2036 /* YGChallengeCell.h */,
 				2CA94AC81FFC7414003A2036 /* YGChallengeCell.m */,
 				2C9248DA1FFF744A000B326A /* YGFirstInstallAlertCell.h */,
@@ -1502,6 +1543,7 @@
 				2CA5A6E61F67778100547CF1 /* main.m */,
 				2C70E8CB1F95B977003FC59C /* key.h */,
 				2C9575FC1F70B304007DD6B9 /* server.h */,
+				05F49F39201ECEC7003C018F /* YGEUNM.h */,
 				2C649B611F9731D00084C351 /* yoga.cer */,
 				2ADB8B711F6A39BD001CD003 /* Yoga.pch */,
 				2C01F6071F9F287F003F22D1 /* GoogleService-Info.plist */,
@@ -1532,6 +1574,7 @@
 		2CA5A7181F67B88D00547CF1 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				05F49F3E201ED7C2003C018F /* share */,
 				2C3437011FE9105C001C7866 /* login */,
 				2C0516771F67EA01003CF71C /* player */,
 				2CA5A71B1F67B9B100547CF1 /* account */,
@@ -2022,6 +2065,7 @@
 		2CA5A6DA1F67778100547CF1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = YG;
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = lyj;
 				TargetAttributes = {
@@ -2339,6 +2383,7 @@
 				2C34371A1FE914EC001C7866 /* YGOnboardingOfNotificationController.m in Sources */,
 				2CA5A7B21F67C3AD00547CF1 /* YGStringUtil.m in Sources */,
 				2C9575FF1F70B556007DD6B9 /* YGChallenge.m in Sources */,
+				05F49F42201ED7E3003C018F /* YGShareCompleteViewController.m in Sources */,
 				2C3437171FE914BA001C7866 /* YGOnboardingOfRecommendationController.m in Sources */,
 				2A5666621F6A97DB00069411 /* YGWorkoutBannerCell.m in Sources */,
 				2CA6022F1F68F72E00D06BCD /* YGPlayer.m in Sources */,
@@ -2375,7 +2420,9 @@
 				2CB4ECFF1F78DB800018902F /* YGRoutineStartCommand.m in Sources */,
 				2CB1D7871F6FD17E00199E4C /* YGChallengeListService.m in Sources */,
 				2C98044A1F8F428500336611 /* YGAchievementCommand.m in Sources */,
+				05F49F2F201EB3ED003C018F /* YGLockSingleCell.m in Sources */,
 				2ADB8B901F6A7601001CD003 /* YGTextHeader.m in Sources */,
+				05F49F48201F25E4003C018F /* YGSessionShareAlert.m in Sources */,
 				2C9576341F7125AF007DD6B9 /* YGSession+Extension.m in Sources */,
 				2C34371D1FE9158A001C7866 /* YGTermsOfUseController.m in Sources */,
 				2CA5A6EA1F67778100547CF1 /* YGAppDelegate.m in Sources */,
@@ -2418,6 +2465,7 @@
 				2ADB8B581F6A1E70001CD003 /* YGChallengeController.m in Sources */,
 				2A56665B1F6A84DE00069411 /* YGChosenChallengeFooter.m in Sources */,
 				2ADB8B841F6A4F44001CD003 /* YGChallengeBannerCell.m in Sources */,
+				05F49F32201EC8F2003C018F /* YGUnSessionBannerCell.m in Sources */,
 				2CA5A7211F67BAD000547CF1 /* YGTabBarController.m in Sources */,
 				2A5666681F6AAD1F00069411 /* YGSessionBannerCell.m in Sources */,
 				2CA5A7B51F67CA1B00547CF1 /* UINavigationBar+Extension.m in Sources */,
@@ -2431,6 +2479,7 @@
 				2A56666E1F6AB4A300069411 /* YGSessionLockedFooter.m in Sources */,
 				2C9576171F70C00D007DD6B9 /* YGAnonymousLoginCommand.m in Sources */,
 				2C912F351FEA4628007E68A4 /* YGEmaiTextField.m in Sources */,
+				05F49F38201ECD56003C018F /* YGSessionShareLockView.m in Sources */,
 				2C8D9C941FFDC21500ACE116 /* YGSinglesListController.m in Sources */,
 				2CB1D7581F6F74B900199E4C /* YGAccountEntranceCell.m in Sources */,
 				2CA94AE21FFCD92A003A2036 /* YGHomeCurrentChallengeCell.m in Sources */,

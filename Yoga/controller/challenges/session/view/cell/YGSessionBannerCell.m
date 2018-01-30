@@ -85,7 +85,7 @@
         _session = session;
         self.titleLabel.text = session.title;
         self.subTitleLabel.text = [NSString stringWithFormat:@"%@ MINUTES",session.duration];
-        [self.coverImgv setImageWithURL:[NSURL URLWithString:session.coverImg.coverUrl] placeholderImage:nil];
+        [self.coverImgv setImageWithURL:[NSURL URLWithString:session.coverImg.coverUrl] placeholderImage:[UIImage imageNamed:@"Routine-cover-default.png"]];
     }
     self.favorateBtn.selected = session.favorate.boolValue;
 }

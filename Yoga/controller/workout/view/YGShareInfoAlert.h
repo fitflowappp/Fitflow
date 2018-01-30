@@ -11,5 +11,6 @@
 @interface YGShareInfoAlert : YGBaseAlert
 @property (nonatomic,strong) UIButton *shareBtn;
 @property (nonatomic,strong) UIButton *cancelShareToFacebookBtn;
+@property (nonatomic,strong) UIButton *startNewChallengeBtn;
 -(id)initWithFrame:(CGRect)frame shareInfo:(NSMutableArray*)shareInfoList;
 @end

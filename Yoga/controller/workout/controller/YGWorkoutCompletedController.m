@@ -100,12 +100,23 @@
     shareBtn.layer.masksToBounds = YES;
     shareBtn.layer.cornerRadius = shareBtn.frame.size.height/2;
     [shareBtn setBackgroundColor:[UIColor colorWithHexString:@"#41D395"]];
-    [shareBtn setTitle:@"SHARE THIS CLASS" forState:UIControlStateNormal];
+    [shareBtn setTitle:@"SHARE & EARN" forState:UIControlStateNormal];
     [shareBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14]];
     [shareBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
     [shareBtn addTarget:self action:@selector(didSelectShare:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:shareBtn];
     self.scrollView.contentSize = CGSizeMake(0,CGRectGetMaxY(completedMessageLable.frame));
+    
+    UILabel *shareLabel = [[UILabel alloc] init];
+    shareLabel.frame = CGRectMake(16*SCALE, shareBtn.frame.origin.y-14*SCALE-btnHeight, self.scrollView.frame.size.width-32*SCALE,1);
+    shareLabel.text = @"Share with friends to earn bonus classes";
+    shareLabel.textAlignment = NSTextAlignmentCenter;
+    shareLabel.font = [UIFont fontWithName:@"Lato-Regular" size:16];
+    shareLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
+    [shareLabel sizeToFit];
+    shareLabel.frame = CGRectMake(16*SCALE, shareBtn.frame.origin.y-14*SCALE - 20, self.scrollView.frame.size.width-32*SCALE, 20);
+    [self.view addSubview:shareLabel];
+    
 }
 
 -(void)addReminderAlert{

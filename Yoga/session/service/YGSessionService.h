@@ -19,4 +19,10 @@
 
 -(void)fetchOtherCommandsucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
 
+-(void)fetchLockSinglesListSucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
+
+-(void)fetchUnlockSinglesListSucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
+
+-(void)fetchShareLockSessionWithWorkoutID:(NSString*)workoutID sucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock;
+
 @end

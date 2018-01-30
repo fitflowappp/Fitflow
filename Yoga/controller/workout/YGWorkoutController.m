@@ -225,8 +225,14 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
             [mainWidow addSubview:shareInfoAlert];
             [shareInfoAlert.shareBtn addTarget:self action:@selector(shareWhenGenerateNewShareInfo) forControlEvents:UIControlEventTouchUpInside];
             [shareInfoAlert.cancelShareToFacebookBtn addTarget:self action:@selector(cancelShareToFacebookWhenGenerateNewShareInfo) forControlEvents:UIControlEventTouchUpInside];
+            [shareInfoAlert.startNewChallengeBtn addTarget:self action:@selector(startNewClassesWhenClassesCompleted) forControlEvents:UIControlEventTouchUpInside];
         }
     }
+}
+
+- (void)startNewClassesWhenClassesCompleted
+{
+    [shareInfoAlert hide];
 }
 
 -(void)generateNewShareInfo:(NSNotification*)notic{

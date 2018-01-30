@@ -9,5 +9,8 @@
 #import "YGNetworkBaseCommand.h"
 
 @interface YGSinglesListCommand : YGNetworkBaseCommand
-
+@property (nonatomic,copy) FAILURE_BLOCK lockerrorBlock;
+@property (nonatomic,copy) SUCCESS_BLOCK locksuccessBlock;
+@property (nonatomic,copy) FAILURE_BLOCK unlockerrorBlock;
+@property (nonatomic,copy) SUCCESS_BLOCK unlocksuccessBlock;
 @end

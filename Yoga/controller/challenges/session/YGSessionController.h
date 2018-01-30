@@ -13,6 +13,10 @@
 @property (nonatomic) BOOL canPlay;
 @property (nonatomic) BOOL fromSingle;
 @property (nonatomic) BOOL isMineChallenge;
+@property (nonatomic) BOOL isMustShare;
+@property (nonatomic) BOOL isShareComplete;
+
+
 @property (nonatomic,strong) NSString    *workoutID;
 @property (nonatomic,strong) NSString    *challengeID;
 @property (nonatomic,strong) YGChallenge *fromChallenge;

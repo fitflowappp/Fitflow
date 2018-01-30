@@ -9,6 +9,7 @@
 #import "YGSingleCell.h"
 #import "UIColor+Extension.h"
 #import "UIImageView+AFNetworking.h"
+#import "YGSession.h"
 @interface YGSingleCell ()
 @property (nonatomic,strong) UIView   *darkv;
 @property (nonatomic,strong) UIButton *playBtn;
@@ -37,7 +38,7 @@
 
 -(void)addDarkv{
     self.darkv = [[UIView alloc] initWithFrame:self.bounds];
-    self.darkv.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
+    self.darkv.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.3];
     [self addSubview:self.darkv];
 }
 
@@ -82,7 +83,7 @@
         _workout = workout;
         self.titleLabel.text = workout.title;
         self.subTitleLabel.text = [NSString stringWithFormat:@"%@ Minutes",workout.duration];
-        [self.challengeCoverImgv setImageWithURL:[NSURL URLWithString:workout.coverImg.coverUrl] placeholderImage:nil];
+        [self.challengeCoverImgv setImageWithURL:[NSURL URLWithString:workout.coverImg.coverUrl] placeholderImage:[UIImage imageNamed:@"Routine-cover-default.png"]];
     }
 }
 
@@ -93,4 +94,5 @@
         }
     }
 }
+
 @end

@@ -13,9 +13,13 @@
 #import "YGSessionController.h"
 #import "YGSinglesListController.h"
 #import "YGFirstInstallAlertCell.h"
+#import "YGLockSingleCell.h"
 #import "YGDeviceUtil.h"
+
 static NSString *SINGLES_CELLID = @"singlesCellID";
 static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
+static NSString *LockSingleCell = @"YGLockSingleCell";
+
 @interface YGSinglesListController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSingleCellDelegate>
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) NSMutableArray   *singlesList;
@@ -40,14 +44,14 @@ static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
 }
 
 -(void)fetchSinglesList{
-    [[YGSessionService instance] fetchSinglesListSucessBlock:^(NSMutableArray *singlesList) {
-        if (singlesList.count) {
+    
+    [[YGSessionService instance] fetchLockSinglesListSucessBlock:^(id data) {
+        if (data) {
             [self.singlesList removeAllObjects];
-            [self.singlesList addObjectsFromArray:singlesList];
+            [self.singlesList addObjectsFromArray:data];
             [self.collectionView reloadData];
         }
         [self endLoading];
-        
     } errorBlock:^(NSError *error) {
         [self endLoading];
         if (self.singlesList.count) {
@@ -78,6 +82,7 @@ static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
     [self.collectionView registerClass:[YGSingleCell class] forCellWithReuseIdentifier:SINGLES_CELLID];
+    [self.collectionView registerClass:[YGLockSingleCell class] forCellWithReuseIdentifier:LockSingleCell];
     [self.collectionView registerClass:[YGFirstInstallAlertCell class] forCellWithReuseIdentifier:FIRST_INSTALL_ALERT_CELLID];
     self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchSinglesList) view: self.collectionView];
     [self.view addSubview:self.collectionView];
@@ -99,10 +104,19 @@ static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == [self numberOfSectionsInCollectionView:collectionView]-1) {
-        YGSingleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SINGLES_CELLID forIndexPath:indexPath];
-        cell.workout = self.singlesList[indexPath.row];
-        cell.delegate = self;
-        return cell;
+        
+        YGSession *listModel = self.singlesList[indexPath.row];
+        
+        if (listModel.singlesLock.integerValue) {
+            YGLockSingleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:LockSingleCell forIndexPath:indexPath];
+            cell.workout = listModel;
+            return cell;
+        } else {
+            YGSingleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SINGLES_CELLID forIndexPath:indexPath];
+            cell.workout = listModel;
+            cell.delegate = self;
+            return cell;
+        }
     }
     YGFirstInstallAlertCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:FIRST_INSTALL_ALERT_CELLID forIndexPath:indexPath];
     cell.text = @"Singles are one-off sessions\nwith specific themes";
@@ -147,7 +161,8 @@ static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
     if (indexPath.section == [self numberOfSectionsInCollectionView:collectionView]-1) {
         YGSession *workout = self.singlesList[indexPath.row];
         YGSessionController *controller = [[YGSessionController alloc] init];
-        controller.canPlay = YES;
+        controller.canPlay = workout.singlesLock.integerValue ? NO : YES;
+        controller.isMustShare = workout.singlesLock.integerValue;
         controller.fromSingle = YES;
         controller.workoutID = workout.ID;
         controller.challengeID = workout.singleChallengeID;

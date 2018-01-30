@@ -11,4 +11,5 @@ pod 'Firebase/Crash'
 pod 'Firebase/Performance'
 pod 'FBNotifications'
 pod 'BuglyHotfix'
+pod 'MJExtension', '~> 3.0.13'
 end

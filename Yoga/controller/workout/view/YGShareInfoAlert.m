@@ -40,7 +40,7 @@
         self.tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.logoImgv.frame)+24*scale,self.backGroundv.frame.size.width,30*scale)];
         self.tipLabel.numberOfLines = 0;
         self.tipLabel.textAlignment = NSTextAlignmentCenter;
-        self.tipLabel.text = @"CONGRATULATIONS, YOU HAVE \nCOMPLETED:";
+        self.tipLabel.text = @"CONGRATULATIONS!";
         self.tipLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
         self.tipLabel.font = [UIFont fontWithName:@"Lato-Bold" size:12*scale];
         [self.backGroundv addSubview:self.tipLabel];
@@ -49,10 +49,10 @@
         CGRect contentRect = CGRectMake(24*scale,CGRectGetMaxY(self.tipLabel.frame)+8*scale,self.backGroundv.frame.size.width-48*scale,100);
         self.contentLabel = [[UILabel alloc] initWithFrame:contentRect];
         self.contentLabel.numberOfLines = 0;
-        self.contentLabel.text = content;
+        self.contentLabel.text = [NSString stringWithFormat:@"%@\n\n Share with friends to earn bonus classes", content];
         self.contentLabel.textAlignment = NSTextAlignmentCenter;
         self.contentLabel.textColor = [UIColor colorWithHexString:@"#000000"];
-        self.contentLabel.font = [UIFont fontWithName:@"Lato-Bold" size:20*scale];
+        self.contentLabel.font = [UIFont fontWithName:@"Lato-Bold" size:16*scale];
         [self.contentLabel sizeToFit];
         contentRect.size.height = self.contentLabel.frame.size.height;
         self.contentLabel.frame = contentRect;
@@ -66,12 +66,25 @@
         self.shareBtn.layer.masksToBounds = YES;
         self.shareBtn.backgroundColor = [UIColor colorWithHexString:@"#41D395"];
         self.shareBtn.layer.cornerRadius = self.shareBtn.frame.size.height/2;
-        [self.shareBtn setTitle:@"SHARE WITH FRIENDS" forState:UIControlStateNormal];
+//        SHARE WITH FRIENDS
+        [self.shareBtn setTitle:@"SHARE & EARN" forState:UIControlStateNormal];
         [self.shareBtn setTitleColor:[UIColor colorWithHexString:@"#FFFFFF"] forState:UIControlStateNormal];
         [self.shareBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
         [self.backGroundv addSubview:self.shareBtn];
+        
+        self.startNewChallengeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.startNewChallengeBtn.frame = CGRectMake(self.shareBtn.frame.origin.x,CGRectGetMaxY(self.shareBtn.frame)+16*scale,self.backGroundv.frame.size.width-self.shareBtn.frame.origin.x*2,self.shareBtn.frame.size.height);
+        self.startNewChallengeBtn.layer.masksToBounds = YES;
+        self.startNewChallengeBtn.layer.cornerRadius = self.startNewChallengeBtn.frame.size.height/2;
+        self.startNewChallengeBtn.layer.borderWidth = 1.0f;
+        self.startNewChallengeBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
+        [self.startNewChallengeBtn setTitle:@"Next Class" forState:UIControlStateNormal];
+        [self.startNewChallengeBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
+        [self.startNewChallengeBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
+        [self.backGroundv addSubview:self.startNewChallengeBtn];
+        
         //
-        backGroundRect.size.height = CGRectGetMaxY(self.shareBtn.frame)+shareBtnMargin;
+        backGroundRect.size.height = CGRectGetMaxY(self.startNewChallengeBtn.frame)+shareBtnMargin;
         self.backGroundv.frame = backGroundRect;
         self.backGroundv.center = self.center;
         [self addSubview:self.backGroundv];
@@ -84,6 +97,7 @@
         self.cancelShareToFacebookBtn.layer.cornerRadius = self.cancelShareToFacebookBtn.frame.size.width/2;
         self.cancelShareToFacebookBtn.center = CGPointMake(CGRectGetMaxX(self.backGroundv.frame),self.backGroundv.frame.origin.y);
         [self addSubview:self.cancelShareToFacebookBtn];
+        
     }
     return self;
 }

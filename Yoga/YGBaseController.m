@@ -8,7 +8,7 @@
 #import <Social/Social.h>
 #import "YGAppDelegate.h"
 #import "YGBaseController.h"
-
+#import "YGShareCompleteViewController.h"
 @interface YGBaseController ()
 @end
 @implementation YGBaseController
@@ -84,7 +84,12 @@
 }
 
 -(void)didSelectShareItem{
-    NSLog(@"Error, SubClass must override this method!");;
+    NSLog(@"Error, SubClass must override this method!");
+}
+
+-(void)didSelectShareCompleted{
+    YGShareCompleteViewController *controller = [YGShareCompleteViewController new];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)retryWhenNetworkError{
@@ -107,6 +112,7 @@
         [controller setCompletionWithItemsHandler:^(UIActivityType  _Nullable activityType, BOOL completed, NSArray * _Nullable returnedItems, NSError * _Nullable activityError) {
             if (completed==YES) {
                 NSLog(@"msg: share completed");
+                [self didSelectShareCompleted];
             }else{
                 if (activityError) {
                     NSLog(@"msg: share error:%@",activityError.localizedDescription);

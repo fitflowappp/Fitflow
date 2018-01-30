@@ -94,7 +94,7 @@
         _challenge = challenge;
         self.titleLabel.text = challenge.title;
         self.subTitleLabel.text = challenge.subTitle;
-        [self.challengeCoverImgv setImageWithURL:[NSURL URLWithString:challenge.coverImg.coverUrl] placeholderImage:nil];
+        [self.challengeCoverImgv setImageWithURL:[NSURL URLWithString:challenge.coverImg.coverUrl] placeholderImage:[UIImage imageNamed:@"Routine-cover-default.png"]];
         self.challengeStarImgv.hidden = !challenge.isMineChallenge.boolValue;
         self.completedIcomImgv.hidden = challenge.status.intValue>2?NO:YES;
     }

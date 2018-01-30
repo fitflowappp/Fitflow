@@ -19,6 +19,7 @@
 #import "YGUserService.h"
 #import "YGSession+Extension.h"
 #import "YGSessionBannerCell.h"
+#import "YGUnSessionBannerCell.h"
 #import "YGSessionController.h"
 #import "YGSessionLockedFooter.h"
 #import "YGSessionUnlockedFooter.h"
@@ -29,19 +30,26 @@
 #import "YGChosenChallengeFooter.h"
 #import "YGChallengeService.h"
 #import "YGChangeChallengeAlert.h"
+#import "YGSessionShareLockView.h"
+#import "YGSessionShareAlert.h"
 static NSString *ROUTINE_CELLID    = @"routineCellID";
 
 static NSString *SESSION_HEADERID  = @"sessionHeaderID";
 
+static NSString *SESSION_BANNER_UNCELLID = @"UnSessionBannerCellID";
+
 static NSString *SESSION_BANNER_CELLID   = @"sessionBannerCellID";
 
 static NSString *SESSION_UNLOCKED_FOOTERID  = @"sessionUnlockedFooterID";
+
+static NSString *CHALLENGE_SHARE_FOOTERID = @"SessionShareLockViewID";
 
 static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
 @interface YGSessionController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSessionBannerCellDelegate>
 @property (nonatomic,strong) YGSession *workout;
 @property (nonatomic,strong) UICollectionView *collectionView;
+@property (nonatomic, weak) YGSessionShareAlert *changeChallengeAlert;
 @end
 
 @implementation YGSessionController{
@@ -53,9 +61,10 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 #pragma mark Life-Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.navigationItem.title = @"CLASS";
-    [self setLeftNavigationItem];
-    [self setRightShareNavigationItem];
+    
+    [self setUpnav];
     [self setCollectionView];
     [YGHUD loading:self.view];
 }
@@ -100,6 +109,23 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 }
 
 #pragma mark UI
+
+- (void)setUpnav
+{
+    [self setLeftNavigationItem];
+    if (_isShareComplete)  return;
+    [self setRightShareNavigationItem];
+}
+
+- (void)back
+{
+    if (self.navigationController.viewControllers.count > 3 && self.canPlay) {
+        [self.navigationController popToViewController:self.navigationController.viewControllers[self.navigationController.viewControllers.count-3] animated:YES];
+    } else {
+        [super back];
+    }
+}
+
 -(void)setCollectionView{
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.minimumLineSpacing = 0;
@@ -111,10 +137,12 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     self.collectionView.backgroundColor = [UIColor clearColor];
     [self.collectionView registerClass:[YGRoutineCell class] forCellWithReuseIdentifier:ROUTINE_CELLID];
     [self.collectionView registerClass:[YGSessionBannerCell class] forCellWithReuseIdentifier:SESSION_BANNER_CELLID];
+    [self.collectionView registerClass:[YGUnSessionBannerCell class] forCellWithReuseIdentifier:SESSION_BANNER_UNCELLID];
     self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchWorkoutInfo) view:self.collectionView];
     [self.collectionView registerClass:[YGTextHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:SESSION_HEADERID];
     [self.collectionView registerClass:[YGSessionUnlockedFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:SESSION_UNLOCKED_FOOTERID];
     [self.collectionView registerClass:[YGChosenChallengeFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:CHALLENGE_CHOOSEN_FOOTERID];
+    [self.collectionView registerClass:[YGSessionShareLockView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:CHALLENGE_SHARE_FOOTERID];
     [self.view addSubview:self.collectionView];
 }
 
@@ -132,6 +160,11 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section==0) {
+        if (self.isMustShare || self.isShareComplete) {
+            YGUnSessionBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SESSION_BANNER_UNCELLID forIndexPath:indexPath];
+            cell.session = self.workout;
+            return cell;
+        }
         YGSessionBannerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:SESSION_BANNER_CELLID forIndexPath:indexPath];
         cell.session = self.workout;
         cell.shouldFavorate = self.fromSingle;
@@ -156,7 +189,22 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
                 [footer.playVedioBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
             }
             return footer;
-        }else{
+        } else if (self.isMustShare) {
+            YGSessionShareLockView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:CHALLENGE_SHARE_FOOTERID forIndexPath:indexPath];
+            SEL action = @selector(didSeletedShareLockAction);
+            if ([footer.playVedioBtn respondsToSelector:action]==NO) {
+                [footer.playVedioBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+            }
+            return footer;
+        } else if (self.isShareComplete) {
+            YGSessionShareLockView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:CHALLENGE_SHARE_FOOTERID forIndexPath:indexPath];
+            footer.isComplete = YES;
+            SEL action = @selector(didSeletedShareCompleteAction);
+            if ([footer.playVedioBtn respondsToSelector:action]==NO) {
+                [footer.playVedioBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+            }
+            return footer;
+        } else{
             YGChosenChallengeFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:CHALLENGE_CHOOSEN_FOOTERID forIndexPath:indexPath];
             SEL action = @selector(showChangeChallengeAletIfNotFromUserChallenge);
             if ([footer.choosenChallengeBtn respondsToSelector:action]==NO) {
@@ -210,6 +258,19 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 }
 
 #pragma mark method
+
+-(void)didSelectShareCompleted {
+    if (_isMustShare) {
+        _isMustShare = NO;
+        _canPlay = YES;
+        [YGTopAlert alert:@"Thanks for sharing! You have now unlocked this bonus class. Enjoy!" bkColorCode:@"#41D395"];
+        [[YGSessionService instance] fetchShareLockSessionWithWorkoutID:self.workoutID sucessBlock:nil errorBlock:nil];
+        [self.collectionView reloadData];
+    } else {
+        [super didSelectShareCompleted];
+    }
+}
+
 -(void)playVideo{
     if (self.isMineChallenge==YES&&self.canPlay==NO) {
         [self showWorkoutLockedAlertIfFromUserChallenge];
@@ -270,6 +331,24 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
 #pragma mark
 
+- (void)didSeletedShareLockAction
+{
+    [self didSelectShareItem];
+}
+
+- (void)didSeletedShareCompleteAction
+{
+    self.canPlay = YES;
+    self.isMustShare = NO;
+    self.isShareComplete = NO;
+
+    [YGTopAlert alert:@"You have now unlocked this bonus class. Enjoy!" bkColorCode:@"#41D395"];
+    
+    [[YGSessionService instance] fetchShareLockSessionWithWorkoutID:self.workoutID sucessBlock:nil errorBlock:nil];
+
+    [self.collectionView reloadData];
+}
+
 -(void)showChangeChallengeAletIfNotFromUserChallenge{
     if (self.userCurrentChallenge.status.intValue>2) {
         [self changeChallengeNetwork];
@@ -305,6 +384,27 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 }
 #pragma share
 -(void)didSelectShareItem{
+    
+    if (!self.isMustShare) {
+        [self didSeltedShareAlert];
+        return;
+    }
+    
+    UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+    NSString *alertMsg = @"Share with friends to earn bonus classes";
+    YGSessionShareAlert *changeChallengeAlert = [[YGSessionShareAlert alloc] initWithFrame:mainWindow.bounds contentTittle:alertMsg];
+    SEL action = @selector(didSeltedShareAlert);
+    if ([changeChallengeAlert.changeBtn respondsToSelector:action]==NO) {
+          [changeChallengeAlert.changeBtn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    }
+    [mainWindow addSubview:changeChallengeAlert];
+    self.changeChallengeAlert = changeChallengeAlert;
+
+}
+- (void)didSeltedShareAlert
+{
+    [self.changeChallengeAlert hide];
+    
     if (self.workout.shareUrl) {
         NSString *shareTitle = [NSString stringWithFormat:@"I found this interesting yoga class on the Fitflow app. It's called %@. Want to try it with me? It's free. %@",self.workout.title,self.workout.shareUrl];
         [self shareWithContent:@[shareTitle]];

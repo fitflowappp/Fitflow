@@ -8,18 +8,61 @@
 #import "YGSession.h"
 #import "YGStringUtil.h"
 #import "YGSinglesListCommand.h"
-
+#import "YGUserService.h"
 @implementation YGSinglesListCommand
 -(void)execute{
-    NSString *requestUrl = URLForge(@"/yoga/challenge/single/workout");
+    NSString *requestUrl = nil;
+    if (self.successBlock) {
+       requestUrl = URLForge(@"/yoga/challenge/single/workout");
+    } else if (self.locksuccessBlock) {
+       requestUrl = URLForge(@"/yoga/app/workout/single/page");
+    } else {
+       requestUrl = URLForge(@"/yoga/app/workout/single/page/lock");
+    }
     [self sendRequestWithUrl:requestUrl method:GET];
+    
+    NSLog(@"%@", [[YGUserService instance] localUser].sessionId);
+    NSLog(@"1");
 }
 
 -(void)successHandle:(id)data{
-    NSDictionary *result = [data objectForKey:@"result"];
-    int code = [[result objectForKey:@"code"] intValue];
+    
+    if (self.successBlock) {
+        NSDictionary *result = [data objectForKey:@"result"];
+        int code = [[result objectForKey:@"code"] intValue];
+        NSMutableArray *singlesList = [NSMutableArray array];
+        if (code ==1) {
+            NSArray *content = [data objectForKey:@"content"];
+            if ([YGStringUtil notEmpty:content]) {
+                for (NSDictionary *dictionary in content) {
+                    YGSession *session = [YGSession objectFrom:dictionary];
+                    [singlesList addObject:session];
+                }
+            }
+        }
+        self.successBlock(singlesList);
+        return;
+    }
+    
+    if (self.locksuccessBlock) {
+        NSMutableArray *singlesList = [NSMutableArray array];
+        NSInteger totalElements = [data[@"totalElements"] integerValue];
+        if (totalElements) {
+            NSArray *content = [data objectForKey:@"content"];
+            if ([YGStringUtil notEmpty:content]) {
+                for (NSDictionary *dictionary in content) {
+                    YGSession *session = [YGSession objectFrom:dictionary];
+                    [singlesList addObject:session];
+                }
+            }
+        }
+        self.locksuccessBlock(singlesList);
+        return;
+    }
+    
     NSMutableArray *singlesList = [NSMutableArray array];
-    if (code ==1) {
+    NSInteger totalElements = [data[@"totalElements"] integerValue];
+    if (totalElements) {
         NSArray *content = [data objectForKey:@"content"];
         if ([YGStringUtil notEmpty:content]) {
             for (NSDictionary *dictionary in content) {
@@ -28,10 +71,22 @@
             }
         }
     }
-    self.successBlock(singlesList);
+    self.unlocksuccessBlock(singlesList);
+   
 }
 
 -(void)errorHandle:(NSError *)error{
-    self.errorBlock(error);
+    if (self.errorBlock) {
+        self.errorBlock(error);
+        return;
+    }
+    if (self.lockerrorBlock) {
+        self.lockerrorBlock(error);
+        return;
+    }
+    self.unlockerrorBlock(error);
+    
 }
+
+
 @end

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YGSession.h"
+@class YGSession;
+
 @protocol YGSingleCellDelegate<NSObject>
 -(void)playWorkoutInSingle:(YGSession*)workout;
 @end

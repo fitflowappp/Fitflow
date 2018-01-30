@@ -14,5 +14,6 @@
 @property (nonatomic,strong) NSNumber *width;
 @property (nonatomic,strong) NSNumber *height;
 @property (nonatomic,strong) NSString *coverUrl;
+@property (nonatomic, copy) NSString *contentUri;//v1.4.3解锁分享添加字段
 +(YGImage*)objectFrom:(id)dictionary;
 @end
