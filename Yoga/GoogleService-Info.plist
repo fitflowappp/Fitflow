@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>393772736025-ufgvnq9vun2ui40tav6dhr7vsmbug2np.apps.googleusercontent.com</string>
+	<string>595033519715-9997a6f6hfncs49k4792tdqci101hi6c.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.393772736025-ufgvnq9vun2ui40tav6dhr7vsmbug2np</string>
+	<string>com.googleusercontent.apps.595033519715-9997a6f6hfncs49k4792tdqci101hi6c</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAoIgZpa6sI674EFK2iABqRIetlq1EWJRk</string>
+	<string>AIzaSyBgGfo_2qdF4ringSOAByUrTGvbznVcNao</string>
 	<key>GCM_SENDER_ID</key>
-	<string>393772736025</string>
+	<string>595033519715</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.Fitflow.BundleID</string>
+	<string>com.firebase.test</string>
 	<key>PROJECT_ID</key>
-	<string>fitness-app-76455</string>
+	<string>test-9a9d6</string>
 	<key>STORAGE_BUCKET</key>
-	<string>fitness-app-76455.appspot.com</string>
+	<string>test-9a9d6.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:393772736025:ios:425e119b57a66c97</string>
+	<string>1:595033519715:ios:a1778b113a5719c1</string>
 	<key>DATABASE_URL</key>
-	<string>https://fitness-app-76455.firebaseio.com</string>
+	<string>https://test-9a9d6.firebaseio.com</string>
 </dict>
 </plist>

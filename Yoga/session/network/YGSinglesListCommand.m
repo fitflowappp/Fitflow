@@ -20,9 +20,6 @@
        requestUrl = URLForge(@"/yoga/app/workout/single/page/lock");
     }
     [self sendRequestWithUrl:requestUrl method:GET];
-    
-    NSLog(@"%@", [[YGUserService instance] localUser].sessionId);
-    NSLog(@"1");
 }
 
 -(void)successHandle:(id)data{
@@ -59,6 +56,7 @@
         self.locksuccessBlock(singlesList);
         return;
     }
+    
     
     NSMutableArray *singlesList = [NSMutableArray array];
     NSInteger totalElements = [data[@"totalElements"] integerValue];

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		051CEDE1202948BE00705548 /* YGDeepLinkUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */; };
+		05981EB82021906200207636 /* YGBuglyUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 05981EB72021906200207636 /* YGBuglyUtil.m */; };
+		05981EBB2021CA5700207636 /* home_update@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EB92021CA5600207636 /* home_update@3x.png */; };
+		05981EBC2021CA5700207636 /* home_update@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EBA2021CA5700207636 /* home_update@2x.png */; };
 		05F49F2F201EB3ED003C018F /* YGLockSingleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */; };
 		05F49F32201EC8F2003C018F /* YGUnSessionBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F31201EC8F2003C018F /* YGUnSessionBannerCell.m */; };
 		05F49F38201ECD56003C018F /* YGSessionShareLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F37201ECD56003C018F /* YGSessionShareLockView.m */; };
@@ -300,7 +304,7 @@
 		2CB4ED0B1F7910140018902F /* YGRoutinePauseCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB4ED0A1F7910140018902F /* YGRoutinePauseCommand.m */; };
 		2CBC74631F949E370006E93A /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CBC74621F949E370006E93A /* AdSupport.framework */; };
 		2CBC74661F94A1800006E93A /* FirebaseCrash.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CBC74651F94A1800006E93A /* FirebaseCrash.json */; };
-		B6C77B7BE1FEC5B5324995E7 /* libPods-Yoga.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DFB41E39588FD105D3FF762 /* libPods-Yoga.a */; };
+		FF3B1D88B5DFD6CC37289136 /* Pods_Yoga.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F1ECFA6F918B9BD0C2E1F93 /* Pods_Yoga.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -321,13 +325,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		051CEDDF202948BE00705548 /* YGDeepLinkUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGDeepLinkUtil.h; sourceTree = "<group>"; };
+		051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGDeepLinkUtil.m; sourceTree = "<group>"; };
+		05981EB62021906200207636 /* YGBuglyUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGBuglyUtil.h; sourceTree = "<group>"; };
+		05981EB72021906200207636 /* YGBuglyUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGBuglyUtil.m; sourceTree = "<group>"; };
+		05981EB92021CA5600207636 /* home_update@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_update@3x.png"; sourceTree = "<group>"; };
+		05981EBA2021CA5700207636 /* home_update@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_update@2x.png"; sourceTree = "<group>"; };
 		05F49F2D201EB3ED003C018F /* YGLockSingleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGLockSingleCell.h; sourceTree = "<group>"; };
 		05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGLockSingleCell.m; sourceTree = "<group>"; };
 		05F49F30201EC8F2003C018F /* YGUnSessionBannerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGUnSessionBannerCell.h; sourceTree = "<group>"; };
 		05F49F31201EC8F2003C018F /* YGUnSessionBannerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGUnSessionBannerCell.m; sourceTree = "<group>"; };
 		05F49F36201ECD56003C018F /* YGSessionShareLockView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGSessionShareLockView.h; sourceTree = "<group>"; };
 		05F49F37201ECD56003C018F /* YGSessionShareLockView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGSessionShareLockView.m; sourceTree = "<group>"; };
-		05F49F39201ECEC7003C018F /* YGEUNM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGEUNM.h; sourceTree = "<group>"; };
 		05F49F40201ED7E3003C018F /* YGShareCompleteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGShareCompleteViewController.h; sourceTree = "<group>"; };
 		05F49F41201ED7E3003C018F /* YGShareCompleteViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGShareCompleteViewController.m; sourceTree = "<group>"; };
 		05F49F46201F25E4003C018F /* YGSessionShareAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGSessionShareAlert.h; sourceTree = "<group>"; };
@@ -336,6 +345,7 @@
 		05FF2F18201DC90100BF67B2 /* YGHomeUpdataAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGHomeUpdataAlert.h; sourceTree = "<group>"; };
 		05FF2F1A201DC96500BF67B2 /* YGUserOtherCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGUserOtherCommand.h; sourceTree = "<group>"; };
 		05FF2F1B201DC96500BF67B2 /* YGUserOtherCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGUserOtherCommand.m; sourceTree = "<group>"; };
+		0F1ECFA6F918B9BD0C2E1F93 /* Pods_Yoga.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Yoga.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24E0721853822A59E961DDF6 /* Pods-Yoga.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yoga.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Yoga/Pods-Yoga.debug.xcconfig"; sourceTree = "<group>"; };
 		2A5666591F6A84DE00069411 /* YGChosenChallengeFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGChosenChallengeFooter.h; sourceTree = "<group>"; };
 		2A56665A1F6A84DE00069411 /* YGChosenChallengeFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGChosenChallengeFooter.m; sourceTree = "<group>"; };
@@ -762,7 +772,6 @@
 		2CB4ED0A1F7910140018902F /* YGRoutinePauseCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGRoutinePauseCommand.m; sourceTree = "<group>"; };
 		2CBC74621F949E370006E93A /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2CBC74651F94A1800006E93A /* FirebaseCrash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FirebaseCrash.json; sourceTree = "<group>"; };
-		4DFB41E39588FD105D3FF762 /* libPods-Yoga.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Yoga.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6B6BAF9F335075863F2493B /* Pods-Yoga.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yoga.release.xcconfig"; path = "Pods/Target Support Files/Pods-Yoga/Pods-Yoga.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -774,10 +783,10 @@
 				2CBC74631F949E370006E93A /* AdSupport.framework in Frameworks */,
 				2C4559801F8E0044006A6C27 /* Bolts.framework in Frameworks */,
 				2C45597E1F8E002D006A6C27 /* FBSDKShareKit.framework in Frameworks */,
-				B6C77B7BE1FEC5B5324995E7 /* libPods-Yoga.a in Frameworks */,
 				2C45597B1F8DFE05006A6C27 /* FBSDKCoreKit.framework in Frameworks */,
 				2C4559821F8E0611006A6C27 /* FBSDKMessengerShareKit.framework in Frameworks */,
 				2C45597C1F8DFE05006A6C27 /* FBSDKLoginKit.framework in Frameworks */,
+				FF3B1D88B5DFD6CC37289136 /* Pods_Yoga.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1543,7 +1552,6 @@
 				2CA5A6E61F67778100547CF1 /* main.m */,
 				2C70E8CB1F95B977003FC59C /* key.h */,
 				2C9575FC1F70B304007DD6B9 /* server.h */,
-				05F49F39201ECEC7003C018F /* YGEUNM.h */,
 				2C649B611F9731D00084C351 /* yoga.cer */,
 				2ADB8B711F6A39BD001CD003 /* Yoga.pch */,
 				2C01F6071F9F287F003F22D1 /* GoogleService-Info.plist */,
@@ -1674,6 +1682,8 @@
 				2CA5A7401F67BE8D00547CF1 /* Cancel-green@3x.png */,
 				2C9D181720075898003060DF /* Challenge-c@2x.png */,
 				2C9D181820075898003060DF /* Challenge-c@3x.png */,
+				05981EBA2021CA5700207636 /* home_update@2x.png */,
+				05981EB92021CA5600207636 /* home_update@3x.png */,
 				2CA76E5A2005E575009D4DFA /* Challenge-Complete.jpg */,
 				2C96C5B52004BE2A008ABF77 /* challenge-completed@2x.png */,
 				2C96C5B42004BE2A008ABF77 /* challenge-completed@3x.png */,
@@ -1776,6 +1786,10 @@
 				2CA5A7AE1F67C3AD00547CF1 /* YGDeviceUtil.m */,
 				2C7457091F90C07A00AF2786 /* YGKeychainUtil.h */,
 				2C74570A1F90C07A00AF2786 /* YGKeychainUtil.m */,
+				051CEDDF202948BE00705548 /* YGDeepLinkUtil.h */,
+				051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */,
+				05981EB62021906200207636 /* YGBuglyUtil.h */,
+				05981EB72021906200207636 /* YGBuglyUtil.m */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -1989,13 +2003,13 @@
 		C910B6023F3B38E144044A0B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4DFB41E39588FD105D3FF762 /* libPods-Yoga.a */,
 				2CBC74621F949E370006E93A /* AdSupport.framework */,
 				2C4559811F8E0611006A6C27 /* FBSDKMessengerShareKit.framework */,
 				2C45597F1F8E0044006A6C27 /* Bolts.framework */,
 				2C45597D1F8E002D006A6C27 /* FBSDKShareKit.framework */,
 				2C4559791F8DFE05006A6C27 /* FBSDKCoreKit.framework */,
 				2C45597A1F8DFE05006A6C27 /* FBSDKLoginKit.framework */,
+				0F1ECFA6F918B9BD0C2E1F93 /* Pods_Yoga.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2081,6 +2095,9 @@
 								enabled = 1;
 							};
 							com.apple.Push = {
+								enabled = 0;
+							};
+							com.apple.SafariKeychain = {
 								enabled = 1;
 							};
 						};
@@ -2130,6 +2147,7 @@
 				2C9248DF1FFF9834000B326A /* Discover-cancel-alert@2x.png in Resources */,
 				2C9D181D20075949003060DF /* Lock-c@3x.png in Resources */,
 				2C42EC2A1F9DDE1400B0CE0A /* 1024x1024.png in Resources */,
+				05981EBC2021CA5700207636 /* home_update@2x.png in Resources */,
 				2C28640F2010C7CF004C45C3 /* Classic.mp3 in Resources */,
 				2C743E9E2010442000BB4EDA /* Play-music@2x.png in Resources */,
 				2C907B0B1F72375300BED0CB /* 87 - Settings.png in Resources */,
@@ -2207,6 +2225,7 @@
 				2C4D67F9200F6A08003A2041 /* Play-music-gray@3x.png in Resources */,
 				2CA5A6F01F67778100547CF1 /* Main.storyboard in Resources */,
 				2C7CBB99200E1CA8003ECB29 /* Play-exit@3x.png in Resources */,
+				05981EBB2021CA5700207636 /* home_update@3x.png in Resources */,
 				2C4460D41F7398A700A67867 /* loading-05@2x.png in Resources */,
 				2C4D67F0200F66C6003A2041 /* Play-pre-white@2x.png in Resources */,
 				2C4574A01F99FFD600646AB7 /* launchImage-4@2x.png in Resources */,
@@ -2335,9 +2354,34 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Yoga/Pods-Yoga-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/Branch/Branch.framework",
+				"${BUILT_PRODUCTS_DIR}/FBNotifications/FBNotifications.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMBase64/GTMBase64.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/MJExtension/MJExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Branch.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBNotifications.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMBase64.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2360,6 +2404,7 @@
 				2C9804471F8F3ACD00336611 /* YGFacebookLoginCommand.m in Sources */,
 				2CB1D7841F6FD10300199E4C /* YGChallengeService.m in Sources */,
 				2C912F381FEA4641007E68A4 /* YGPasswordTextField.m in Sources */,
+				051CEDE1202948BE00705548 /* YGDeepLinkUtil.m in Sources */,
 				2C70E8CE1F95CF01003FC59C /* YGChallengeCompletedAlert.m in Sources */,
 				2C9970EF1F7A1FAF00C77C5E /* YGSkipRoutineCommand.m in Sources */,
 				2A5666651F6A98BE00069411 /* YGStartWorkoutFooter.m in Sources */,
@@ -2434,6 +2479,7 @@
 				2C8D9CA31FFE33A900ACE116 /* YGHomeAddSinglesFooter.m in Sources */,
 				2C7CBB6F200DE1BE003ECB29 /* YGBackgroundMusicVolume.m in Sources */,
 				2C8D9C931FFDC21500ACE116 /* YGChallengeListController.m in Sources */,
+				05981EB82021906200207636 /* YGBuglyUtil.m in Sources */,
 				2CA5A7281F67BBB900547CF1 /* YGAccountController.m in Sources */,
 				2C4460B31F73815F00A67867 /* YGDefaultSessionController.m in Sources */,
 				2C907B1A1F7243ED00BED0CB /* YGDownVideoCommand.m in Sources */,
@@ -2656,6 +2702,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CODE_SIGN_ENTITLEMENTS = Yoga/Yoga.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Xin Song (3UJ437377Y)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2667,6 +2715,7 @@
 					"/Users/lyj/Downloads/FacebookSDKs-iOS-4.27.1",
 					"$(PROJECT_DIR)",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Yoga/Yoga.pch";
 				INFOPLIST_FILE = Yoga/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2686,6 +2735,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CODE_SIGN_ENTITLEMENTS = Yoga/Yoga.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Zone Internet Limited (MF2Q9YT333)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2697,6 +2748,7 @@
 					"/Users/lyj/Downloads/FacebookSDKs-iOS-4.27.1",
 					"$(PROJECT_DIR)",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Yoga/Yoga.pch";
 				INFOPLIST_FILE = Yoga/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

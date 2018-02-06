@@ -12,7 +12,6 @@
 #import "YGSingleCell.h"
 #import "YGRefreshHeader.h"
 #import "YGSessionService.h"
-#import "YGPlayController.h"
 #import "YGSessionController.h"
 #import "YGFirstInstallAlertCell.h"
 #import "YGLockSingleCell.h"
@@ -104,7 +103,7 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
 {
     if (!_noContentLabel) {
         _noContentLabel = [[UILabel alloc] initWithFrame:CGRectMake(20*SCALE, 20, GET_SCREEN_WIDTH - 40*SCALE, 100)];
-        _noContentLabel.text = @"You have already unlocken all of the bonus Singles avaliable. Thank you for being such an active Fitflow user. \n\n Keep coming back to check regularly for more free bonus Singles to unlock.";
+        _noContentLabel.text = @"You have already unlocked all of the bonus Singles avaliable. Thank you for being such an active Fitflow user. \n\n Keep coming back to check regularly for more free bonus Singles to unlock.";
         _noContentLabel.textColor = [UIColor colorWithHexString:@"C5C5C5"];
         _noContentLabel.numberOfLines = 0;
         _noContentLabel.textAlignment = NSTextAlignmentCenter;
@@ -143,15 +142,6 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
         retH = retW*(58/375.0);
     }
     return CGSizeMake(retW,retH);
-}
-
--(void)playWorkoutInSingle:(YGSession *)workout{
-    if (workout.routineList.count) {
-        YGPlayController *controller = [[YGPlayController alloc] init];
-        controller.session = workout;
-        controller.challengeID = workout.singleChallengeID;
-        [self.navigationController pushViewController:controller animated:YES];
-    }
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{

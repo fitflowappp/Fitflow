@@ -13,11 +13,11 @@
 +(YGChallenge*)objectFrom:(NSDictionary*)dictionary{
     YGChallenge *challenge = [[YGChallenge alloc] init];
     if ([YGStringUtil notNull:dictionary]) {
-        challenge.ID = [dictionary objectForKey:@"id"];//
+        challenge.ID = [dictionary objectForKey:@"id"];
         challenge.seconds = [dictionary objectForKey:@"seconds"];
         challenge.avail = [dictionary objectForKey:@"avail"];
         challenge.status = [dictionary objectForKey:@"status"];
-        challenge.coverImg = [YGImage objectFrom:[dictionary objectForKey:@"coverImg"]];//
+        challenge.coverImg = [YGImage objectFrom:[dictionary objectForKey:@"coverImg"]];
         NSString *currentWorkoutID = [dictionary objectForKey:@"currentWorkoutId"];
         if ([YGStringUtil notNull:currentWorkoutID]) {
             challenge.currentWorkoutID = currentWorkoutID;
@@ -26,11 +26,11 @@
         if ([YGStringUtil notNull:currentRoutineID]) {
             challenge.currentRoutineID = currentRoutineID;
         }
-        NSString *title = [dictionary objectForKey:@"title"];//
+        NSString *title = [dictionary objectForKey:@"title"];
         if ([YGStringUtil notNull:title]) {
             challenge.title = title;
         }
-        NSString *subTitle = [dictionary objectForKey:@"subTitle"];//
+        NSString *subTitle = [dictionary objectForKey:@"subTitle"];
         if ([YGStringUtil notNull:subTitle]) {
             challenge.subTitle = subTitle;
         }
@@ -39,7 +39,7 @@
             challenge.challengeDescription = challengeDescription;
         }
         /*workoutLiteList*/
-        NSArray *workouts = [dictionary objectForKey:@"workouts"];//
+        NSArray *workouts = [dictionary objectForKey:@"workouts"];
         if ([YGStringUtil notNull:workouts]) {
             for (NSDictionary * dictionary in workouts) {
                 YGSession *session = [YGSession objectFrom:dictionary];

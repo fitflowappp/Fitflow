@@ -15,6 +15,9 @@
 #import "YGFirstInstallAlertCell.h"
 #import "YGLockSingleCell.h"
 #import "YGDeviceUtil.h"
+#import "YGOpenReminderAlert.h"
+#import "YGSchedulingController.h"
+#import <EventKit/EventKit.h>
 
 static NSString *SINGLES_CELLID = @"singlesCellID";
 static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
@@ -23,6 +26,7 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
 @interface YGSinglesListController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSingleCellDelegate>
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) NSMutableArray   *singlesList;
+@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @property (nonatomic,assign) BOOL hasAlertSinglesTip;
 @end
 
@@ -40,6 +44,7 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self fetchSinglesList];
+    [self addReminderAlert];
     [self.collectionView reloadData];
 }
 
@@ -86,6 +91,34 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
     [self.collectionView registerClass:[YGFirstInstallAlertCell class] forCellWithReuseIdentifier:FIRST_INSTALL_ALERT_CELLID];
     self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchSinglesList) view: self.collectionView];
     [self.view addSubview:self.collectionView];
+}
+
+-(void)addReminderAlert{
+    EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
+            UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+            YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
+            openReminder.type = 1;
+            [openReminder.openReminderBtn addTarget:self action:@selector(openReminder:) forControlEvents:UIControlEventTouchUpInside];
+            [openReminder.notShowAgainBtn addTarget:self action:@selector(notAskMeReminder:) forControlEvents:UIControlEventTouchUpInside];
+            [mainWindow addSubview:openReminder];
+        }
+    }
+    _isShowRemind = NO;
+}
+-(void)openReminder:(UIButton*)sender{
+    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
+    [openReminder hide];
+    YGSchedulingController *controller = [[YGSchedulingController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)notAskMeReminder:(UIButton*)sender{
+    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
+    [openReminder hide];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -154,6 +187,7 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
         controller.challengeID = workout.singleChallengeID;
         controller.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:controller animated:YES];
+        _isShowRemind = YES;
     }
 }
 

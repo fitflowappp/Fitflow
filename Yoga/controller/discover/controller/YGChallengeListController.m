@@ -149,7 +149,6 @@ static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
         YGChallengeController *controller = [[YGChallengeController alloc] init];
         controller.challengeID = challenge.ID;
         controller.hidesBottomBarWhenPushed = YES;
-        controller.shouldLigth = challenge.avail.boolValue;
         controller.userCurrentChallenge = [self currentChallenge];
         controller.isMineChallenge = challenge.isMineChallenge.boolValue;
         [self.navigationController pushViewController:controller animated:YES];

@@ -11,4 +11,9 @@
 @interface YGOpenReminderAlert : YGBaseAlert
 @property (nonatomic,strong) UIButton *openReminderBtn;
 @property (nonatomic,strong) UIButton *notShowAgainBtn;
+
+/**
+ 0完成页面  1回退页面
+ */
+@property (nonatomic) NSInteger type;
 @end

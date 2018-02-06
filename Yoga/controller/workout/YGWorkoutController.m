@@ -31,6 +31,10 @@
 #import "YGDiscoverController.h"
 #import "YGHomeNoSinglesCell.h"
 #import "YGHomeCurrentChallengeCompleteCell.h"
+#import "YGOpenReminderAlert.h"
+#import "YGSchedulingController.h"
+#import "YGDeepLinkUtil.h"
+#import <EventKit/EventKit.h>
 
 static NSString *WORKOUT_USERINFO_CELLID  = @"userInfoCellID";
 static NSString *WORKOUT_USER_SINGLES_CELLID   = @"userSinglesCellID";
@@ -49,6 +53,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 @property (nonatomic,strong) NSMutableArray *completedChallengeIDList;
 @property (nonatomic,assign) BOOL hasAlertSinglesTip;
 @property (nonatomic,assign) BOOL hasAlertChallengesTip;
+@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @end
 
 @implementation YGWorkoutController{
@@ -64,7 +69,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     self.achievementList = [NSMutableArray array];
     self.needShareInfoList = [NSMutableArray array];
     self.completedChallengeIDList = [NSMutableArray array];
-    self.navigationItem.title =@"FITFLOW";
+    self.navigationItem.title = @"FITFLOW";
     [self setCollectionView];
     [YGHUD loading:self.view];
 }
@@ -73,6 +78,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     [super viewWillAppear:animated];
     [self beginFetch];
     [self.collectionView reloadData];
+    [self addReminderAlert];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -191,6 +197,20 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
         }
     }
 }
+-(void)addReminderAlert{
+    EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
+            UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+            YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
+            openReminder.type = 1;
+            [openReminder.openReminderBtn addTarget:self action:@selector(openReminder:) forControlEvents:UIControlEventTouchUpInside];
+            [openReminder.notShowAgainBtn addTarget:self action:@selector(notAskMeReminder:) forControlEvents:UIControlEventTouchUpInside];
+            [mainWindow addSubview:openReminder];
+        }
+    }
+    _isShowRemind = NO;
+}
 
 -(void)startNewChallengeWhenChallengeCompleted{
     [challengeCompletedAlert hide];
@@ -215,6 +235,21 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
         }
     }
 }
+
+-(void)openReminder:(UIButton*)sender{
+    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
+    [openReminder hide];
+    YGSchedulingController *controller = [[YGSchedulingController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)notAskMeReminder:(UIButton*)sender{
+    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
+    [openReminder hide];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 -(void)handleShareInfo{
     if (self.needShareInfoList.count>0) {
@@ -305,6 +340,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     if (indexPath.section==0) {
         YGUserInfoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:WORKOUT_USERINFO_CELLID forIndexPath:indexPath];
         cell.achievementList = self.achievementList;
+        cell.hidden = self.achievementList.count ? NO : YES;
         return cell;
     }
     if (indexPath.section==1) {
@@ -387,7 +423,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGFloat retW = collectionView.frame.size.width;
     if (indexPath.section==0) {
-        return CGSizeMake(retW,80*MAX(1,SCALE));
+        return CGSizeMake(retW, self.achievementList.count ? 80*MAX(1,SCALE) : 0.00001);
     }
     if (indexPath.section==1) {
         return CGSizeMake(retW,retW*(219/375.0));
@@ -411,7 +447,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     CGFloat retW = collectionView.frame.size.width;
     CGFloat retH = ((32)/375.0)*retW;
     if (section==0) {
-        return CGSizeMake(retW,((32)/375.0)*retW);
+        return CGSizeMake(retW, self.achievementList.count ? (32/375.0)*retW : 0.0000001);
     }
     YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
     if (appDelegate.fitflowUpdated) {
@@ -455,6 +491,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 
 #pragma mark Do-Method
 -(void)didSelectPlayCurrentWorkout:(YGSession *)workout{
+    _isShowRemind = YES;
     YGPlayController *controller = [[YGPlayController alloc] init];
     controller.session = workout;
     controller.hidesBottomBarWhenPushed = YES;
@@ -463,6 +500,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 }
 
 -(void)playWorkoutInSingle:(YGSession *)workout{
+    _isShowRemind = YES;
     YGPlayController *controller = [[YGPlayController alloc] init];
     controller.session = workout;
     controller.hidesBottomBarWhenPushed = YES;

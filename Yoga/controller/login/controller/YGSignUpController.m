@@ -21,6 +21,7 @@
 #import "YGTermsOfUseController.h"
 #import "YGPrivacyPolicyController.h"
 #import "YGOnboardingOfHomeController.h"
+#import "YGDeepLinkUtil.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
@@ -303,9 +304,15 @@
             if (code==1) {
                 [YGTopAlert alert:@"You're signed up. Welcome to Fitflow!" bkColorCode:@"#41D395"];
                 if (self.fromBeginWorkout==YES) {
-                    YGOnboardingOfHomeController *controller = [[YGOnboardingOfHomeController alloc] init];
-                    [self.navigationController pushViewController:controller animated:YES];
-                    return;
+                    if ([YGDeepLinkUtil isExistDeepLinkParamsKey]) {
+                        YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
+                        [appDelegate initTabBarController];
+                        [YGDeepLinkUtil pushToSaveDeepLinkParams];
+                    } else {
+                        YGOnboardingOfHomeController *controller = [[YGOnboardingOfHomeController alloc] init];
+                        [self.navigationController pushViewController:controller animated:YES];
+                        return;
+                    }
                 }
                 YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
                 if ([appDelegate.window.rootViewController isKindOfClass:[UITabBarController class]]) {
@@ -394,6 +401,9 @@
                                            
                                        }else{
                                            [appDelegate initTabBarController];
+                                           if ([YGDeepLinkUtil isExistDeepLinkParamsKey]) {
+                                               [YGDeepLinkUtil pushToSaveDeepLinkParams];
+                                           }
                                        }
                                    }else{
                                        [YGHUD alertMsg:NETWORK_ERROR_ALERT at:ws.view];

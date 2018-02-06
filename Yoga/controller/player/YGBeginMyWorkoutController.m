@@ -54,6 +54,7 @@
 }
 
 -(void)beginMyWorkout{
+    
     __weak typeof(self) ws = self;
     if ([YGUserService instance].localUser.isLogin==NO) {
         [YGHUD loading:ws.view];

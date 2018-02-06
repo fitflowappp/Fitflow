@@ -59,6 +59,8 @@
     NSString *encodingURLString=[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest * request=[[self networkEngine].requestSerializer requestWithMethod:requestMethod URLString:encodingURLString parameters:params error:nil];
     request.timeoutInterval = 10;
+    
+    NSLog(@"%@", [[YGUserService instance] localUser].sessionId);
    [request setValue:[[YGUserService instance] localUser].sessionId forHTTPHeaderField:@"Authorization"];
     
     NSURLSessionDataTask *dataTask = [[self networkEngine] dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error){
@@ -74,13 +76,13 @@
 
 -(void)errorHandle:(NSError *)error{
     if (self.errorBlock) {
-     self.errorBlock(error);
+        self.errorBlock(error);
     }
 }
 
 -(void)successHandle:(id)data{
     if (self.successBlock) {
-      self.successBlock(data);   
+        self.successBlock(data);
     }
 }
 -(void)execute{

@@ -17,6 +17,7 @@
 #import "YGPasswordTextField.h"
 #import "YGUserNetworkService.h"
 #import "YGForgetPasswordController.h"
+#import "YGDeepLinkUtil.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
@@ -247,6 +248,9 @@
                     [rootNav popToRootViewControllerAnimated:YES];
                 }else{
                     [appDelegate initTabBarController];
+                    if ([YGDeepLinkUtil isExistDeepLinkParamsKey]) {
+                        [YGDeepLinkUtil pushToSaveDeepLinkParams];
+                    }
                 }
                 [YGTopAlert alert:@"You're signed in. Welcome back!" bkColorCode:@"#41D395"];
             }else{
@@ -314,6 +318,9 @@
                                            
                                        }else{
                                            [appDelegate initTabBarController];
+                                           if ([YGDeepLinkUtil isExistDeepLinkParamsKey]) {
+                                               [YGDeepLinkUtil pushToSaveDeepLinkParams];
+                                           }
                                        }
                                        [YGTopAlert alert:@"You're signed in. Welcome back!" bkColorCode:@"#41D395"];
                                    }else{

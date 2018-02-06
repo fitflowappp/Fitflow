@@ -22,7 +22,7 @@
         session.singleChallengeID = [dictionary objectForKey:@"singleChallengeId"];
         session.currentRoutineID = [dictionary objectForKey:@"currentRoutineId"];
         session.coverImg = [YGImage objectFrom:[dictionary objectForKey:@"coverImg"]];
-        session.singlesLock = [dictionary objectForKey:@"singlesLock"];
+        session.singlesLock = [[dictionary objectForKey:@"singlesLock"] isKindOfClass:[NSNumber class]] ? [dictionary objectForKey:@"singlesLock"] : nil;
         NSString *title = [dictionary objectForKey:@"title"];
         if ([YGStringUtil notNull:title]) {
             session.title = title;

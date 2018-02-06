@@ -27,6 +27,9 @@
             [achieveList addObject:[NSString stringWithFormat:@"%@",workoutCount]];
             [achieveList addObject:[NSString stringWithFormat:@"%@",completedMinutes]];
             [achieveList addObject:[NSString stringWithFormat:@"%@",days]];
+            if (workoutCount.integerValue == 0 && completedMinutes.integerValue == 0 && days.integerValue == 0) {
+                [achieveList removeAllObjects];
+            }
         }
     }else{
         NSString *msg = [result objectForKey:@"msg"];

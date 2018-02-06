@@ -21,10 +21,16 @@
 #import "YGBaseNavigationController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <Branch/Branch.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "FBSDKMessengerShareKit/FBSDKMessengerSharer.h"
 #import "YGSessionService.h"
 #import "YGHomeUpdataAlert.h"
+#import "YGBuglyUtil.h"
+#import "YGDeepLinkUtil.h"
+#import "YGChallengeController.h"
+#import "YGSessionController.h"
+
 @import Firebase;
 @interface YGAppDelegate ()
 
@@ -44,6 +50,7 @@
 #if Debug
     NSLog(@"msg: service is Debug version");
 #endif
+    
 #if Debug_Heap
     [Heap enableVisualizer];
     NSLog(@"msg: Heap Debug open");
@@ -55,6 +62,16 @@
                              didFinishLaunchingWithOptions:launchOptions];
     
     [self fetchOtherCommandData];// 更新
+    
+    [YGBuglyUtil postBugWithGoogleDB:[NSError errorWithDomain:@"" code:0 userInfo:@{@"error":@"1"}]];
+    
+    Branch *branch = [Branch getInstance];
+    [branch initSessionWithLaunchOptions:launchOptions andRegisterDeepLinkHandler:^(NSDictionary *params, NSError *error) {
+        if (error == nil) {
+            [YGDeepLinkUtil linkWithDeepLinkParamter:params];
+        }
+    }];
+    
     return YES;
 }
 
@@ -91,9 +108,10 @@
             openURL:(NSURL *)url
             options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
+    [[Branch getInstance] application:application openURL:url options:options];
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
-                                                          options:options];
+                                                        options:options];
 }
 
 // Still need this for iOS8
@@ -102,6 +120,12 @@
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nonnull id)annotation
 {
+    [[Branch getInstance]
+     application:application
+     openURL:url
+     sourceApplication:sourceApplication
+     annotation:annotation];
+    
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
                                                 sourceApplication:sourceApplication
@@ -325,5 +349,14 @@
     }
     NSLog(@"\n>>[GTSdk SetModeOff]:%@\n\n", isModeOff ? @"开启" : @"关闭");
 }
+
+
+// Respond to Universal Links
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
+    [[Branch getInstance] continueUserActivity:userActivity];
+    
+    return YES;
+}
+
 @end
 

@@ -10,8 +10,8 @@
 #import "YGBaseController.h"
 
 @interface YGChallengeController : YGBaseController
-@property (nonatomic) BOOL shouldLigth;
 @property (nonatomic) BOOL isMineChallenge;
 @property (nonatomic,strong) NSString *challengeID;
 @property (nonatomic,strong) YGChallenge *userCurrentChallenge;
+
 @end

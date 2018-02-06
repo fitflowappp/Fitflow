@@ -32,6 +32,10 @@
 #import "YGChangeChallengeAlert.h"
 #import "YGSessionShareLockView.h"
 #import "YGSessionShareAlert.h"
+#import "YGOpenReminderAlert.h"
+#import "YGSchedulingController.h"
+#import <EventKit/EventKit.h>
+
 static NSString *ROUTINE_CELLID    = @"routineCellID";
 
 static NSString *SESSION_HEADERID  = @"sessionHeaderID";
@@ -50,12 +54,12 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 @property (nonatomic,strong) YGSession *workout;
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic, weak) YGSessionShareAlert *changeChallengeAlert;
+@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @end
 
 @implementation YGSessionController{
     YGChallengeUnCompletedAlert *challengeUnCompletedAlert;
     __block YGChangeChallengeAlert *changeChallengeAlert;
-    
 }
 
 #pragma mark Life-Circle
@@ -72,6 +76,7 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.collectionView reloadData];
+    [self addReminderAlert];
     self.navigationController.navigationBarHidden = NO;
     [self fetchWorkoutInfo];
 }
@@ -104,6 +109,15 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
 -(void)endLoading{
     [YGHUD hide:self.view];
+    if (_isDeepLink) {
+        if (_isUseLock) {
+            self.canPlay = self.workout.singlesLock.integerValue ? NO : YES;
+            self.isMustShare = self.workout.singlesLock.integerValue;
+        } else {
+            self.canPlay =  YES;
+            self.isMustShare = NO;
+        }
+    }
     [self.collectionView reloadData];
     [self.collectionView.mj_header endRefreshing];
 }
@@ -281,6 +295,7 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
         controller.session = self.workout;
         controller.challengeID = self.challengeID;
         [self.navigationController pushViewController:controller animated:YES];
+        _isShowRemind = YES;
     }
 }
 
@@ -309,6 +324,34 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
         [YGHUD hide:self.view];
         [YGHUD alertMsg:NETWORK_ERROR_ALERT at:self.view];
     }];
+}
+#pragma mark
+-(void)addReminderAlert{
+    EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
+    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
+            UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+            YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
+            openReminder.type = 1;
+            [openReminder.openReminderBtn addTarget:self action:@selector(openReminder:) forControlEvents:UIControlEventTouchUpInside];
+            [openReminder.notShowAgainBtn addTarget:self action:@selector(notAskMeReminder:) forControlEvents:UIControlEventTouchUpInside];
+            [mainWindow addSubview:openReminder];
+        }
+    }
+    _isShowRemind = NO;
+}
+-(void)openReminder:(UIButton*)sender{
+    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
+    [openReminder hide];
+    YGSchedulingController *controller = [[YGSchedulingController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)notAskMeReminder:(UIButton*)sender{
+    YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
+    [openReminder hide];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark
@@ -354,7 +397,13 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
         [self changeChallengeNetwork];
     }else{
         UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
-        NSString *alertMsg = [NSString stringWithFormat:@"Are you sure you want to change from %@ to %@?",self.userCurrentChallenge.title,self.fromChallenge.title];
+        NSString *alertMsg = nil;
+        if (self.userCurrentChallenge) {
+            alertMsg = [NSString stringWithFormat:@"Are you sure you want to change from %@ to %@?",self.userCurrentChallenge.title,self.fromChallenge.title];
+        } else {
+            alertMsg = [NSString stringWithFormat:@"Are you sure you want to change to %@?", self.fromChallenge.title];
+        }
+        
         changeChallengeAlert = [[YGChangeChallengeAlert alloc] initWithFrame:mainWindow.bounds contentTittle:alertMsg];
         SEL action = @selector(changeChallengeNetwork);
         if ([changeChallengeAlert.changeBtn respondsToSelector:action]==NO) {

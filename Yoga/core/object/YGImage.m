@@ -15,7 +15,13 @@
         img.Id       = [dictionary objectForKey:@"id"];
         img.width    = [dictionary objectForKey:@"width"];
         img.height   = [dictionary objectForKey:@"height"];
-        img.coverUrl = [NSString stringWithFormat:@"%@%@",cHttpRequestDomain,[dictionary objectForKey:@"contentUri"]];
+        
+        NSString *imageUrl = [dictionary objectForKey:@"contentUri"];
+        if ([imageUrl containsString:@"http"]) {
+            img.coverUrl = imageUrl;
+        } else {
+            img.coverUrl = [NSString stringWithFormat:@"%@%@",cHttpRequestDomain, imageUrl];
+        }
     }
     return img;
 }

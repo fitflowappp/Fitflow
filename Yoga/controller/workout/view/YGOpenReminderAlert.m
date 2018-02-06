@@ -105,6 +105,14 @@
     
 }
 
+- (void)setType:(NSInteger)type
+{
+    _type = type;
+    self.tipLabel.text = @"DON'T HAVE TIME TO FINISH THIS CLASS?";
+    self.contentLabel.text = @"Schedule a reminder so you can come back next time you're free.";
+    [self.openReminderBtn setTitle:@"SCHEDULE REMINDERS" forState:UIControlStateNormal];
+}
+
 -(void)hide{
     [UIView animateWithDuration:0.5 animations:^{
         self.alpha = 0;

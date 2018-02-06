@@ -35,7 +35,7 @@
         self.backGroundv.layer.cornerRadius = 10*scale;
         self.backGroundv.backgroundColor = [UIColor whiteColor];
         //
-        UIImageView *logoImgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Challenge-c"]];
+        UIImageView *logoImgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_update"]];
         self.logoImgv = logoImgv;
         self.logoImgv.center = CGPointMake(self.backGroundv.frame.size.width/2,40*scale+self.logoImgv.frame.size.height/2);
         [self.backGroundv addSubview:self.logoImgv];
