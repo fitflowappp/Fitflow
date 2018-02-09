@@ -13,7 +13,6 @@ pod 'Firebase/Crash'
 pod 'Firebase/Performance'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
-
 pod 'FBNotifications'
 pod 'MJExtension', '~> 3.0.13'
 end

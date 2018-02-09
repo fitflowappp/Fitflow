@@ -11,6 +11,7 @@
 #import "YGChallengeController.h"
 #import "YGSessionController.h"
 #import "YGSchedulingController.h"
+#import "YGDiscoverController.h"
 
 #define KEY_DEEP_LINK_PARAMS @"KEY_DEEP_LINK_PARAMS"
 
@@ -92,7 +93,12 @@
         YGSchedulingController *controller = [[YGSchedulingController alloc] init];
         controller.hidesBottomBarWhenPushed = YES;
         [seltedVC pushViewController:controller animated:YES];
-    } else if ([shortUrl hasPrefix:@"/discover/list"]) {
+    } else if ([shortUrl hasPrefix:@"/discover/singles"]) {
+        tabar.selectedIndex = 1;
+        UINavigationController *discoverNav = tabar.childViewControllers[1];
+        YGDiscoverController *controller = discoverNav.viewControllers.lastObject;
+        controller.optionIndex = 1;
+    } else if ([shortUrl hasPrefix:@"/discover/challenge"]) {
         tabar.selectedIndex = 1;
     }
 }

@@ -50,11 +50,10 @@ static NSString *CHALLENGE_SHARE_FOOTERID = @"SessionShareLockViewID";
 
 static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
-@interface YGSessionController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSessionBannerCellDelegate>
+@interface YGSessionController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSessionBannerCellDelegate,YGPlayBaseControllerDelegate>
 @property (nonatomic,strong) YGSession *workout;
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic, weak) YGSessionShareAlert *changeChallengeAlert;
-@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @end
 
 @implementation YGSessionController{
@@ -70,15 +69,14 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     
     [self setUpnav];
     [self setCollectionView];
+    
+    [self fetchWorkoutInfo];
     [YGHUD loading:self.view];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.collectionView reloadData];
-    [self addReminderAlert];
     self.navigationController.navigationBarHidden = NO;
-    [self fetchWorkoutInfo];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -292,10 +290,10 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     }
     if (self.workout.routineList.count) {
         YGPlayController *controller = [[YGPlayController alloc] init];
+        controller.delegate = self;
         controller.session = self.workout;
         controller.challengeID = self.challengeID;
         [self.navigationController pushViewController:controller animated:YES];
-        _isShowRemind = YES;
     }
 }
 
@@ -326,9 +324,9 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     }];
 }
 #pragma mark
--(void)addReminderAlert{
+-(void)exitWithRemindAlert{
     EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+    if (status!=EKAuthorizationStatusAuthorized) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
             UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
             YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
@@ -338,7 +336,6 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
             [mainWindow addSubview:openReminder];
         }
     }
-    _isShowRemind = NO;
 }
 -(void)openReminder:(UIButton*)sender{
     YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;

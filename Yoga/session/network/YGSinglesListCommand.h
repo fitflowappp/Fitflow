@@ -13,4 +13,7 @@
 @property (nonatomic,copy) SUCCESS_BLOCK locksuccessBlock;
 @property (nonatomic,copy) FAILURE_BLOCK unlockerrorBlock;
 @property (nonatomic,copy) SUCCESS_BLOCK unlocksuccessBlock;
+
+@property (nonatomic) NSInteger pageNum;
+
 @end

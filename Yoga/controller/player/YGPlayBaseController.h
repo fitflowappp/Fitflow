@@ -8,9 +8,15 @@
 #import "YGPlayer.h"
 #import "YGBaseController.h"
 
+@protocol YGPlayBaseControllerDelegate <NSObject>
+- (void)exitWithRemindAlert;
+@end
+
+
 @interface YGPlayBaseController : YGBaseController<YGPlayerDelegate>
 -(void)playBackgroundMusic;
 -(void)pauseBackgroundMusic;
 -(void)setBackGroundMusicVolume:(float)volume;
 -(void)playBackgroundMusicItemIndex:(NSInteger)index;
+@property (nonatomic, weak) id<YGPlayBaseControllerDelegate>delegate;
 @end

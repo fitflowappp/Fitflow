@@ -52,14 +52,14 @@
     [leftItemBtn setImage:itemImg forState:UIControlStateNormal];
     [leftItemBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [leftItemBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftItemBtn];
-    if (self.view.frame.size.width>375) {
-        leftItemBtn.imageEdgeInsets =UIEdgeInsetsMake(0,-4,0, 0);
-        leftItemBtn.contentEdgeInsets =UIEdgeInsetsMake(0,-4,0,0);
-    }else{
-        leftItemBtn.imageEdgeInsets =UIEdgeInsetsMake(0,-2,0, 0);
-        leftItemBtn.contentEdgeInsets =UIEdgeInsetsMake(0,-2,0,0);
-    }
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 20, 44);
+    [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *buttonItemzero = [[UIBarButtonItem alloc] initWithCustomView:button];
+    UIBarButtonItem *buttonItemone = [[UIBarButtonItem alloc] initWithCustomView:leftItemBtn];
+    self.navigationItem.leftBarButtonItems = @[buttonItemone, buttonItemzero];
 }
 
 -(void)setRightShareNavigationItem{
@@ -69,14 +69,15 @@
     [rightItemBtn setImage:itemImg forState:UIControlStateNormal];
     [rightItemBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [rightItemBtn addTarget:self action:@selector(didSelectShareItem) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightItemBtn];
-    if (self.view.frame.size.width>375) {
-        rightItemBtn.imageEdgeInsets =UIEdgeInsetsMake(0,0,0,-2);
-        rightItemBtn.contentEdgeInsets =UIEdgeInsetsMake(0,0,0,-2);
-    }else{
-        rightItemBtn.imageEdgeInsets =UIEdgeInsetsMake(0,0,0,-2);
-        rightItemBtn.contentEdgeInsets =UIEdgeInsetsMake(0,0,0,-2);
-    }
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 20, 44);
+    [button addTarget:self action:@selector(didSelectShareItem) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *buttonItemzero = [[UIBarButtonItem alloc] initWithCustomView:button];
+    UIBarButtonItem *buttonItemone = [[UIBarButtonItem alloc] initWithCustomView:rightItemBtn];
+    
+    self.navigationItem.rightBarButtonItems = @[buttonItemone, buttonItemzero];
 }
 
 -(void)back{

@@ -31,11 +31,11 @@
 #import "YGDiscoverController.h"
 #import "YGHomeNoSinglesCell.h"
 #import "YGHomeCurrentChallengeCompleteCell.h"
+#import <EventKit/EventKit.h>
 #import "YGOpenReminderAlert.h"
 #import "YGSchedulingController.h"
 #import "YGDeepLinkUtil.h"
-#import <EventKit/EventKit.h>
-
+#import "YGHomeUpdataAlert.h"
 static NSString *WORKOUT_USERINFO_CELLID  = @"userInfoCellID";
 static NSString *WORKOUT_USER_SINGLES_CELLID   = @"userSinglesCellID";
 static NSString *WORKOUT_CURRENT_CHALLENGE_CELLID  = @"currentChallengeCellID";
@@ -44,7 +44,7 @@ static NSString *WORKOUT_NO_SINGLES_CELLID  = @"noSinglesCellID";
 static NSString *WORKOUT_SECTION_HEADERID  = @"homeSectionHeaderID";
 static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 
-@interface YGWorkoutController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGHomeCurrentChallengeCellDelegate,YGSingleCellDelegate,YGHomeCurrentChallengeCellCompleteDelegate>
+@interface YGWorkoutController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGHomeCurrentChallengeCellDelegate,YGSingleCellDelegate,YGHomeCurrentChallengeCellCompleteDelegate,YGPlayBaseControllerDelegate>
 @property (nonatomic,strong) YGChallenge *userChallenge;
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) NSMutableArray *achievementList;
@@ -53,7 +53,6 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 @property (nonatomic,strong) NSMutableArray *completedChallengeIDList;
 @property (nonatomic,assign) BOOL hasAlertSinglesTip;
 @property (nonatomic,assign) BOOL hasAlertChallengesTip;
-@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @end
 
 @implementation YGWorkoutController{
@@ -71,6 +70,7 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     self.completedChallengeIDList = [NSMutableArray array];
     self.navigationItem.title = @"FITFLOW";
     [self setCollectionView];
+    [self setupDeepLink];
     [YGHUD loading:self.view];
 }
 
@@ -78,7 +78,6 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     [super viewWillAppear:animated];
     [self beginFetch];
     [self.collectionView reloadData];
-    [self addReminderAlert];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -184,12 +183,25 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
     [self.collectionView.mj_header endRefreshing];
 }
 
+- (void)setupDeepLink
+{
+    if ([YGDeepLinkUtil isExistDeepLinkParamsKey]) {
+        [YGDeepLinkUtil pushToSaveDeepLinkParams];
+    }
+}
+
 -(void)alertIfChallengeCompleted{
     UIWindow *window = [UIApplication sharedApplication].delegate.window;
     if ([window.subviews.lastObject isKindOfClass:[YGChallengeCompletedAlert class]]==NO&&
         [window.subviews.lastObject isKindOfClass:[YGShareInfoAlert class]]==NO) {
         challengeCompletedAlert = [[YGChallengeCompletedAlert alloc] initWithFrame:window.bounds challengeTittle:self.userChallenge.title];
-        [window addSubview:challengeCompletedAlert];
+        
+        if ([window.subviews.lastObject isKindOfClass:[YGHomeUpdataAlert class]]==NO) {
+            [window addSubview:challengeCompletedAlert];
+        } else {
+            [window insertSubview:challengeCompletedAlert atIndex:window.subviews.count-1];
+        }
+        
         [challengeCompletedAlert.shareBtn addTarget:self action:@selector(shareWhenChallengeCompleted) forControlEvents:UIControlEventTouchUpInside];
         [challengeCompletedAlert.startNewChallengeBtn addTarget:self action:@selector(startNewChallengeWhenChallengeCompleted) forControlEvents:UIControlEventTouchUpInside];
         if ([YGStringUtil notNull:self.userChallenge.ID]) {
@@ -197,9 +209,9 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
         }
     }
 }
--(void)addReminderAlert{
+-(void)exitWithRemindAlert {
     EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+    if (status!=EKAuthorizationStatusAuthorized) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
             UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
             YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
@@ -209,7 +221,6 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
             [mainWindow addSubview:openReminder];
         }
     }
-    _isShowRemind = NO;
 }
 
 -(void)startNewChallengeWhenChallengeCompleted{
@@ -491,8 +502,8 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 
 #pragma mark Do-Method
 -(void)didSelectPlayCurrentWorkout:(YGSession *)workout{
-    _isShowRemind = YES;
     YGPlayController *controller = [[YGPlayController alloc] init];
+    controller.delegate = self;
     controller.session = workout;
     controller.hidesBottomBarWhenPushed = YES;
     controller.challengeID = self.userChallenge.ID;
@@ -500,8 +511,8 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
 }
 
 -(void)playWorkoutInSingle:(YGSession *)workout{
-    _isShowRemind = YES;
     YGPlayController *controller = [[YGPlayController alloc] init];
+    controller.delegate = self;
     controller.session = workout;
     controller.hidesBottomBarWhenPushed = YES;
     controller.challengeID = self.userChallenge.ID;

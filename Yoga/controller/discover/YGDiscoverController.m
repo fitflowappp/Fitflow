@@ -79,7 +79,7 @@
     }
 }
 
--(void)didSelectSingles:(UIButton*)sender{
+-(void)didSelectSingles:(UIButton*)sender {
     if (self.discoverOptionView.optionIndex==0) {
         self.discoverOptionView.optionIndex = 1;
         [UIView animateWithDuration:0.2 animations:^{

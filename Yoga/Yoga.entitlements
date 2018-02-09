@@ -2,11 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>aps-environment</key>
+	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:fitflowapp.app.link</string>
+		<string>applinks:fitflowapp.test-app.link</string>
+		<string>applinks:fitflowapp-alternate.test-app.link</string>
 		<string>applinks:fitflowapp-alternate.app.link</string>
-		<string>applinks:fitflowapp-singlesDetail.app.link</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>

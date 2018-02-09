@@ -14,12 +14,14 @@
     NSString *requestUrl = nil;
     if (self.successBlock) {
        requestUrl = URLForge(@"/yoga/challenge/single/workout");
+        [self sendRequestWithUrl:requestUrl method:GET];
     } else if (self.locksuccessBlock) {
        requestUrl = URLForge(@"/yoga/app/workout/single/page");
+        [self sendRequestWithUrl:requestUrl method:GET parameter:@{@"number":@(_pageNum), @"size":@"10"}];
     } else {
        requestUrl = URLForge(@"/yoga/app/workout/single/page/lock");
+        [self sendRequestWithUrl:requestUrl method:GET parameter:@{@"number":@(_pageNum), @"size":@"10"}];
     }
-    [self sendRequestWithUrl:requestUrl method:GET];
 }
 
 -(void)successHandle:(id)data{

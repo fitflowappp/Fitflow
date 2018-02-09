@@ -31,34 +31,35 @@
     CGFloat btnMargin = 16*SCALE;
     CGFloat btnWidth  = MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT)-btnMargin*2;
     CGFloat btnHeight = btnWidth*(96/686.0);
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT)-NAV_HEIGHT-(btnHeight*2+btnMargin*3))];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT)-NAV_HEIGHT-(btnHeight*2+btnMargin*3)-20)];
     self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
 }
 
 -(void)addSubviews{
+    self.view.backgroundColor = [UIColor whiteColor];
     UIImageView *congratulationImgv = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Right-c"]];
-    congratulationImgv.center = CGPointMake(self.scrollView.frame.size.width/2,72+congratulationImgv.frame.size.height/2);
+    congratulationImgv.center = CGPointMake(self.scrollView.frame.size.width/2,48*SCALE+congratulationImgv.frame.size.height/2);
     [self.scrollView addSubview:congratulationImgv];
     //
     UILabel *congratulationTipLabel = [[UILabel alloc] init];
-    congratulationTipLabel.frame = CGRectMake(0,CGRectGetMaxY(congratulationImgv.frame)+24,self.scrollView.frame.size.width,29);
+    congratulationTipLabel.frame = CGRectMake(0,CGRectGetMaxY(congratulationImgv.frame)+24*SCALE,self.scrollView.frame.size.width,29*SCALE);
     congratulationTipLabel.text = @"Congratulations!";
     congratulationTipLabel.textAlignment = NSTextAlignmentCenter;
-    congratulationTipLabel.font = [UIFont fontWithName:@"Lato-Black" size:24];
+    congratulationTipLabel.font = [UIFont fontWithName:@"Lato-Black" size:24*SCALE];
     congratulationTipLabel.textColor = [UIColor colorWithHexString:@"#0EC07F"];
     [self.scrollView addSubview:congratulationTipLabel];
     //
     UILabel *completedTipLabel = [[UILabel alloc] init];
-    completedTipLabel.frame = CGRectMake(0,CGRectGetMaxY(congratulationTipLabel.frame)+20,self.scrollView.frame.size.width,25);
+    completedTipLabel.frame = CGRectMake(0,CGRectGetMaxY(congratulationTipLabel.frame)+20*SCALE,self.scrollView.frame.size.width,25*SCALE);
     completedTipLabel.text = @"YOU COMPLETED:";
     completedTipLabel.textAlignment = NSTextAlignmentCenter;
-    completedTipLabel.font = [UIFont fontWithName:@"Lato-Bold" size:14];
+    completedTipLabel.font = [UIFont fontWithName:@"Lato-Bold" size:14*SCALE];
     completedTipLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
     [self.scrollView addSubview:completedTipLabel];
     //
     UILabel *completedTitleLabel =  [[UILabel alloc] init];
-    completedTitleLabel.frame = CGRectMake(16*SCALE,CGRectGetMaxY(completedTipLabel.frame)+4,self.scrollView.frame.size.width-32*SCALE,38);
+    completedTitleLabel.frame = CGRectMake(16*SCALE,CGRectGetMaxY(completedTipLabel.frame)+4,self.scrollView.frame.size.width-32*SCALE,38*SCALE);
     completedTitleLabel.text = [NSString stringWithFormat:@"%@",self.workout.title];
     completedTitleLabel.numberOfLines = 0;
     completedTitleLabel.textAlignment = NSTextAlignmentCenter;
@@ -115,6 +116,7 @@
     shareLabel.textColor = [UIColor colorWithHexString:@"#9B9B9B"];
     [shareLabel sizeToFit];
     shareLabel.frame = CGRectMake(16*SCALE, shareBtn.frame.origin.y-14*SCALE - 20, self.scrollView.frame.size.width-32*SCALE, 20);
+    shareLabel.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:shareLabel];
     
 }

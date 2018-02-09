@@ -47,6 +47,16 @@
     [self prepareGeTuiSdk];
     [self initRootController];
     [Heap setAppId:HeapAppID];
+    
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
+    NSDictionary *dic = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (dic.allKeys) {
+        [FBSDKAppEvents logPushNotificationOpen:dic];
+        [FBSDKAppEvents logEvent:[NSString stringWithFormat:@"PushOpened_%@", dic[@"aps"][@"alert"][@"pushvalue"]]];
+    }
+    
+    
 #if Debug
     NSLog(@"msg: service is Debug version");
 #endif
@@ -58,8 +68,6 @@
     if ([[UIApplication sharedApplication] isRegisteredForRemoteNotifications]) {
         [self registerUserNotification];
     }
-    [[FBSDKApplicationDelegate sharedInstance] application:application
-                             didFinishLaunchingWithOptions:launchOptions];
     
     [self fetchOtherCommandData];// 更新
     
@@ -71,6 +79,8 @@
             [YGDeepLinkUtil linkWithDeepLinkParamter:params];
         }
     }];
+    
+    [FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
     
     return YES;
 }
@@ -111,7 +121,7 @@
     [[Branch getInstance] application:application openURL:url options:options];
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
-                                                        options:options];
+                                                          options:options];
 }
 
 // Still need this for iOS8
@@ -233,6 +243,13 @@
 // iOS 10: 点击通知进入App时触发
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler {
     [GeTuiSdk handleRemoteNotification:response.notification.request.content.userInfo];
+    
+    NSDictionary *dic = response.notification.request.content.userInfo;
+    NSString *str = [NSString stringWithFormat:@"PushOpened_%@", dic[@"aps"][@"alert"][@"pushvalue"]];
+    [FBSDKAppEvents logEvent:str];
+    
+    [FBSDKAppEvents logPushNotificationOpen:response.notification.request.content.userInfo];
+    
     completionHandler();
 }
 #endif
@@ -265,13 +282,14 @@
     NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
     if ([GeTuiSdk registerDeviceToken:token]==YES) {
-        NSLog(@"GeTuiSdk setDeviceToken success");
+        NSLog(@"GeTuiSdk ≈ success");
     }
     [FBSDKAppEvents setPushNotificationsDeviceToken:deviceToken];
 }
 
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(nullable NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)(void))completionHandler{
-    [FBSDKAppEvents logPushNotificationOpen:userInfo action:identifier];
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler
+{
+    [FBSDKAppEvents logPushNotificationOpen:userInfo];
 }
 
 #pragma mark - GeTuiSdk

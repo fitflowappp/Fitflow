@@ -18,16 +18,17 @@
 #import "YGOpenReminderAlert.h"
 #import "YGSchedulingController.h"
 #import <EventKit/EventKit.h>
+#import <MJRefresh/MJRefresh.h>
 
 static NSString *SINGLES_CELLID = @"singlesCellID";
 static NSString *FIRST_INSTALL_ALERT_CELLID = @"firstInstallALertCellID";
 static NSString *LockSingleCell = @"YGLockSingleCell";
 
-@interface YGSinglesListController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSingleCellDelegate>
+@interface YGSinglesListController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGSingleCellDelegate,YGPlayBaseControllerDelegate>
 @property (nonatomic,strong) UICollectionView *collectionView;
 @property (nonatomic,strong) NSMutableArray   *singlesList;
-@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @property (nonatomic,assign) BOOL hasAlertSinglesTip;
+@property (nonatomic) NSInteger pageNum;
 @end
 
 @implementation YGSinglesListController
@@ -44,21 +45,49 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self fetchSinglesList];
-    [self addReminderAlert];
     [self.collectionView reloadData];
 }
 
--(void)fetchSinglesList{
+-(void)fetchSinglesList {
     
-    [[YGSessionService instance] fetchLockSinglesListSucessBlock:^(id data) {
+    self.pageNum = 0;
+    
+    [[YGSessionService instance] fetchLockSinglesListPageNum:_pageNum SucessBlock:^(id data) {
         if (data) {
             [self.singlesList removeAllObjects];
             [self.singlesList addObjectsFromArray:data];
             [self.collectionView reloadData];
+            self.collectionView.mj_footer.hidden = NO;
+        }
+        [self.collectionView.mj_footer resetNoMoreData];
+        [self endLoading];
+    } errorBlock:^(NSError *error) {
+        [self endLoading];
+        self.pageNum = 0;
+        if (self.singlesList.count) {
+            [YGHUD alertMsg:NETWORK_ERROR_ALERT at:self.view].yOffset=-NAV_HEIGHT/2;
+        }else{
+            [YGHUD alertNetworkErrorIn:self.view target:self].yOffset=-NAV_HEIGHT/2;
+        }
+    }];
+}
+- (void)fetchMoreSinglesList
+{
+    self.pageNum++;
+    
+    [[YGSessionService instance] fetchLockSinglesListPageNum:_pageNum SucessBlock:^(id data) {
+        NSArray *arr = data;
+        if (arr.count) {
+            [self.singlesList addObjectsFromArray:data];
+            [self.collectionView reloadData];
+            [self.collectionView.mj_footer endRefreshing];
+        } else {
+            [self.collectionView.mj_footer endRefreshingWithNoMoreData];
         }
         [self endLoading];
     } errorBlock:^(NSError *error) {
         [self endLoading];
+        self.pageNum--;
         if (self.singlesList.count) {
             [YGHUD alertMsg:NETWORK_ERROR_ALERT at:self.view].yOffset=-NAV_HEIGHT/2;
         }else{
@@ -90,12 +119,20 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
     [self.collectionView registerClass:[YGLockSingleCell class] forCellWithReuseIdentifier:LockSingleCell];
     [self.collectionView registerClass:[YGFirstInstallAlertCell class] forCellWithReuseIdentifier:FIRST_INSTALL_ALERT_CELLID];
     self.collectionView.mj_header = [YGRefreshHeader headerAtTarget:self action:@selector(fetchSinglesList) view: self.collectionView];
+    
+    MJRefreshAutoNormalFooter *foot = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(fetchMoreSinglesList)];
+    [foot setRefreshingTitleHidden:YES];
+//    [foot setTitle:@"  " forState:MJRefreshStatePulling];
+    [foot setTitle:@"" forState:MJRefreshStateNoMoreData];
+    self.collectionView.mj_footer = foot;
+    
+    self.collectionView.mj_footer.hidden = YES;
     [self.view addSubview:self.collectionView];
 }
 
--(void)addReminderAlert{
+-(void)exitWithRemindAlert{
     EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+    if (status!=EKAuthorizationStatusAuthorized) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
             UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
             YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
@@ -105,7 +142,6 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
             [mainWindow addSubview:openReminder];
         }
     }
-    _isShowRemind = NO;
 }
 -(void)openReminder:(UIButton*)sender{
     YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
@@ -184,10 +220,10 @@ static NSString *LockSingleCell = @"YGLockSingleCell";
     if (workout.routineList.count) {
         YGPlayController *controller = [[YGPlayController alloc] init];
         controller.session = workout;
+        controller.delegate = self;
         controller.challengeID = workout.singleChallengeID;
         controller.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:controller animated:YES];
-        _isShowRemind = YES;
     }
 }
 

@@ -65,7 +65,7 @@
         self.updataBtn.layer.borderWidth = 1.0f;
         self.updataBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
         self.updataBtn.layer.cornerRadius = self.updataBtn.frame.size.height/2;
-        [self.updataBtn setTitle:@"UPGRADE NOW" forState:UIControlStateNormal];
+        [self.updataBtn setTitle:@"UPDATE NOW" forState:UIControlStateNormal];
         [self.updataBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.updataBtn.backgroundColor = [UIColor colorWithHexString:@"#0EC07F"];
         [self.updataBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
@@ -79,11 +79,11 @@
         self.laterOrLeaveBtn.layer.borderWidth = 1.0f;
         self.laterOrLeaveBtn.layer.borderColor = [UIColor colorWithHexString:@"#0EC07F"].CGColor;
         self.laterOrLeaveBtn.layer.cornerRadius = self.updataBtn.frame.size.height/2;
-        [self.laterOrLeaveBtn setTitle:type ? @"LEAVE FITFLOW" : @"MAYBE LATER" forState:UIControlStateNormal];
+        [self.laterOrLeaveBtn setTitle:type ? @"Leave Fitflow" : @"Maybe Later" forState:UIControlStateNormal];
         [self.laterOrLeaveBtn setTitleColor:[UIColor colorWithHexString:@"#0EC07F"] forState:UIControlStateNormal];
         [self.laterOrLeaveBtn.titleLabel setFont:[UIFont fontWithName:@"Lato-Bold" size:14*scale]];
         [self.backGroundv addSubview:self.laterOrLeaveBtn];
-        [self.laterOrLeaveBtn addTarget:self action:@selector(hide) forControlEvents:UIControlEventTouchUpInside];
+        [self.laterOrLeaveBtn addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
         
         
         
@@ -114,8 +114,8 @@
 }
 
 -(void)hide{
+   
     if (self.type) {
-        exit(0);
         return;
     }
     
@@ -133,6 +133,15 @@
         [self.cancelBtn removeFromSuperview];
         [self removeFromSuperview];
     }];
+}
+
+- (void)cancelAction
+{
+    if (self.type) {
+        exit(0);
+        return;
+    }
+    [self hide];
 }
 
 - (void)show{

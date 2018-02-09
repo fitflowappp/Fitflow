@@ -99,6 +99,7 @@
 }
 
 -(void)endPlayingNetwork:(YGRoutine*)routine{
+    NSLog(@"1");
     [[YGRoutineService instance] endPlayingWithChallenge:self.challengeID workoutID:self.session.ID routineID:routine.ID successBlock:^(NSDictionary *data) {
         NSDictionary *result = [data objectForKey:@"result"];
         int code = [[result objectForKey:@"code"] intValue];

@@ -27,8 +27,9 @@
     [command execute];
 }
 
-- (void)fetchLockSinglesListSucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock{
+- (void)fetchLockSinglesListPageNum:(NSInteger)pageNum SucessBlock:(SUCCESS_BLOCK)sucessBlock errorBlock:(FAILURE_BLOCK)errorBlock {
     YGSinglesListCommand *command = [[YGSinglesListCommand alloc] init];
+    command.pageNum = pageNum;
     command.lockerrorBlock = errorBlock;
     command.locksuccessBlock = sucessBlock;
     [command execute];

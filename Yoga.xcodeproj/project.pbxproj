@@ -11,6 +11,8 @@
 		05981EB82021906200207636 /* YGBuglyUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 05981EB72021906200207636 /* YGBuglyUtil.m */; };
 		05981EBB2021CA5700207636 /* home_update@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EB92021CA5600207636 /* home_update@3x.png */; };
 		05981EBC2021CA5700207636 /* home_update@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EBA2021CA5700207636 /* home_update@2x.png */; };
+		05E7559C202C2E1B009739C3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E7559B202C2E1B009739C3 /* MobileCoreServices.framework */; };
+		05E7559E202C2E39009739C3 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E7559D202C2E39009739C3 /* ImageIO.framework */; };
 		05F49F2F201EB3ED003C018F /* YGLockSingleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */; };
 		05F49F32201EC8F2003C018F /* YGUnSessionBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F31201EC8F2003C018F /* YGUnSessionBannerCell.m */; };
 		05F49F38201ECD56003C018F /* YGSessionShareLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F49F37201ECD56003C018F /* YGSessionShareLockView.m */; };
@@ -331,6 +333,8 @@
 		05981EB72021906200207636 /* YGBuglyUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGBuglyUtil.m; sourceTree = "<group>"; };
 		05981EB92021CA5600207636 /* home_update@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_update@3x.png"; sourceTree = "<group>"; };
 		05981EBA2021CA5700207636 /* home_update@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_update@2x.png"; sourceTree = "<group>"; };
+		05E7559B202C2E1B009739C3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		05E7559D202C2E39009739C3 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		05F49F2D201EB3ED003C018F /* YGLockSingleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGLockSingleCell.h; sourceTree = "<group>"; };
 		05F49F2E201EB3ED003C018F /* YGLockSingleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGLockSingleCell.m; sourceTree = "<group>"; };
 		05F49F30201EC8F2003C018F /* YGUnSessionBannerCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGUnSessionBannerCell.h; sourceTree = "<group>"; };
@@ -780,6 +784,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05E7559E202C2E39009739C3 /* ImageIO.framework in Frameworks */,
+				05E7559C202C2E1B009739C3 /* MobileCoreServices.framework in Frameworks */,
 				2CBC74631F949E370006E93A /* AdSupport.framework in Frameworks */,
 				2C4559801F8E0044006A6C27 /* Bolts.framework in Frameworks */,
 				2C45597E1F8E002D006A6C27 /* FBSDKShareKit.framework in Frameworks */,
@@ -2003,6 +2009,8 @@
 		C910B6023F3B38E144044A0B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05E7559D202C2E39009739C3 /* ImageIO.framework */,
+				05E7559B202C2E1B009739C3 /* MobileCoreServices.framework */,
 				2CBC74621F949E370006E93A /* AdSupport.framework */,
 				2C4559811F8E0611006A6C27 /* FBSDKMessengerShareKit.framework */,
 				2C45597F1F8E0044006A6C27 /* Bolts.framework */,
@@ -2095,7 +2103,7 @@
 								enabled = 1;
 							};
 							com.apple.Push = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.SafariKeychain = {
 								enabled = 1;

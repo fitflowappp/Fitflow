@@ -40,10 +40,9 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 
 static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 
-@interface YGChallengeController ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface YGChallengeController ()<UICollectionViewDelegate,UICollectionViewDataSource,YGPlayBaseControllerDelegate>
 @property (nonatomic,strong) YGChallenge *challenge;
 @property (nonatomic,strong) UICollectionView *collectionView;
-@property (assign) BOOL isShowRemind;// 视频播放页面回退显示开关
 @end
 
 @implementation YGChallengeController{
@@ -64,7 +63,6 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self fetchChallengeInfo];
-    [self addReminderAlert];
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -120,9 +118,9 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     [self.view addSubview:self.collectionView];
 }
 
--(void)addReminderAlert{
+-(void)exitWithRemindAlert{
     EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];
-    if (status!=EKAuthorizationStatusAuthorized && _isShowRemind) {
+    if (status!=EKAuthorizationStatusAuthorized) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"KEY_USER_NOT_OPEN_REMIND_FOREVER"]==NO) {
             UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
             YGOpenReminderAlert *openReminder = [[YGOpenReminderAlert alloc] initWithFrame:CGRectMake(0,0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT))];
@@ -132,7 +130,6 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
             [mainWindow addSubview:openReminder];
         }
     }
-    _isShowRemind = NO;
 }
 -(void)openReminder:(UIButton*)sender{
     YGOpenReminderAlert *openReminder = (YGOpenReminderAlert*)sender.superview.superview;
@@ -281,8 +278,8 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
         YGPlayController *controller = [[YGPlayController alloc] init];
         controller.session = currentWorkout;
         controller.challengeID = self.challenge.ID;
+        controller.delegate = self;
         [self.navigationController pushViewController:controller animated:YES];
-        _isShowRemind = YES;
     }
 }
 

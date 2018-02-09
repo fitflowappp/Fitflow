@@ -108,8 +108,8 @@
 - (void)setType:(NSInteger)type
 {
     _type = type;
-    self.tipLabel.text = @"DON'T HAVE TIME TO FINISH THIS CLASS?";
-    self.contentLabel.text = @"Schedule a reminder so you can come back next time you're free.";
+    self.tipLabel.text = @"TOO BUSY TODAY?";
+    self.contentLabel.text = @"Schedule a reminder to come back when you're free.";
     [self.openReminderBtn setTitle:@"SCHEDULE REMINDERS" forState:UIControlStateNormal];
 }
 

@@ -74,5 +74,8 @@
 
 -(void)exit{
     [self.navigationController popViewControllerAnimated:YES];
+    if ([self.delegate respondsToSelector:@selector(exitWithRemindAlert)]) {
+        [self.delegate exitWithRemindAlert];
+    }
 }
 @end
