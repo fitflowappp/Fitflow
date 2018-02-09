@@ -5,13 +5,13 @@
 //  Created by lyj on 2017/9/12.
 //  Copyright © 2017年 lyj. All rights reserved.
 //
+#import "YGAppDelegate.h"
 #import "Heap.h"
 #import "YGDeviceUtil.h"
 #import "YGStringUtil.h"
 #import "FBNotifications.h"
 #import "YGStringUtil.h"
 #import "YGUserService.h"
-#import "YGAppDelegate.h"
 #import "YGNetworkService.h"
 #import "YGUserPersistence.h"
 #import "YGTabBarController.h"
@@ -32,6 +32,7 @@
 #import "YGSessionController.h"
 
 @import Firebase;
+
 @interface YGAppDelegate ()
 
 @property (nonatomic,strong) NSDictionary *updateResponse;//更新有效
@@ -378,4 +379,5 @@
 }
 
 @end
+
 

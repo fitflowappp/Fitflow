@@ -9,7 +9,7 @@
 #ifndef server_h
 #define server_h
 
-#define Debug 1
+#define Debug 0
 
 #define Debug_Heap  0
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		051C4A7C202DC9B500F00575 /* YGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 051C4A7B202DC9B500F00575 /* YGAppDelegate.m */; };
 		051CEDE1202948BE00705548 /* YGDeepLinkUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */; };
 		05981EB82021906200207636 /* YGBuglyUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 05981EB72021906200207636 /* YGBuglyUtil.m */; };
 		05981EBB2021CA5700207636 /* home_update@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EB92021CA5600207636 /* home_update@3x.png */; };
@@ -326,6 +327,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		051C4A7A202DC9B500F00575 /* YGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGAppDelegate.h; sourceTree = "<group>"; };
+		051C4A7B202DC9B500F00575 /* YGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGAppDelegate.m; sourceTree = "<group>"; };
 		051CEDDF202948BE00705548 /* YGDeepLinkUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGDeepLinkUtil.h; sourceTree = "<group>"; };
 		051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGDeepLinkUtil.m; sourceTree = "<group>"; };
 		05981EB62021906200207636 /* YGBuglyUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGBuglyUtil.h; sourceTree = "<group>"; };
@@ -661,8 +664,6 @@
 		2CA27E101FEBA98A00BEC527 /* YGOnboardingGoalCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGOnboardingGoalCell.m; sourceTree = "<group>"; };
 		2CA5A6E21F67778100547CF1 /* Yoga.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yoga.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA5A6E61F67778100547CF1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2CA5A6E81F67778100547CF1 /* YGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGAppDelegate.h; sourceTree = "<group>"; };
-		2CA5A6E91F67778100547CF1 /* YGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGAppDelegate.m; sourceTree = "<group>"; };
 		2CA5A6EB1F67778100547CF1 /* YGBaseController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGBaseController.h; sourceTree = "<group>"; };
 		2CA5A6EC1F67778100547CF1 /* YGBaseController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGBaseController.m; sourceTree = "<group>"; };
 		2CA5A6EF1F67778100547CF1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1534,14 +1535,14 @@
 				2CB1D7741F6FCD2A00199E4C /* session */,
 				2CB1D7751F6FCD3400199E4C /* challenge */,
 				2CA5A7181F67B88D00547CF1 /* controller */,
-				2CA5A6E81F67778100547CF1 /* YGAppDelegate.h */,
-				2CA5A6E91F67778100547CF1 /* YGAppDelegate.m */,
 				2CA5A6EB1F67778100547CF1 /* YGBaseController.h */,
 				2CA5A6EC1F67778100547CF1 /* YGBaseController.m */,
 				2CA5A71F1F67BAD000547CF1 /* YGTabBarController.h */,
 				2CA5A7201F67BAD000547CF1 /* YGTabBarController.m */,
 				2CA5A72C1F67BC9400547CF1 /* YGBaseNavigationController.h */,
 				2CA5A72D1F67BC9400547CF1 /* YGBaseNavigationController.m */,
+				051C4A7A202DC9B500F00575 /* YGAppDelegate.h */,
+				051C4A7B202DC9B500F00575 /* YGAppDelegate.m */,
 				2CA5A6EE1F67778100547CF1 /* Main.storyboard */,
 				2CA5A6F11F67778100547CF1 /* Assets.xcassets */,
 				2CA5A6F31F67778100547CF1 /* LaunchScreen.storyboard */,
@@ -2428,6 +2429,7 @@
 				2C95761D1F70C819007DD6B9 /* YGUserNetworkService.m in Sources */,
 				2CA94AD91FFCB31D003A2036 /* YGSinglesListCommand.m in Sources */,
 				2C091A1D1FFB5A9C00F17048 /* YGDiscoverController.m in Sources */,
+				051C4A7C202DC9B500F00575 /* YGAppDelegate.m in Sources */,
 				2C87D53D1FECFA8E00C751D9 /* YGLoginSignupBasecontroller.m in Sources */,
 				2C3437201FE915B5001C7866 /* YGPrivacyPolicyController.m in Sources */,
 				2C9804571F8F5F7800336611 /* YGSchedulingEntranceCell.m in Sources */,
@@ -2706,6 +2708,7 @@
 			baseConfigurationReference = 24E0721853822A59E961DDF6 /* Pods-Yoga.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2716,9 +2719,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lyj/Downloads/FacebookSDKs-iOS-4.27.1",
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2726,11 +2729,13 @@
 				INFOPLIST_FILE = Yoga/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Fitflow.BundleID;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
@@ -2739,6 +2744,7 @@
 			baseConfigurationReference = C6B6BAF9F335075863F2493B /* Pods-Yoga.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2751,7 +2757,6 @@
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lyj/Downloads/FacebookSDKs-iOS-4.27.1",
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2764,6 +2769,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};
