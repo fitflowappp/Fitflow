@@ -9,6 +9,7 @@
 #import "YGAppDelegate.h"
 #import "YGBaseController.h"
 #import "YGShareCompleteViewController.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 @interface YGBaseController ()
 @end
 @implementation YGBaseController
@@ -98,6 +99,7 @@
 }
 
 -(void)shareWithContent:(NSArray*)content{
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHARE];
     dispatch_async(dispatch_get_main_queue(), ^{
         UIActivityViewController *controller = [[UIActivityViewController alloc]initWithActivityItems:content applicationActivities:nil];
         NSMutableArray *excludedActivityTypes = [NSMutableArray array];

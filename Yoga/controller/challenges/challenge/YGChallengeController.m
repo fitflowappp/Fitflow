@@ -29,7 +29,7 @@
 #import "YGOpenReminderAlert.h"
 #import "YGSchedulingController.h"
 #import <EventKit/EventKit.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 static NSString *CHALLENGE_BANNER_CELLID     = @"challengesCellID";
 
 static NSString *CHALLENGE_SESSION_CELLID    = @"currentChallengeCellID";
@@ -58,6 +58,7 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     [self setRightShareNavigationItem];
     [YGHUD loading:self.view];
     
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGEDETAIL(_challengeID)];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -313,6 +314,7 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     __block  UIWindow *window = [UIApplication sharedApplication].delegate.window;
     [YGHUD loading:window];
     [[YGChallengeService instance] changeChallengeWithChallengID:self.challenge.ID sucessBlock:^(YGChallenge* challenge) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGE(self.challenge.ID)];
         [YGHUD hide:window];
         [changeChallengeAlert hide];
         YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;

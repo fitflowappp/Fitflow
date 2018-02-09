@@ -303,6 +303,7 @@
             [YGHUD hide:self.view];
             if (code==1) {
                 [YGTopAlert alert:@"You're signed up. Welcome to Fitflow!" bkColorCode:@"#41D395"];
+                [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_EMAILREGISTER];
                 if (self.fromBeginWorkout==YES) {
                     if ([YGDeepLinkUtil isExistDeepLinkParamsKey]) {
                         YGAppDelegate *appDelegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
