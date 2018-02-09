@@ -35,6 +35,7 @@
 #import "YGOpenReminderAlert.h"
 #import "YGSchedulingController.h"
 #import <EventKit/EventKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 static NSString *ROUTINE_CELLID    = @"routineCellID";
 
@@ -72,6 +73,7 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     
     [self fetchWorkoutInfo];
     [YGHUD loading:self.view];
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_WORKOUTDETAIL(_workoutID)];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -288,6 +290,7 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
         [self showWorkoutLockedAlertIfFromUserChallenge];
         return;
     }
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_WORKOUT(_workoutID)];
     if (self.workout.routineList.count) {
         YGPlayController *controller = [[YGPlayController alloc] init];
         controller.delegate = self;
@@ -385,6 +388,8 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     [YGTopAlert alert:@"You have now unlocked this bonus class. Enjoy!" bkColorCode:@"#41D395"];
     
     [[YGSessionService instance] fetchShareLockSessionWithWorkoutID:self.workoutID sucessBlock:nil errorBlock:nil];
+    
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_UNLOCK];
 
     [self.collectionView reloadData];
 }
@@ -421,6 +426,7 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     [YGHUD loading:window];
     [[YGChallengeService instance] changeChallengeWithChallengID:self.fromChallenge.ID sucessBlock:^(YGChallenge* challenge) {
         [YGHUD hide:window];
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGE(self.fromChallenge.ID)];
         [changeChallengeAlert hide];
         YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
         [delegate backToWorkout];

@@ -12,6 +12,7 @@
 #import <EventKit/EventKit.h>
 #import "YGSchedulingController.h"
 #import "YGWorkoutCompletedController.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 @interface YGWorkoutCompletedController ()
 @property (nonatomic,strong) UIScrollView *scrollView;
 @end
@@ -25,6 +26,8 @@
     [self addScrollView];
     [self addSubviews];
     [self addReminderAlert];
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPLETEWORKOUT];
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPLETEWORKOUTPARA(self.workout.ID)];
 }
 
 -(void)addScrollView{

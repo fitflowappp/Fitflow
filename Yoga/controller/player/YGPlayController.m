@@ -14,6 +14,7 @@
 #import "YGBackgroundMusicService.h"
 #import "YGWorkoutCompletedController.h"
 #import "YGPlayBackgroundMusicController.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 @interface YGPlayController ()
 @property (nonatomic,strong) YGPlayer *player;
 @property (nonatomic,assign) BOOL setBackgroundMusic;
@@ -25,6 +26,7 @@
     [super viewDidLoad];
     [self preparePlay];
     self.view.backgroundColor = [UIColor blackColor];
+    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PLAYVIDEO];
 }
 
 -(void)viewWillAppear:(BOOL)animated{

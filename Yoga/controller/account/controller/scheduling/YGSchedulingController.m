@@ -19,6 +19,7 @@
 #import "YGSchedulingEntranceCell.h"
 #import "YGSchedulingController.h"
 #import "YGWorkoutScheduleView.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 static NSString *SCHEDULING_SWITCH_CELLID = @"shedulingSwithCellID";
 static NSString *SCHEDULING_ENTRANCE_CELLID = @"shedulingEntranceCellID";
 static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
@@ -416,6 +417,9 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
         [YGHUD loading:self.view];
     });
     [ws.scheduleInfo setObject:@(staus) forKey:@"notification"];
+    if (open) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PUSH];
+    }
     [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {
         int code = [[result objectForKey:@"code"] intValue];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -467,6 +471,9 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
         [YGHUD loading:ws.view];
     });
     BOOL staus = sender.isOn;
+    if (staus) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CALENDAR];
+    }
     [self.scheduleInfo setObject:@(staus) forKey:@"remider"];
     [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {
         [YGHUD hide:ws.view];

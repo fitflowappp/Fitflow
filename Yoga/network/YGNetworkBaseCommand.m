@@ -60,7 +60,7 @@
     NSMutableURLRequest * request=[[self networkEngine].requestSerializer requestWithMethod:requestMethod URLString:encodingURLString parameters:params error:nil];
     request.timeoutInterval = 10;
     
-    NSLog(@"%@", [[YGUserService instance] localUser].sessionId);
+    NSLog(@"sessionID:--%@", [[YGUserService instance] localUser].sessionId);
    [request setValue:[[YGUserService instance] localUser].sessionId forHTTPHeaderField:@"Authorization"];
     
     NSURLSessionDataTask *dataTask = [[self networkEngine] dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error){
