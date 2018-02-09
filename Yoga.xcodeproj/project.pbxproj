@@ -236,7 +236,6 @@
 		2CA27E0D1FEB971900BEC527 /* YGOnboardingBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA27E0C1FEB971900BEC527 /* YGOnboardingBaseController.m */; };
 		2CA27E111FEBA98A00BEC527 /* YGOnboardingGoalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA27E101FEBA98A00BEC527 /* YGOnboardingGoalCell.m */; };
 		2CA5A6E71F67778100547CF1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA5A6E61F67778100547CF1 /* main.m */; };
-		2CA5A6EA1F67778100547CF1 /* YGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA5A6E91F67778100547CF1 /* YGAppDelegate.m */; };
 		2CA5A6ED1F67778100547CF1 /* YGBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA5A6EC1F67778100547CF1 /* YGBaseController.m */; };
 		2CA5A6F01F67778100547CF1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CA5A6EE1F67778100547CF1 /* Main.storyboard */; };
 		2CA5A6F21F67778100547CF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CA5A6F11F67778100547CF1 /* Assets.xcassets */; };
@@ -2478,7 +2477,6 @@
 				05F49F48201F25E4003C018F /* YGSessionShareAlert.m in Sources */,
 				2C9576341F7125AF007DD6B9 /* YGSession+Extension.m in Sources */,
 				2C34371D1FE9158A001C7866 /* YGTermsOfUseController.m in Sources */,
-				2CA5A6EA1F67778100547CF1 /* YGAppDelegate.m in Sources */,
 				2CA5A7B11F67C3AD00547CF1 /* YGDeviceUtil.m in Sources */,
 				2C34370E1FE913B6001C7866 /* YGResetPasswordController.m in Sources */,
 				2C9576051F70B581007DD6B9 /* YGRoutine.m in Sources */,
