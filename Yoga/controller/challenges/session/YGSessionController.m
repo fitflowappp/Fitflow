@@ -16,7 +16,6 @@
 #import "YGRefreshHeader.h"
 #import "YGSessionService.h"
 #import "UIColor+Extension.h"
-#import "YGUserService.h"
 #import "YGSession+Extension.h"
 #import "YGSessionBannerCell.h"
 #import "YGUnSessionBannerCell.h"
@@ -73,7 +72,6 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     
     [self fetchWorkoutInfo];
     [YGHUD loading:self.view];
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_WORKOUTDETAIL(_workoutID)];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -90,6 +88,9 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     [[YGSessionService instance] fetchSessionWithChallengeID:self.challengeID sessionID:self.workoutID sucessBlock:^(YGSession *session) {
         if (session) {
             ws.workout = session;
+            if (!Debug) {
+                [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_WORKOUTDETAIL(session.code)];
+            }
         }
         [ws endLoading];
     } errorBlock:^(NSError *error) {
@@ -274,13 +275,22 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 #pragma mark method
 
 -(void)didSelectShareCompleted {
+    
     if (_isMustShare) {
         _isMustShare = NO;
         _canPlay = YES;
         [YGTopAlert alert:@"Thanks for sharing! You have now unlocked this bonus class. Enjoy!" bkColorCode:@"#41D395"];
         [[YGSessionService instance] fetchShareLockSessionWithWorkoutID:self.workoutID sucessBlock:nil errorBlock:nil];
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHAREWORKOUT(self.workout.code)];
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_UNLOCK];
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_UNLOCKPara(self.workout.code)];
+        }
         [self.collectionView reloadData];
     } else {
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHAREWORKOUT(self.workout.code)];
+        }
         [super didSelectShareCompleted];
     }
 }
@@ -290,7 +300,6 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
         [self showWorkoutLockedAlertIfFromUserChallenge];
         return;
     }
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_WORKOUT(_workoutID)];
     if (self.workout.routineList.count) {
         YGPlayController *controller = [[YGPlayController alloc] init];
         controller.delegate = self;
@@ -388,9 +397,10 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
     [YGTopAlert alert:@"You have now unlocked this bonus class. Enjoy!" bkColorCode:@"#41D395"];
     
     [[YGSessionService instance] fetchShareLockSessionWithWorkoutID:self.workoutID sucessBlock:nil errorBlock:nil];
-    
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_UNLOCK];
-
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_UNLOCK];
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_UNLOCKPara(self.workout.code)];
+    }
     [self.collectionView reloadData];
 }
 
@@ -421,12 +431,15 @@ static NSString *CHALLENGE_CHOOSEN_FOOTERID  = @"challengeChooseFooterID";
 }
 
 -(void)changeChallengeNetwork{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:FBEVENTUPDATEKEY_COMPCHALLENGE];
     //更换挑战
     __block  UIWindow *window = [UIApplication sharedApplication].delegate.window;
     [YGHUD loading:window];
     [[YGChallengeService instance] changeChallengeWithChallengID:self.fromChallenge.ID sucessBlock:^(YGChallenge* challenge) {
         [YGHUD hide:window];
-        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGE(self.fromChallenge.ID)];
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGE(self.fromChallenge.code)];
+        }
         [changeChallengeAlert hide];
         YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
         [delegate backToWorkout];

@@ -36,6 +36,8 @@
 #import "YGSchedulingController.h"
 #import "YGDeepLinkUtil.h"
 #import "YGHomeUpdataAlert.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 static NSString *WORKOUT_USERINFO_CELLID  = @"userInfoCellID";
 static NSString *WORKOUT_USER_SINGLES_CELLID   = @"userSinglesCellID";
 static NSString *WORKOUT_CURRENT_CHALLENGE_CELLID  = @"currentChallengeCellID";
@@ -207,6 +209,18 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
         if ([YGStringUtil notNull:self.userChallenge.ID]) {
             [self.completedChallengeIDList addObject:self.userChallenge.ID];
         }
+        
+        NSString *isUPData = [[NSUserDefaults standardUserDefaults] stringForKey:FBEVENTUPDATEKEY_COMPCHALLENGE];
+        if (!isUPData.length) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"finish" forKey:FBEVENTUPDATEKEY_COMPCHALLENGE];
+            if ([YGStringUtil notNull:self.userChallenge.code]) {
+                if (!Debug) {
+                    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPCHALLENGE];
+                    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPCHALLENGEPAR(self.userChallenge.code)];
+                }
+            }
+        }
+        
     }
 }
 -(void)exitWithRemindAlert {
@@ -235,9 +249,11 @@ static NSString *WORKOUT_ADD_SINGLES_FOOTERID  = @"addSinglesFooterID";
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
-
 -(void)shareWhenChallengeCompleted{
     [challengeCompletedAlert hide];
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHARECHANLLENGE(self.userChallenge.code)];
+    }
     if (self.userChallenge.workoutList) {
         YGSession *workout = self.userChallenge.workoutList[0];
         if (workout.shareUrl) {

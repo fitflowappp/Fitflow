@@ -418,7 +418,9 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
     });
     [ws.scheduleInfo setObject:@(staus) forKey:@"notification"];
     if (open) {
-        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PUSH];
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PUSH];
+        }
     }
     [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {
         int code = [[result objectForKey:@"code"] intValue];
@@ -472,7 +474,9 @@ static NSString *SCHEDULING_TEXT_HEADERID = @"shedulingTextHeaderID";
     });
     BOOL staus = sender.isOn;
     if (staus) {
-        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CALENDAR];
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CALENDAR];
+        }
     }
     [self.scheduleInfo setObject:@(staus) forKey:@"remider"];
     [[YGUserNetworkService instance] scheduleWithParams:self.scheduleInfo sucessBlock:^(NSDictionary *result) {

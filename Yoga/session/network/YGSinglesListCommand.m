@@ -8,7 +8,6 @@
 #import "YGSession.h"
 #import "YGStringUtil.h"
 #import "YGSinglesListCommand.h"
-#import "YGUserService.h"
 @implementation YGSinglesListCommand
 -(void)execute{
     NSString *requestUrl = nil;

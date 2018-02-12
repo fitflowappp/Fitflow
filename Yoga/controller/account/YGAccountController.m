@@ -149,6 +149,7 @@ static NSString *ACCOUNT_LOGIN_FOOTERID   = @"accountLoginFooterID";
     }else{
         [YGHUD loading:self.view];
         __weak typeof(self) ws = self;
+        localUser.isLogout = YES;
         [[YGUserNetworkService instance] anonymousLoginSucessBlock:^(NSDictionary *result) {
             [YGHUD hide:ws.view];
             int code = [[result objectForKey:@"code"] intValue];

@@ -25,6 +25,7 @@
 }
 
 -(void)anonymousLoginSucessBlock:(SUCCESS_BLOCK)sucessBlock failureBlcok:(FAILURE_BLOCK)errorBlock{
+    
     YGAnonymousLoginCommand *command = [[YGAnonymousLoginCommand alloc] init];
     command.errorBlock = errorBlock;
     command.successBlock = sucessBlock;

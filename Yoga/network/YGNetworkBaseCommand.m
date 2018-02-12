@@ -61,7 +61,11 @@
     request.timeoutInterval = 10;
     
     NSLog(@"sessionID:--%@", [[YGUserService instance] localUser].sessionId);
-   [request setValue:[[YGUserService instance] localUser].sessionId forHTTPHeaderField:@"Authorization"];
+    if ([[YGUserService instance] localUser].isLogout) {
+        [[YGUserService instance] localUser].isLogout = NO;
+    } else {
+        [request setValue:[[YGUserService instance] localUser].sessionId forHTTPHeaderField:@"Authorization"];
+    }
     
     NSURLSessionDataTask *dataTask = [[self networkEngine] dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error){
         //NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;

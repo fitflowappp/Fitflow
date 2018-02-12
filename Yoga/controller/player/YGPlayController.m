@@ -26,7 +26,12 @@
     [super viewDidLoad];
     [self preparePlay];
     self.view.backgroundColor = [UIColor blackColor];
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PLAYVIDEO];
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PLAYVIDEO];
+        if (_session) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_WORKOUT(_session.code)];
+        }
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{

@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		051C4A7C202DC9B500F00575 /* YGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 051C4A7B202DC9B500F00575 /* YGAppDelegate.m */; };
+		051C4A8320302BF900F00575 /* ServiceAccount.json in Resources */ = {isa = PBXBuildFile; fileRef = 051C4A8220302BF800F00575 /* ServiceAccount.json */; };
 		051CEDE1202948BE00705548 /* YGDeepLinkUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */; };
+		053B89B420314A8F0075DF65 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 053B89B320314A8F0075DF65 /* GoogleService-Info.plist */; };
 		05981EB82021906200207636 /* YGBuglyUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 05981EB72021906200207636 /* YGBuglyUtil.m */; };
 		05981EBB2021CA5700207636 /* home_update@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EB92021CA5600207636 /* home_update@3x.png */; };
 		05981EBC2021CA5700207636 /* home_update@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 05981EBA2021CA5700207636 /* home_update@2x.png */; };
@@ -39,7 +41,6 @@
 		2ADB8B8A1F6A5563001CD003 /* right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2ADB8B881F6A5563001CD003 /* right@2x.png */; };
 		2ADB8B8B1F6A5563001CD003 /* right@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2ADB8B891F6A5563001CD003 /* right@3x.png */; };
 		2ADB8B901F6A7601001CD003 /* YGTextHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ADB8B8F1F6A7601001CD003 /* YGTextHeader.m */; };
-		2C01F6081F9F287F003F22D1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C01F6071F9F287F003F22D1 /* GoogleService-Info.plist */; };
 		2C05167A1F67EB09003CF71C /* YGPlayBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0516791F67EB09003CF71C /* YGPlayBaseController.m */; };
 		2C0516801F67EB6F003CF71C /* YGPlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C05167F1F67EB6F003CF71C /* YGPlayController.m */; };
 		2C091A161FFB535F00F17048 /* Bar-home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C091A121FFB535E00F17048 /* Bar-home@2x.png */; };
@@ -305,7 +306,6 @@
 		2CB4ED081F78F1DA0018902F /* YGWorkoutCompletedController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB4ED071F78F1DA0018902F /* YGWorkoutCompletedController.m */; };
 		2CB4ED0B1F7910140018902F /* YGRoutinePauseCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB4ED0A1F7910140018902F /* YGRoutinePauseCommand.m */; };
 		2CBC74631F949E370006E93A /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CBC74621F949E370006E93A /* AdSupport.framework */; };
-		2CBC74661F94A1800006E93A /* FirebaseCrash.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CBC74651F94A1800006E93A /* FirebaseCrash.json */; };
 		FF3B1D88B5DFD6CC37289136 /* Pods_Yoga.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F1ECFA6F918B9BD0C2E1F93 /* Pods_Yoga.framework */; };
 /* End PBXBuildFile section */
 
@@ -329,8 +329,10 @@
 /* Begin PBXFileReference section */
 		051C4A7A202DC9B500F00575 /* YGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGAppDelegate.h; sourceTree = "<group>"; };
 		051C4A7B202DC9B500F00575 /* YGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGAppDelegate.m; sourceTree = "<group>"; };
+		051C4A8220302BF800F00575 /* ServiceAccount.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ServiceAccount.json; sourceTree = "<group>"; };
 		051CEDDF202948BE00705548 /* YGDeepLinkUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGDeepLinkUtil.h; sourceTree = "<group>"; };
 		051CEDE0202948BE00705548 /* YGDeepLinkUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGDeepLinkUtil.m; sourceTree = "<group>"; };
+		053B89B320314A8F0075DF65 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		05981EB62021906200207636 /* YGBuglyUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YGBuglyUtil.h; sourceTree = "<group>"; };
 		05981EB72021906200207636 /* YGBuglyUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YGBuglyUtil.m; sourceTree = "<group>"; };
 		05981EB92021CA5600207636 /* home_update@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_update@3x.png"; sourceTree = "<group>"; };
@@ -386,7 +388,6 @@
 		2ADB8B891F6A5563001CD003 /* right@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right@3x.png"; sourceTree = "<group>"; };
 		2ADB8B8E1F6A7601001CD003 /* YGTextHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGTextHeader.h; sourceTree = "<group>"; };
 		2ADB8B8F1F6A7601001CD003 /* YGTextHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGTextHeader.m; sourceTree = "<group>"; };
-		2C01F6071F9F287F003F22D1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2C0516781F67EB09003CF71C /* YGPlayBaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGPlayBaseController.h; sourceTree = "<group>"; };
 		2C0516791F67EB09003CF71C /* YGPlayBaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGPlayBaseController.m; sourceTree = "<group>"; };
 		2C05167E1F67EB6F003CF71C /* YGPlayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGPlayController.h; sourceTree = "<group>"; };
@@ -775,7 +776,6 @@
 		2CB4ED091F7910140018902F /* YGRoutinePauseCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGRoutinePauseCommand.h; sourceTree = "<group>"; };
 		2CB4ED0A1F7910140018902F /* YGRoutinePauseCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGRoutinePauseCommand.m; sourceTree = "<group>"; };
 		2CBC74621F949E370006E93A /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
-		2CBC74651F94A1800006E93A /* FirebaseCrash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FirebaseCrash.json; sourceTree = "<group>"; };
 		C6B6BAF9F335075863F2493B /* Pods-Yoga.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yoga.release.xcconfig"; path = "Pods/Target Support Files/Pods-Yoga/Pods-Yoga.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1555,14 +1555,14 @@
 		2CA5A6E51F67778100547CF1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				051C4A8220302BF800F00575 /* ServiceAccount.json */,
+				053B89B320314A8F0075DF65 /* GoogleService-Info.plist */,
 				2CA5A6E61F67778100547CF1 /* main.m */,
 				2C70E8CB1F95B977003FC59C /* key.h */,
 				2C9575FC1F70B304007DD6B9 /* server.h */,
 				2C649B611F9731D00084C351 /* yoga.cer */,
 				2ADB8B711F6A39BD001CD003 /* Yoga.pch */,
-				2C01F6071F9F287F003F22D1 /* GoogleService-Info.plist */,
 				2CAF699B1F936FBB00E85061 /* Yoga.entitlements */,
-				2CBC74651F94A1800006E93A /* FirebaseCrash.json */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2176,6 +2176,7 @@
 				2CA5A7921F67BE8D00547CF1 /* right-white@3x.png in Resources */,
 				2C4460D71F7398A700A67867 /* loading-06@3x.png in Resources */,
 				2C8D9C9C1FFE128600ACE116 /* Single-unfavorate@2x.png in Resources */,
+				053B89B420314A8F0075DF65 /* GoogleService-Info.plist in Resources */,
 				2ADB8B811F6A3C47001CD003 /* current@3x.png in Resources */,
 				2C87D5411FED00E700C751D9 /* password-eye-close@2x.png in Resources */,
 				2C907B101F72376A00BED0CB /* 58 - Settings.png in Resources */,
@@ -2201,7 +2202,7 @@
 				2C4460D11F7398A700A67867 /* loading-03@3x.png in Resources */,
 				2C9EACE51FF1106400DCDB2B /* error-top-logo@3x.png in Resources */,
 				2C9632D32011E9F80023FECA /* Icon-20.png in Resources */,
-				2C01F6081F9F287F003F22D1 /* GoogleService-Info.plist in Resources */,
+				051C4A8320302BF900F00575 /* ServiceAccount.json in Resources */,
 				2C4460D01F7398A700A67867 /* loading-03@2x.png in Resources */,
 				2C9D182E20075DE3003060DF /* Aboutus-gray@3x.png in Resources */,
 				2C4460CD1F7398A700A67867 /* loading-01@3x.png in Resources */,
@@ -2245,7 +2246,6 @@
 				2C4D67EE200F66C6003A2041 /* Play-next-white@3x.png in Resources */,
 				2CA5A7BD1F67D62100547CF1 /* Lato-Light.ttf in Resources */,
 				2CA5A77C1F67BE8D00547CF1 /* facebook-white@3x.png in Resources */,
-				2CBC74661F94A1800006E93A /* FirebaseCrash.json in Resources */,
 				2C4574961F99F6DC00646AB7 /* open@2x.png in Resources */,
 				2C45749E1F99F98900646AB7 /* logo-c@3x.png in Resources */,
 				2C4460D81F7398A700A67867 /* loading-07@2x.png in Resources */,
@@ -2717,6 +2717,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Xin Song (3UJ437377Y)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2753,6 +2754,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Zone Internet Limited (MF2Q9YT333)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (

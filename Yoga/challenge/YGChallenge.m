@@ -17,6 +17,15 @@
         challenge.seconds = [dictionary objectForKey:@"seconds"];
         challenge.avail = [dictionary objectForKey:@"avail"];
         challenge.status = [dictionary objectForKey:@"status"];
+        
+        if ([dictionary[@"code"] isKindOfClass:[NSString class]]) {
+            challenge.code = [dictionary objectForKey:@"code"];
+            challenge.code = [challenge.code stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
+        } else if ([dictionary[@"code"] isKindOfClass:[NSNumber class]]) {
+            challenge.code = [NSString stringWithFormat:@"%@", dictionary[@"code"]];
+            challenge.code = [challenge.code stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
+        }
+        
         challenge.coverImg = [YGImage objectFrom:[dictionary objectForKey:@"coverImg"]];
         NSString *currentWorkoutID = [dictionary objectForKey:@"currentWorkoutId"];
         if ([YGStringUtil notNull:currentWorkoutID]) {

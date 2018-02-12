@@ -26,8 +26,7 @@
     [self addScrollView];
     [self addSubviews];
     [self addReminderAlert];
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPLETEWORKOUT];
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPLETEWORKOUTPARA(self.workout.ID)];
+    [self addFaceTimeUpdate];
 }
 
 -(void)addScrollView{
@@ -37,6 +36,14 @@
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,MIN(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT),MAX(GET_SCREEN_WIDTH,GET_SCREEN_HEIGHT)-NAV_HEIGHT-(btnHeight*2+btnMargin*3)-20)];
     self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
+}
+
+- (void)addFaceTimeUpdate
+{
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPLETEWORKOUT];
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_COMPLETEWORKOUTPARA(self.workout.code)];
+    }
 }
 
 -(void)addSubviews{
@@ -149,6 +156,13 @@
     [openReminder hide];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"KEY_USER_NOT_OPEN_CALENDAR_FOREVER"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+- (void)didSelectShareCompleted
+{
+    [super didSelectShareCompleted];
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHAREWORKOUT(self.workout.code)];
+    }
 }
 
 -(void)nextWorkout{

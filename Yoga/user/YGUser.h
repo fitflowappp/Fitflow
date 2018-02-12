@@ -15,4 +15,6 @@
 @property (nonatomic,strong) NSString *email;
 @property (nonatomic,strong) NSString *sessionId;
 @property (nonatomic,strong) NSData   *profileData;
+
+@property (nonatomic) BOOL isLogout;
 @end

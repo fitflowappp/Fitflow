@@ -10,6 +10,7 @@
 #import "YGImage.h"
 @interface YGSession : NSObject
 @property (nonatomic,strong) NSString *ID;//
+@property (nonatomic,strong) NSString *code;
 @property (nonatomic,strong) NSString *title;//
 @property (nonatomic,strong) NSNumber *avail;//
 @property (nonatomic,strong) NSNumber *status;//

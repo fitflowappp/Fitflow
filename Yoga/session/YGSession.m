@@ -14,6 +14,15 @@
     YGSession *session = [[YGSession alloc] init];
     if ([YGStringUtil notNull:dictionary]) {
         session.ID = [dictionary objectForKey:@"id"];
+        
+        if ([dictionary[@"code"] isKindOfClass:[NSString class]]) {
+            session.code = [dictionary objectForKey:@"code"];
+            session.code = [session.code stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
+        } else if ([dictionary[@"code"] isKindOfClass:[NSNumber class]]) {
+            session.code = [NSString stringWithFormat:@"%@", dictionary[@"code"]];
+            session.code = [session.code stringByReplacingOccurrencesOfString:@"-" withString:@"_"];
+        }
+        
         session.avail = [dictionary objectForKey:@"avail"];
         session.status = [dictionary objectForKey:@"status"];
         session.favorate = [dictionary objectForKey:@"isfollow"];

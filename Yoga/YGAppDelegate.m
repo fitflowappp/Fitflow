@@ -84,6 +84,7 @@
     [FBSDKSettings enableLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
     
     
+    
     return YES;
 }
 
@@ -209,6 +210,11 @@
         center.delegate = self;
         [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionCarPlay) completionHandler:^(BOOL granted, NSError *_Nullable error) {
             //
+            if (granted) {
+                if (!Debug) {
+                    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_PUSH];
+                }
+            }
             dispatch_async(dispatch_get_global_queue(0,0), ^{
                 [self handleRegisterUserNotificationSettings:granted];
             });

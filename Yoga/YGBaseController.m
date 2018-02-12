@@ -92,14 +92,17 @@
 -(void)didSelectShareCompleted{
     YGShareCompleteViewController *controller = [YGShareCompleteViewController new];
     [self.navigationController pushViewController:controller animated:YES];
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHARE];
+    }
 }
+
 
 -(void)retryWhenNetworkError{
     NSLog(@"Error, SubClass must override this method!");
 }
 
 -(void)shareWithContent:(NSArray*)content{
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHARE];
     dispatch_async(dispatch_get_main_queue(), ^{
         UIActivityViewController *controller = [[UIActivityViewController alloc]initWithActivityItems:content applicationActivities:nil];
         NSMutableArray *excludedActivityTypes = [NSMutableArray array];

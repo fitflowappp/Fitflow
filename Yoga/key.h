@@ -49,16 +49,15 @@
 #define FBEVENTUPDATEKEY_EMAILREGISTER   @"FFEmailRegistered"
 #define FBEVENTUPDATEKEY_SHARE           @"FFShare"
 #define FBEVENTUPDATEKEY_UNLOCK          @"FFUnlock"
-
+#define FBEVENTUPDATEKEY_SHAREWORKOUT(string) [NSString stringWithFormat:@"%@_%@", @"FFShareWorkOut", string]
+#define FBEVENTUPDATEKEY_SHARECHANLLENGE(string) [NSString stringWithFormat:@"%@_%@", @"FFShareChallenge", string]
+#define FBEVENTUPDATEKEY_UNLOCKPara(string)  [NSString stringWithFormat:@"%@_%@", @"FFUnlock", string]
 #define FBEVENTUPDATEKEY_CHALLENGEDETAIL(string) [NSString stringWithFormat:@"%@_%@", @"FFChallengeDetail", string]
 #define FBEVENTUPDATEKEY_WORKOUTDETAIL(string) [NSString stringWithFormat:@"%@_%@", @"FFWorkoutDetail", string]
-
-#define FBEVENTUPDATEKEY_WORKOUT(string) [NSString stringWithFormat:@"%@_%@", @"FFWorkout", string]
-#define FBEVENTUPDATEKEY_CHALLENGE(string) [NSString stringWithFormat:@"%@_%@", @"FFChallenge", string]
-
+#define FBEVENTUPDATEKEY_WORKOUT(string) [NSString stringWithFormat:@"%@_%@", @"FFWorkoutPlay", string]
+#define FBEVENTUPDATEKEY_CHALLENGE(string) [NSString stringWithFormat:@"%@_%@", @"FFChallengeChoose", string]
 #define FBEVENTUPDATEKEY_COMPLETEWORKOUTPARA(string) [NSString stringWithFormat:@"%@_%@", @"FFCompleteWorkout", string]
 #define FBEVENTUPDATEKEY_COMPCHALLENGEPAR(string) [NSString stringWithFormat:@"%@_%@", @"FFCompleteChallenge", string]
-
 #define FBEVENTUPDATEKEY_PUSH            @"FFPushOn"
 #define FBEVENTUPDATEKEY_CALENDAR        @"FFCalendarOn"
 

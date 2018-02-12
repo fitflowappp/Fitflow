@@ -17,9 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.4</string>
-	<key>FacebookAutoLogAppEventsEnabled</key>
-	<false/>
+	<string>1.4.5</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -40,9 +38,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>13</string>
+	<string>16</string>
 	<key>FacebookAppID</key>
 	<string>468287860237491</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<false/>
 	<key>FacebookDisplayName</key>
 	<string>Fitflow</string>
 	<key>LSApplicationCategoryType</key>

@@ -25,8 +25,8 @@
         [ref observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             NSLog(@"1");
         }];
-    FIRDatabaseQuery * query=[[ref child:@"loginfo"] queryEqualToValue:@0];
-    [ref setValue:@{@"error":@"76755"}];
+//    FIRDatabaseQuery * query=[[ref child:@"loginfo"] queryEqualToValue:@0];
+//    [ref setValue:@{@"error":@"76755"}];
 //    [tmp setValue:@"1111" withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
 //        NSLog(@"error");
 //    }];

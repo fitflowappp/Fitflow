@@ -36,7 +36,11 @@
     NSData *userData = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USER_LOCAL_DATA];
     if ([YGStringUtil notNull:userData]) {
         NSDictionary *userInfo = [NSKeyedUnarchiver unarchiveObjectWithData:userData];
-        _localUser.name = [userInfo objectForKey:@"name"];
+        if ([YGStringUtil notNull:[userInfo objectForKey:@"email"]]) {
+            _localUser.name = [userInfo objectForKey:@"email"];
+        } else {
+            _localUser.name = @"Unregistered User";
+        }
         _localUser.email= [userInfo objectForKey:@"email"];
         _localUser.sessionId= [userInfo objectForKey:@"sessionId"];
         _localUser.unRegistered = [[userInfo objectForKey:@"unRegistered"] boolValue];

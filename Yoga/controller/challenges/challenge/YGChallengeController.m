@@ -6,7 +6,6 @@
 //  Copyright © 2017年 lyj. All rights reserved.
 //
 #import "YGHUD.h"
-#import "YGUserService.h"
 #import "YGAppDelegate.h"
 #import "YGStringUtil.h"
 #import "YGTextHeader.h"
@@ -57,8 +56,6 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     [self setLeftNavigationItem];
     [self setRightShareNavigationItem];
     [YGHUD loading:self.view];
-    
-    [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGEDETAIL(_challengeID)];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -76,6 +73,9 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
     [[YGChallengeService instance] fetchChallengeWithChallengeId:self.challengeID sucessBlock:^(YGChallenge *challenge) {
         if (challenge) {
             ws.challenge = challenge;
+        }
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGEDETAIL(challenge.code)];
         }
         [ws endLoading];
     } errorBlock:^(NSError *error) {
@@ -273,6 +273,13 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 }
 #pragma mark method
 
+- (void)didSelectShareCompleted {
+    [super didSelectShareCompleted];
+    if (!Debug) {
+        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_SHARECHANLLENGE(self.challenge.code)];
+    }
+}
+
 -(void)startWorkout{
     YGSession *currentWorkout = [self.challenge currentWorkout];
     if (currentWorkout) {
@@ -311,10 +318,13 @@ static NSString *START_WORKOUT_FOOTERID      = @"startWorkoutFooterID";
 
 -(void)changeChallengeNetwork{
     //更换挑战
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:FBEVENTUPDATEKEY_COMPCHALLENGE];
     __block  UIWindow *window = [UIApplication sharedApplication].delegate.window;
     [YGHUD loading:window];
     [[YGChallengeService instance] changeChallengeWithChallengID:self.challenge.ID sucessBlock:^(YGChallenge* challenge) {
-        [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGE(self.challenge.ID)];
+        if (!Debug) {
+            [FBSDKAppEvents logEvent:FBEVENTUPDATEKEY_CHALLENGE(self.challenge.code)];
+        }
         [YGHUD hide:window];
         [changeChallengeAlert hide];
         YGAppDelegate *delegate = (YGAppDelegate*)[UIApplication sharedApplication].delegate;
